@@ -1,0 +1,38 @@
+{
+  "name": "wagyukeygen",
+  "version": "1.0.0",
+  "description": "Wagyu Key Gen.",
+  "main": "./dist/electron/index.js",
+  "author": "Colfax Selby <colfax.selby@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.0",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/styled-components": "^5.1.7",
+    "electron": "^12.0.0",
+    "ts-loader": "^8.0.17",
+    "typescript": "^4.2.2",
+    "webpack": "^5.24.2",
+    "webpack-cli": "^4.5.0",
+    "webpack-serve": "^3.2.0"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.react.config.js --config webpack.electron.config.js",
+    "build:watch": "yarn build -- --watch",
+    "start": "electron ./dist/electron/index.js",
+    "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
+    "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development"
+  },
+  "dependencies": {
+    "@rauschma/stringio": "^1.4.0",
+    "html-webpack-plugin": "^5.2.0",
+    "js-yaml": "^4.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "shebang-loader": "^0.0.1",
+    "styled-components": "^5.2.1"
+  }
+}
