@@ -6,7 +6,7 @@ from eth2deposit.key_handling.key_derivation.mnemonic import (
 )
 
 def create_mnemonic(word_list, language='english'):
-    return get_mnemonic(language=language, words_path=args.wordlist)
+    return get_mnemonic(language=language, words_path=word_list)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
