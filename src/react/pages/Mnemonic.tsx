@@ -9,7 +9,7 @@ import {
 import Footer from '../components/Footer';
 import React, { useState } from 'react';
 
-import { createMnemonic } from "../commands/Eth2Deposit";
+import { createMnemonic, generateKeys } from "../commands/Eth2Deposit";
 
 import styled from 'styled-components';
 
@@ -65,6 +65,10 @@ const Mnemonic = () => {
   const uiCreateMnemonic = () => {
     setMnemonic(createMnemonic('english'));
   }
+
+  const uiGenerateKeys = () => {
+    generateKeys(mnemonic, 0, 1, "mainnet", "secret", "");
+  }
   
   return (
     <Container>
@@ -78,6 +82,7 @@ const Mnemonic = () => {
         <p>{mnemonic}</p>
       </Content>
       <CallButton onClick={uiCreateMnemonic}>Create Mnemonic</CallButton>
+      <CallButton onClick={uiGenerateKeys}>Generate Keys</CallButton>
       <Footer backLink={"/"} backLabel={"Home"} nextLink={""} nextLabel={""} />
     </Container>
   );
