@@ -1,7 +1,16 @@
-import { Heading, MainContent } from '../colors';
+import {
+  Black,
+  Button,
+  ButtonHover,
+  Heading,
+  MainContent
+} from '../colors';
 
 import Footer from '../components/Footer';
-import React from 'react';
+import React, { useState } from 'react';
+
+import { createMnemonic, generateKeys } from "../commands/Eth2Deposit";
+
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -29,7 +38,38 @@ const Content = styled.div`
   flex-grow: 6;
 `;
 
+const CallButton = styled.span`
+  color: ${Black};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 24;
+  background-color: ${Button};
+  padding: 16 24;
+  border-radius: 10%;
+  text-decoration: none;
+
+  transition: 250ms background-color ease;
+  cursor: pointer;
+  margin-top: 60;
+
+  &:hover {
+    background-color: ${ButtonHover};
+  }
+`;
+
 const Mnemonic = () => {
+  const [mnemonic, setMnemonic] = useState("");
+
+  const uiCreateMnemonic = () => {
+    setMnemonic(createMnemonic('english'));
+  }
+
+  const uiGenerateKeys = () => {
+    generateKeys(mnemonic, 0, 1, "mainnet", "secret", "");
+  }
+  
   return (
     <Container>
       <LandingHeader>Mnemonic</LandingHeader>
@@ -39,7 +79,10 @@ const Mnemonic = () => {
         <br />
         <br />
         ...
+        <p>{mnemonic}</p>
       </Content>
+      <CallButton onClick={uiCreateMnemonic}>Create Mnemonic</CallButton>
+      <CallButton onClick={uiGenerateKeys}>Generate Keys</CallButton>
       <Footer backLink={"/"} backLabel={"Home"} nextLink={""} nextLabel={""} />
     </Container>
   );
