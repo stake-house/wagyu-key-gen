@@ -18,7 +18,7 @@ export const Red = "#fa1e0e";
 
 export const LightGreen = "#52b788";
 
-export const Background = "#1b262c";
+export const Background = "#1B262C";
 export const Button = LightBlue;
 export const ButtonHover = LightGreen;
 export const Heading = MediumBlue;
@@ -27,4 +27,5 @@ export const MainContentAlert = Red;
 export const Black = "#000000"
 export const DisabledButton = DarkGray;
 
-
+export const Yellow = "#FFA600";
+export const Orange = "#F2994A";

@@ -4,6 +4,7 @@ import {
   ButtonHover,
   Heading,
   MainContent,
+  Yellow,
 } from "../colors";
 import { Link, withRouter } from "react-router-dom";
 
@@ -18,12 +19,19 @@ const Container = styled.div`
 `;
 
 const LandingHeader = styled.div`
-  font-weight: 700;
-  font-size: 35;
-  margin-top: 120;
-  color: ${Heading};
+  font-size: 48;
+  margin-top: 150;
   max-width: 550;
   text-align: center;
+`;
+
+const Key = styled.div`
+  height: 350px;
+  align-items: center;
+`;
+
+const Links = styled.div`
+  color: ${Yellow};
 `;
 
 const Content = styled.div`
@@ -39,9 +47,9 @@ const EnterButton = styled(Link)`
   justify-content: center;
   align-items: center;
   height: 24;
-  background-color: ${Button};
+  background-color: ${Yellow};
   padding: 16 24;
-  border-radius: 10%;
+  border-radius: 10px;
   text-decoration: none;
 
   transition: 250ms background-color ease;
@@ -56,13 +64,15 @@ const EnterButton = styled(Link)`
 const Home = () => {
   return (
     <Container>
-      <LandingHeader>Welcome to Wagyu Key Gen</LandingHeader>
+      <LandingHeader>Welcome!</LandingHeader>
+      <Key></Key>
       <Content>
         Your key generator for Ethereum 2.0
         <br />
         <br/>
         <br/>
       </Content>
+      <Links>Docs | Github | Discord </Links>
       <EnterButton to="/mnemonic">Enter</EnterButton>
     </Container>
   );
