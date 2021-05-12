@@ -15,7 +15,7 @@ export const GlobalStyles = createGlobalStyle`
     height: 100%;
     overflow: auto;
     font-weight: 300;
-    font-size: 24px;
+    font-size: 16px;
     background: ${Background};
   }
 

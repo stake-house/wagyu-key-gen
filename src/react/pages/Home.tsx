@@ -8,7 +8,9 @@ import {
 } from "../colors";
 import { Link, withRouter } from "react-router-dom";
 
+import { KeyIcon } from "../components/icons/KeyIcon";
 import React from "react";
+import { shell } from "electron";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -19,25 +21,26 @@ const Container = styled.div`
 `;
 
 const LandingHeader = styled.div`
-  font-size: 48;
-  margin-top: 150;
-  max-width: 550;
+  font-size: 36px;
+  margin-top: 100px;
+  margin-bottom: 70px;
   text-align: center;
-`;
-
-const Key = styled.div`
-  height: 350px;
-  align-items: center;
-`;
-
-const Links = styled.div`
-  color: ${Yellow};
 `;
 
 const Content = styled.div`
   color: ${MainContent};
-  margin-top: 40;
-  max-width: 650;
+  margin-top: 90px;
+`;
+
+const Links = styled.div`
+  color: ${Yellow};
+  margin-top: 30px;
+`;
+
+const StyledLink = styled.span`
+  color: ${Heading};
+  cursor: pointer;
+  color: inherit;
 `;
 
 const EnterButton = styled(Link)`
@@ -46,15 +49,15 @@ const EnterButton = styled(Link)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 24;
+  height: 60px;
+  width: 120px;
   background-color: ${Yellow};
-  padding: 16 24;
   border-radius: 10px;
   text-decoration: none;
 
   transition: 250ms background-color ease;
   cursor: pointer;
-  margin-top: 60;
+  margin-top: 80px;
 
   &:hover {
     background-color: ${ButtonHover};
@@ -62,17 +65,27 @@ const EnterButton = styled(Link)`
 `;
 
 const Home = () => {
+
+  const sendToDocs = () => {
+    shell.openExternal("https://github.com/stake-house/wagyu-key-gen");
+  }
+
+  const sendToGithub = () => {
+    shell.openExternal("https://github.com/stake-house/wagyu-key-gen");
+  }
+
+  const sendToDiscord = () => {
+    shell.openExternal("https://invite.gg/ethstaker");
+  }
+
   return (
     <Container>
       <LandingHeader>Welcome!</LandingHeader>
-      <Key></Key>
-      <Content>
-        Your key generator for Ethereum 2.0
-        <br />
-        <br/>
-        <br/>
-      </Content>
-      <Links>Docs | Github | Discord </Links>
+      <KeyIcon />
+      <Content>Your key generator for Ethereum 2.0</Content>
+      <Links>
+        <StyledLink onClick={sendToDocs}>Docs</StyledLink> | <StyledLink onClick={sendToGithub}>Github</StyledLink> | <StyledLink onClick={sendToDiscord}>Discord</StyledLink>
+      </Links>
       <EnterButton to="/mnemonic">Enter</EnterButton>
     </Container>
   );
