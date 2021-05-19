@@ -9,6 +9,6 @@ export default {
   component: NetworkPickerComponent,
 };
 
-export const NetworkPicker: Story = () => {
-  return <NetworkPickerComponent />
-}
+// export const NetworkPicker: Story = () => {
+//   return <NetworkPickerComponent />
+// }
