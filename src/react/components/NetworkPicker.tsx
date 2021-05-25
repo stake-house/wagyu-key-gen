@@ -1,4 +1,5 @@
-import { Background, ButtonHover, Yellow } from '../colors';
+import { BackgroundLight, ButtonHover, Yellow } from '../colors';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { network } from '../constants';
@@ -12,7 +13,7 @@ const Container = styled.div`
   background: rgba(27, 38, 44, 0.95);
   border-radius: 20px;
   align-items: center;
-  background: ${Background};
+  background: ${BackgroundLight};
   margin: auto;
   margin-top: 150px;
 `;
@@ -20,25 +21,7 @@ const Container = styled.div`
 const Header = styled.div`
   font-size: 36px;
   margin-top: 30px;
-`;
-
-const Options = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-`;
-
-const Option = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 30px;
-`;
-
-const OptionInput = styled.input``;
-
-const OptionLabel = styled.label`
-  margin-left: 20px;
+  margin-bottom: 30px;
 `;
 
 const Submit = styled.div`
@@ -73,29 +56,21 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
     props.setShowNetworkPicker(false);
   }
 
-  const networkChanged = (selected: string) => {
-    props.setNetworkSelected(selected);
+  const networkChanged = (selected: React.ChangeEvent<HTMLInputElement>) => {
+    props.setNetworkSelected(selected.target.value);
   }
 
   return (
     <Container>
       <Header>Network</Header>
-
       {/* TODO: come up with a better way to pass selection back */}
-      <Options>
-        <Option>
-          <OptionInput type="radio" id="prater" name="network" value="prater" checked={props.networkSelected == network.PRATER} onClick={e => networkChanged(network.PRATER)} />
-          <OptionLabel>Prater (Testnet)</OptionLabel>
-        </Option>
-        <Option>
-          <OptionInput type="radio" id="pyrmont" name="network" value="pyrmont" checked={props.networkSelected == network.PYRMONT} onClick={e => networkChanged(network.PYRMONT)} />
-          <OptionLabel>Pyrmont (Testnet)</OptionLabel>
-        </Option>
-        <Option>
-          <OptionInput type="radio" id="mainnet" name="network" value="mainnet" checked={props.networkSelected == network.MAINNET} onClick={e => networkChanged(network.MAINNET)} />
-          <OptionLabel>Mainnet</OptionLabel>
-        </Option>
-      </Options>
+      <FormControl component="fieldset">
+        <RadioGroup aria-label="gender" name="gender1" value={props.networkSelected} onChange={networkChanged}>
+          <FormControlLabel value={network.PRATER} control={<Radio />} label={network.PRATER} />
+          <FormControlLabel value={network.PYRMONT} control={<Radio />} label={network.PYRMONT} />
+          <FormControlLabel value={network.MAINNET} disabled control={<Radio />} label={network.MAINNET} />
+        </RadioGroup>
+      </FormControl>
       <Submit onClick={closePicker}>OK</Submit>
     </Container>
   )

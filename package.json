@@ -34,6 +34,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.4",
     "@rauschma/stringio": "^1.4.0",
     "html-webpack-plugin": "^5.2.0",
     "js-yaml": "^4.0.0",

@@ -19,6 +19,7 @@ export const Red = "#fa1e0e";
 export const LightGreen = "#52b788";
 
 export const Background = "#1B262C";
+export const BackgroundLight = "#354D5A";
 export const Button = LightBlue;
 export const ButtonHover = LightGreen;
 export const Heading = MediumBlue;
