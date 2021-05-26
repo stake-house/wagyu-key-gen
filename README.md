@@ -10,6 +10,9 @@ Start by cloning this repo and enter the directory by running `git clone https:/
    - _If you are running with `build:watch` after saving your changes will automatically build.  In order to get them to show in the app press `ctrl+r` or `cmd+r`._
  - `yarn start`
 
+### Storybook
+ - `yarn storybook` to start storybook
+
 ## Design
 Current designs: https://www.figma.com/file/jcF78fVjndvM2hOPvifl0N/Wagyu-Key?node-id=1%3A4
 

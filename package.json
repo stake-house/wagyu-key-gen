@@ -6,11 +6,17 @@
   "author": "Colfax Selby <colfax.selby@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.14.0",
+    "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-essentials": "^6.2.9",
+    "@storybook/addon-links": "^6.2.9",
+    "@storybook/react": "^6.2.9",
     "@types/js-yaml": "^4.0.0",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.7",
+    "babel-loader": "^8.2.2",
     "electron": "^12.0.0",
     "ts-loader": "^8.0.17",
     "typescript": "^4.2.2",
@@ -23,9 +29,12 @@
     "build:watch": "yarn build -- --watch",
     "start": "electron ./dist/electron/index.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
-    "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development"
+    "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.4",
     "@rauschma/stringio": "^1.4.0",
     "html-webpack-plugin": "^5.2.0",
     "js-yaml": "^4.0.0",
