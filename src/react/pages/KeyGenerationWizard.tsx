@@ -122,7 +122,7 @@ const KeyGenerationWizard = (props: Props) => {
       case 1: {
         if (password.localeCompare(verifyPassword) == 0) {
           setError("");
-          generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network, password, "");
+          generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "");
           setStep(step + 1);
         } else {
           setError("Passwords don't match, please try again.");
