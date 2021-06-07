@@ -15,7 +15,7 @@ type VerifyMnemonicProps = {
 
 const VerifyMnemonic = (props: VerifyMnemonicProps) => {
 
-  const updateInputMnemonic = (e: React.FormEvent<HTMLInputElement>) => {
+  const updateInputMnemonic = (e: React.ChangeEvent<HTMLInputElement>) => {
     props.setVerifyMnemonic(e.currentTarget.value);
   }
 
