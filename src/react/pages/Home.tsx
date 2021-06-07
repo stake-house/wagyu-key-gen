@@ -1,6 +1,6 @@
 import {
   Black,
-  Button,
+  ButtonColor,
   ButtonHover,
   Gray4,
   Heading,
@@ -81,10 +81,18 @@ const StyledLink = styled.span`
   color: ${Yellow};
 `;
 
+const Options = styled.div`
+  display: flex;
+  width: 400px;
+  align-items: center;
+  justify-content: space-around;
+`;
+
 const EnterButton = styled(Link)`
   color: ${Black};
   display: flex;
   flex-direction: row;
+  text-align: center;
   justify-content: center;
   align-items: center;
   height: 60px;
@@ -132,7 +140,20 @@ const Home = () => {
       <Links>
         <StyledLink onClick={sendToDocs}>Docs</StyledLink> | <StyledLink onClick={sendToGithub}>Github</StyledLink> | <StyledLink onClick={sendToDiscord}>Discord</StyledLink>
       </Links>
-      <EnterButton to="/mnemonic">Enter</EnterButton>
+      <Options>
+        <EnterButton to={{
+            pathname: "/mnemonicgeneration",
+            state: {
+              network: networkSelected,
+            },
+        }}>Create New Mnemonic (?)</EnterButton>
+        <EnterButton to={{
+            pathname: "/mnemonicimport",
+            state: {
+              network: networkSelected,
+            },
+        }}>Use Existing Mnemonic (?)</EnterButton>
+      </Options>
       <ModalBackground showNetworkPicker={showNetworkPicker}>
         <NetworkPicker setShowNetworkPicker={setShowNetworkPicker} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
       </ModalBackground>

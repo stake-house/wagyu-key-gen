@@ -25,8 +25,7 @@
     "webpack-serve": "^3.2.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.react.config.js --config webpack.electron.config.js",
-    "build:watch": "yarn build -- --watch",
+    "build": "webpack --config webpack.react.config.js --config webpack.electron.config.js --watch",
     "start": "electron ./dist/electron/index.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
     "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development",
@@ -35,6 +34,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
     "@rauschma/stringio": "^1.4.0",
     "html-webpack-plugin": "^5.2.0",
     "js-yaml": "^4.0.0",
