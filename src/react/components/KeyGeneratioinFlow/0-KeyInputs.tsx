@@ -1,5 +1,5 @@
 import { TextField } from '@material-ui/core';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -22,6 +22,7 @@ type GenerateKeysProps = {
 }
 
 const KeyInputs = (props: GenerateKeysProps) => {
+  const [indexPassedIn, setIndexPassedIn] = useState(props.index != null);
 
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
@@ -42,7 +43,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
       <Container>
         Nice!  Your mnemonic is verified.  Now lets collect some info about the keys to generate:
         <StyledTextField id="number-of-keys" label="Number of Keys" variant="outlined" type="number" onChange={updateNumberOfKeys} />
-        { props.index == null && <StyledTextField id="index" label="Index" variant="outlined" type="number" onChange={updateIndex} /> }
+        { !indexPassedIn && <StyledTextField id="index" label="Index" variant="outlined" type="number" onChange={updateIndex} /> }
         <StyledTextField id="password" label="Password" type="password" variant="outlined" onChange={updatePassword} />
       </Container>
     );
