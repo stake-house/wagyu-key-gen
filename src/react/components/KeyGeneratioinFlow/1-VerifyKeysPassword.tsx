@@ -21,7 +21,6 @@ const VerifyKeysPassword = (props: VerifyKeysPasswordProps) => {
   if (props.step == 1) {
     return (
       <Container>
-        VerifyKeysPassword
         <TextField id="password" label="Retype Password" type="password" variant="outlined" onChange={updateVerifyPassword} />
         { props.error ? props.error : null }
       </Container>

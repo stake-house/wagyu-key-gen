@@ -22,8 +22,7 @@ const VerifyMnemonic = (props: VerifyMnemonicProps) => {
   if (props.step == 2) {
     return (
       <Container>
-        VerifyMnemonic
-        <TextField id="mnemonic" label="Mnemonic" variant="outlined" onChange={updateInputMnemonic} />
+        <TextField id="mnemonic" label="Verify Mnemonic" variant="outlined" onChange={updateInputMnemonic} />
         { props.error ? props.error : null }
       </Container>
     );
