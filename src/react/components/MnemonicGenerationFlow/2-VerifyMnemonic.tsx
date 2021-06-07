@@ -1,7 +1,10 @@
+import { TextField } from '@material-ui/core';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 type VerifyMnemonicProps = {
@@ -20,7 +23,7 @@ const VerifyMnemonic = (props: VerifyMnemonicProps) => {
     return (
       <Container>
         VerifyMnemonic
-        <input type="text" onChange={updateInputMnemonic}/>
+        <TextField id="mnemonic" label="Mnemonic" variant="outlined" onChange={updateInputMnemonic} />
         { props.error ? props.error : null }
       </Container>
     );
