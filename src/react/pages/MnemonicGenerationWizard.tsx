@@ -5,6 +5,7 @@ import { useHistory, withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { Gray4, Heading } from '../colors';
+import { createMnemonic } from '../commands/Eth2Deposit';
 import GenerateMnemonic from '../components/MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from '../components/MnemonicGenerationFlow/1-ShowMnemonic';
 import VerifyMnemonic from '../components/MnemonicGenerationFlow/2-VerifyMnemonic';
@@ -154,8 +155,8 @@ const MnemonicGenerationWizard = (props: Props) => {
   }
 
   const uiCreateMnemonic = () => {
-    // props.setMnemonic(createMnemonic('english'));
-    setMnemonic("here is the test menmonic");
+    setMnemonic(createMnemonic('english'));
+    //setMnemonic("here is the test menmonic");
   }
 
 
