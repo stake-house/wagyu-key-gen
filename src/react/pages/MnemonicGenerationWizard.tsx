@@ -5,6 +5,7 @@ import { useHistory, withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { Gray4, Heading } from '../colors';
+import { uname } from '../commands/BashUtils';
 import { createMnemonic } from '../commands/Eth2Deposit';
 import GenerateMnemonic from '../components/MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from '../components/MnemonicGenerationFlow/1-ShowMnemonic';
@@ -81,6 +82,7 @@ const MnemonicGenerationWizard = (props: Props) => {
       }
       case 2: {
         setVerifyMnemonic("");
+        setError("")
         setStep(step - 1);
         break;
       }
@@ -155,8 +157,11 @@ const MnemonicGenerationWizard = (props: Props) => {
   }
 
   const uiCreateMnemonic = () => {
-    setMnemonic(createMnemonic('english'));
-    //setMnemonic("here is the test menmonic");
+    if (uname() == "Linux") {
+      setMnemonic(createMnemonic('english'));
+    } else {
+      setMnemonic("here is the test menmonic");
+    }
   }
 
 

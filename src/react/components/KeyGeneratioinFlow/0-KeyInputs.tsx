@@ -19,6 +19,7 @@ type GenerateKeysProps = {
   index: number | null,
   setIndex: Dispatch<SetStateAction<number | null>>,
   setPassword: Dispatch<SetStateAction<string>>,
+  error: string,
 }
 
 const KeyInputs = (props: GenerateKeysProps) => {
@@ -45,6 +46,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
         <StyledTextField id="number-of-keys" label="Number of Keys" variant="outlined" type="number" onChange={updateNumberOfKeys} />
         { !indexPassedIn && <StyledTextField id="index" label="Index" variant="outlined" type="number" onChange={updateIndex} /> }
         <StyledTextField id="password" label="Password" type="password" variant="outlined" onChange={updatePassword} />
+        { props.error ? props.error : null }
       </Container>
     );
   }

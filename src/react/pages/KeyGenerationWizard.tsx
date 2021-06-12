@@ -5,6 +5,7 @@ import { useHistory, withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { Gray4, Heading } from '../colors';
+import { uname } from '../commands/BashUtils';
 import { generateKeys } from '../commands/Eth2Deposit';
 import KeyInputs from '../components/KeyGeneratioinFlow/0-KeyInputs';
 import VerifyKeysPassword from '../components/KeyGeneratioinFlow/1-VerifyKeysPassword';
@@ -77,10 +78,12 @@ const KeyGenerationWizard = (props: Props) => {
   const prevClicked = () => {
     switch (step) {
       case 0: {
+        setError("");
         toHome();
         break;
       }
       case 1: {
+        setError("");
         setStep(step - 1);
         break;
       }
@@ -111,10 +114,17 @@ const KeyGenerationWizard = (props: Props) => {
 
       // Inputs
       case 0: {
-        console.log(password);
-        console.log(numberOfKeys);
-        console.log(index);
-        setStep(step + 1);
+        // TODO: verify password strength - use deposit cli api?
+        if (numberOfKeys == 0) {
+          setError("Please input number of keys.");
+        } else if (index == null) {
+          setError("Please input starting index.");
+        } else if (password.length < 8) {
+          setError("Password must be at least 8 characters.");
+        } else {
+          setError("");
+          setStep(step + 1);
+        }
         break;
       }
 
@@ -122,7 +132,13 @@ const KeyGenerationWizard = (props: Props) => {
       case 1: {
         if (password.localeCompare(verifyPassword) == 0) {
           setError("");
-          generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "");
+
+          if (uname() == "Linux") {
+            generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "");
+          } else {
+            console.log("Pretended to generate keys since not on linux.");
+          }
+
           setStep(step + 1);
         } else {
           setError("Passwords don't match, please try again.");
@@ -157,7 +173,7 @@ const KeyGenerationWizard = (props: Props) => {
       <Network>{props.location.state.network}</Network>
       <LandingHeader>Generate Keys</LandingHeader>
 
-      <KeyInputs step={step} setNumberOfKeys={setNumberOfKeys} index={index} setIndex={setIndex} setPassword={setPassword} />
+      <KeyInputs step={step} setNumberOfKeys={setNumberOfKeys} index={index} setIndex={setIndex} setPassword={setPassword} error={error} />
       <VerifyKeysPassword step={step} setVerifyPassword={setVerifyPassword} error={error} />
       <KeysCreated step={step} />
 

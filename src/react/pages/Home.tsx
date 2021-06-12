@@ -15,6 +15,9 @@ import { NetworkPicker } from "../components/NetworkPicker";
 import {network} from "../constants";
 import { shell } from "electron";
 import styled from "styled-components";
+import { TextField } from "@material-ui/core";
+import { Button } from '@material-ui/core';
+
 
 type ContainerProps = {
   showNetworkPicker: boolean,
@@ -110,6 +113,27 @@ const EnterButton = styled(Link)`
   }
 `;
 
+// const StyledTextField = styled(TextField)`
+//   label {
+//     color: white;
+//   }
+//   label.focused {
+//     color: white;
+//   }
+//   .MuiOutlinedInput-root {
+//     fieldset {
+//       border-color: ${Yellow};
+//     }
+//     &:hover fieldset {
+//       border-color: ${Yellow};
+//     }
+//     &.Mui-focused fieldset {
+//       border-color: ${Yellow};
+//     }
+//   }
+// `;
+
+
 const Home = () => {
 
   const [networkSelected, setNetworkSelected] = useState(network.PRATER)
@@ -135,6 +159,8 @@ const Home = () => {
     <Container>
       <Network><StyledLink onClick={toggleShowNetworkPicker}>{networkSelected}</StyledLink></Network>
       <LandingHeader>Welcome!</LandingHeader>
+      <TextField id="number-of-keys" label="Number of Keys" variant="outlined" type="number" color="primary" />
+      <Button variant="contained" color="primary">test</Button>
       <KeyIcon />
       <Content>Your key generator for Ethereum 2.0</Content>
       <Links>
@@ -154,6 +180,9 @@ const Home = () => {
             },
         }}>Use Existing Mnemonic (?)</EnterButton>
       </Options>
+
+
+
       <ModalBackground showNetworkPicker={showNetworkPicker}>
         <NetworkPicker setShowNetworkPicker={setShowNetworkPicker} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
       </ModalBackground>
