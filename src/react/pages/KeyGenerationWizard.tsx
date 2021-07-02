@@ -162,7 +162,7 @@ const KeyGenerationWizard = (props: Props) => {
           // TODO: loading state here
           if (un == "Linux") {
             console.log("On linux, generating keys.");
-            generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "");
+            generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "", folderPath);
           } else {
             console.log("Pretended to generate keys since not on linux.");
           }
