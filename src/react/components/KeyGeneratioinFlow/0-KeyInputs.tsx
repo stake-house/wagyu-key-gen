@@ -1,17 +1,6 @@
-import { TextField } from '@material-ui/core';
+import { Grid, TextField, Tooltip, Typography } from '@material-ui/core';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import styled from 'styled-components';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StyledTextField = styled(TextField)`
-  & .MuiOutlinedInput-notchedOutline .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: white;
-  }
-`;
+import { errors, tooltips } from '../../constants';
 
 type GenerateKeysProps = {
   step: number,
@@ -19,7 +8,9 @@ type GenerateKeysProps = {
   index: number | null,
   setIndex: Dispatch<SetStateAction<number | null>>,
   setPassword: Dispatch<SetStateAction<string>>,
-  error: string,
+  numberOfKeysError: boolean,
+  passwordStrengthError: boolean,
+  startingIndexError: boolean,
 }
 
 const KeyInputs = (props: GenerateKeysProps) => {
@@ -41,13 +32,59 @@ const KeyInputs = (props: GenerateKeysProps) => {
 
   if (props.step == 0) {
     return (
-      <Container>
-        Nice!  Your mnemonic is verified.  Now lets collect some info about the keys to generate:
-        <StyledTextField id="number-of-keys" label="Number of Keys" variant="outlined" type="number" onChange={updateNumberOfKeys} />
-        { !indexPassedIn && <StyledTextField id="index" label="Index" variant="outlined" type="number" onChange={updateIndex} /> }
-        <StyledTextField id="password" label="Password" type="password" variant="outlined" onChange={updatePassword} />
-        { props.error ? props.error : null }
-      </Container>
+      <Grid container direction="column" spacing={3}>
+        <Grid item xs={12}>
+          <Typography variant="body1">
+            Nice!  Your mnemonic is verified.  Now lets collect some info about the keys to generate:
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Tooltip title={tooltips.NUMBER_OF_KEYS}>
+            <TextField
+                id="number-of-keys"
+                label="Number of New Keys"
+                variant="outlined"
+                type="number"
+                onChange={updateNumberOfKeys}
+                InputProps={{ inputProps: { min: 1 } }}
+                error={props.numberOfKeysError}
+                helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
+                style = {{width: 300}}
+              />
+          </Tooltip>
+        </Grid>
+        { !indexPassedIn &&
+          <Grid item xs={12}>
+            <Tooltip title={tooltips.STARTING_INDEX}>
+              <TextField
+                  id="index"
+                  label="Amount of Existing (starting index)"
+                  variant="outlined"
+                  type="number"
+                  onChange={updateIndex}
+                  InputProps={{ inputProps: { min: 0 } }}
+                  error={props.startingIndexError}
+                  helperText={props.startingIndexError ? errors.STARTING_INDEX : ""}
+                  style = {{width: 300}}
+                />
+            </Tooltip>
+          </Grid>
+        }
+        <Grid item xs={12}>
+          <Tooltip title={tooltips.PASSWORD}>
+            <TextField
+                id="password"
+                label="Password"
+                type="password"
+                variant="outlined"
+                onChange={updatePassword}
+                error={props.passwordStrengthError}
+                helperText={props.passwordStrengthError ? errors.PASSWORD_STRENGTH : ""}
+                style = {{width: 300}}
+              />
+          </Tooltip>
+        </Grid>
+      </Grid>
     );
   }
 

@@ -1,13 +1,5 @@
-import { Button } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import React, { Dispatch, SetStateAction } from 'react';
-import styled from 'styled-components';
-import { createMnemonic } from '../../commands/Eth2Deposit';
-
-const Container = styled.div`
-`;
-
-const Message = styled.div`
-`;
 
 type GenerateMnemonicProps = {
   step: number,
@@ -17,11 +9,18 @@ type GenerateMnemonicProps = {
 const GenerateMnemonic = (props: GenerateMnemonicProps) => {
   if (props.step == 0) {
     return (
-      <Container>
-        <Message>
-          Yada yada yada offline keep this safe yada
-        </Message>
-      </Container>
+      <Grid container>
+        <Grid item xs={1} />
+        <Grid item xs={11}>
+          <Typography variant="body1" align="left">
+            We'll be generating both a mnemonic and validator keys for you. (insert link explaining what they are)
+            <br/><br/>
+            It is very important to keep both safe and secure as you will need it to retrieve your funds later.  (insert tips on storage)
+            <br/><br/>
+            If possible, you should run this on a computer that is not connected to the internet.  You can move Wagyu Key Gen to a USB stick, plug into an offline machine, and run it from there if you'd like.
+          </Typography>
+        </Grid>
+      </Grid>
     );
   }
 

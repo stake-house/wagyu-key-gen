@@ -1,47 +1,22 @@
-import { Button } from '@material-ui/core';
-import { FreeBreakfastOutlined } from '@material-ui/icons';
+import { Button, Grid, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useHistory, withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { Gray4, Heading } from '../colors';
 import { uname } from '../commands/BashUtils';
 import { createMnemonic } from '../commands/Eth2Deposit';
 import GenerateMnemonic from '../components/MnemonicGenerationFlow/0-GenerateMnemonic';
-import ShowMnemonic from '../components/MnemonicGenerationFlow/1-ShowMnemonic';
-import VerifyMnemonic from '../components/MnemonicGenerationFlow/2-VerifyMnemonic';
+import ShowMnemonic from '../components/MnemonicGenerationFlow/1-2-ShowMnemonic';
+import VerifyMnemonic from '../components/MnemonicGenerationFlow/3-VerifyMnemonic';
 
-const WizardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+const MainGrid = styled(Grid)`
+  width: 100%;
+  margin: 0px;
+  text-align: center;
 `;
 
-const LandingHeader = styled.div`
-  font-weight: 700;
-  font-size: 35px;
-  margin-top: 30px;
-  color: ${Heading};
-  max-width: 550;
-`;
-
-const Network = styled.div`
-  color: ${Gray4};
-  margin-top: 35px;
-  margin-right: 35px;
-  align-self: flex-end;
-`;
-
-const FooterContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  align-self: flex-end;
-  height: 70;
-  flex-grow:1;
-  min-width:100vw;
+const ContentGrid = styled(Grid)`
+  height: 450px;
 `;
 
 type IncomingState = {
@@ -54,18 +29,20 @@ const MnemonicGenerationWizard = (props: Props) => {
   const [step, setStep] = useState(0);
   const [mnemonic, setMnemonic] = useState("");
   const [verifyMnemonic, setVerifyMnemonic] = useState("");
-  const [error, setError] = useState("");
+  const [mnemonicValidationError, setMnemonicValidationError] = useState(false);
 
   let history = useHistory();
 
   const prevLabel = () => {
     switch (step) {
       case 0:
-        return "Home";
+        return "Back";
       case 1:
-        return "Prev"
+        return "Back";
       case 2:
-        return "Prev"
+        return "Back";
+      case 3:
+        return "Back";
     }
   }
 
@@ -81,8 +58,12 @@ const MnemonicGenerationWizard = (props: Props) => {
         break;
       }
       case 2: {
+        setStep(step - 1);
+        break;
+      }
+      case 3: {
         setVerifyMnemonic("");
-        setError("")
+        setMnemonicValidationError(false)
         setStep(step - 1);
         break;
       }
@@ -96,10 +77,12 @@ const MnemonicGenerationWizard = (props: Props) => {
   const nextLabel = () => {
     switch (step) {
       case 0:
-        return "Next"
+        return "Generate";
       case 1:
-        return "Next"
+        return "Next";
       case 2:
+        return "I'm sure";
+      case 3:
         return "Verify";
     }
   }
@@ -120,13 +103,19 @@ const MnemonicGenerationWizard = (props: Props) => {
         break;
       }
 
-      // VerifyMnemonic
+      // I'm Sure
       case 2: {
+        setStep(step + 1);
+        break;
+      }
+
+      // VerifyMnemonic
+      case 3: {
         if (mnemonic.localeCompare(verifyMnemonic) == 0) {
-          setError("");
+          setMnemonicValidationError(false);
           toKeyGenerationWizard();
         } else {
-          setError("Mnemonics don't match, please try again.");
+          setMnemonicValidationError(true);
         }
         break;
       }
@@ -160,25 +149,45 @@ const MnemonicGenerationWizard = (props: Props) => {
     if (uname() == "Linux") {
       setMnemonic(createMnemonic('english'));
     } else {
-      setMnemonic("here is the test menmonic");
+      setMnemonic("one two three four five six seven eight nine ten eleven twelve one two three four five six seven eight nine ten eleven twelve");
     }
   }
 
 
   return (
-    <WizardContainer>
-      <Network>{props.location.state.network}</Network>
-      <LandingHeader>Generate Mnemonic</LandingHeader>
-
-      <GenerateMnemonic step={step} setMnemonic={setMnemonic} />
-      <ShowMnemonic step={step} mnemonic={mnemonic} />
-      <VerifyMnemonic step={step} setVerifyMnemonic={setVerifyMnemonic} error={error} />
-
-      <FooterContainer>
-        <Button variant="contained" onClick={prevClicked}>{prevLabel()}</Button>
-        <Button variant="contained" onClick={nextClicked}>{nextLabel()}</Button>
-      </FooterContainer>
-    </WizardContainer>
+    <MainGrid container spacing={5} direction="column">
+      <Grid item container>
+        <Grid item xs={10}/>
+        <Grid item xs={2}>
+          <Typography variant="caption" style={{color: "gray"}}>
+            Network: {props.location.state.network}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid item container>
+        <Grid item xs={12}>
+          <Typography variant="h1">
+            Generate Mnemonic
+          </Typography>
+        </Grid>
+      </Grid>
+      <ContentGrid item container>
+        <Grid item xs={12}>
+          <GenerateMnemonic step={step} setMnemonic={setMnemonic} />
+          <ShowMnemonic step={step} mnemonic={mnemonic} />
+          <VerifyMnemonic step={step} setVerifyMnemonic={setVerifyMnemonic} error={mnemonicValidationError} />
+        </Grid>
+      </ContentGrid>
+      <Grid item container>
+        <Grid item xs={2} text-align="center">
+          <Button variant="contained" color="primary" onClick={prevClicked}>{prevLabel()}</Button>
+        </Grid>
+        <Grid item xs={8} />
+        <Grid item xs={2} text-align="center">
+          <Button variant="contained" color="primary" onClick={nextClicked}>{nextLabel()}</Button>
+        </Grid>
+      </Grid>
+    </MainGrid>
   );
 }
 

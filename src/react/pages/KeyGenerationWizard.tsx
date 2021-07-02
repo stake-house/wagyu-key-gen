@@ -1,49 +1,25 @@
-import { Button } from '@material-ui/core';
+import { Button, Grid, Typography } from '@material-ui/core';
 import { ipcRenderer } from 'electron';
 import React, { useState } from 'react';
 import { useHistory, withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { Gray4, Heading } from '../colors';
 import { uname } from '../commands/BashUtils';
 import { generateKeys } from '../commands/Eth2Deposit';
 import KeyInputs from '../components/KeyGeneratioinFlow/0-KeyInputs';
 import VerifyKeysPassword from '../components/KeyGeneratioinFlow/1-VerifyKeysPassword';
-import KeysCreated from '../components/KeyGeneratioinFlow/2-KeysCreated';
+import SelectFolder from '../components/KeyGeneratioinFlow/2-SelectFolder';
+import KeysCreated from '../components/KeyGeneratioinFlow/3-KeysCreated';
 
-const WizardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+const MainGrid = styled(Grid)`
+  width: 100%;
+  margin: 0px;
+  text-align: center;
 `;
 
-const LandingHeader = styled.div`
-  font-weight: 700;
-  font-size: 35px;
-  margin-top: 30px;
-  color: ${Heading};
-  max-width: 550;
+const ContentGrid = styled(Grid)`
+  height: 450px;
 `;
-
-const Network = styled.div`
-  color: ${Gray4};
-  margin-top: 35px;
-  margin-right: 35px;
-  align-self: flex-end;
-`;
-
-const FooterContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  align-self: flex-end;
-  height: 70;
-  flex-grow:1;
-  min-width:100vw;
-`;
-
 
 type IncomingState = {
   network: string,
@@ -59,7 +35,12 @@ const KeyGenerationWizard = (props: Props) => {
   const [numberOfKeys, setNumberOfKeys] = useState(0);
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
-  const [error, setError] = useState("");
+  const [numberOfKeysError, setNumberOfKeysError] = useState(false);
+  const [passwordStrengthError, setPasswordStrengthError] = useState(false);
+  const [passwordVerifyError, setPasswordVerifyError] = useState(false);
+  const [startingIndexError, setStartingIndexError] = useState(false);
+  const [folderPath, setFolderPath] = useState("");
+  const [folderError, setFolderError] = useState(false);
 
 
   let history = useHistory(); 
@@ -67,28 +48,37 @@ const KeyGenerationWizard = (props: Props) => {
   const prevLabel = () => {
     switch (step) {
       case 0:
-        return "Restart";
+        return "Back";
       case 1:
-        return "Prev"
+        return "Back";
       case 2:
-        return "Prev"
+        return "Back";
     }
   }
 
   const prevClicked = () => {
     switch (step) {
       case 0: {
-        setError("");
+        setNumberOfKeysError(false);
+        setPasswordStrengthError(false);
+        setStartingIndexError(false);
+        // TODO: make this go back, not home
         toHome();
         break;
       }
       case 1: {
-        setError("");
+        setPasswordVerifyError(false);
+        setNumberOfKeys(0);
+        setPassword("");
+        setIndex(props.location.state.index);
+        setVerifyPassword("");
         setStep(step - 1);
         break;
       }
       case 2: {
         setStep(step - 1);
+        setFolderPath("");
+        setFolderError(false);
         break;
       }
       default: {
@@ -103,9 +93,11 @@ const KeyGenerationWizard = (props: Props) => {
       case 0:
         return "Next"
       case 1:
-        return "Next"
+        return "Verify"
       case 2:
-        return "Close";
+        return "Create"
+      case 3:
+        return "Finished";
     }
   }
 
@@ -114,26 +106,62 @@ const KeyGenerationWizard = (props: Props) => {
 
       // Inputs
       case 0: {
-        // TODO: verify password strength - use deposit cli api?
-        if (numberOfKeys == 0) {
-          setError("Please input number of keys.");
-        } else if (index == null) {
-          setError("Please input starting index.");
-        } else if (password.length < 8) {
-          setError("Password must be at least 8 characters.");
+        let isError = false;
+
+        if (numberOfKeys < 1) {
+          setNumberOfKeysError(true);
+          isError = true;
         } else {
-          setError("");
+          setNumberOfKeysError(false);
+        }
+        
+        if (password.length < 8) {
+          setPasswordStrengthError(true);
+          isError = true;
+        } else {
+          setPasswordStrengthError(false);
+        }
+        
+        if (index == null || index < 0) {
+          setStartingIndexError(true);
+          isError = true;
+        } else {
+          setStartingIndexError(false);
+        }
+
+        if (!isError) {
+          setNumberOfKeysError(false);
+          setPasswordStrengthError(false);
+          setStartingIndexError(false);
           setStep(step + 1);
         }
+
         break;
       }
 
       // Verify Password
       case 1: {
         if (password.localeCompare(verifyPassword) == 0) {
-          setError("");
+          setPasswordVerifyError(false);
+          setStep(step + 1);
+        } else {
+          setPasswordVerifyError(true);
+        }
 
-          if (uname() == "Linux") {
+        break;
+      }
+
+      // Select Folder
+      case 2: {
+        if (folderPath != "") {
+          setFolderError(false);
+
+          const un = uname();
+          console.log(un);
+
+          // TODO: loading state here
+          if (un == "Linux") {
+            console.log("On linux, generating keys.");
             generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "");
           } else {
             console.log("Pretended to generate keys since not on linux.");
@@ -141,13 +169,14 @@ const KeyGenerationWizard = (props: Props) => {
 
           setStep(step + 1);
         } else {
-          setError("Passwords don't match, please try again.");
+          setFolderError(true);
         }
+
         break;
       }
 
       // Keys Generated
-      case 2: {
+      case 3: {
         close();
         break;
       }
@@ -169,19 +198,46 @@ const KeyGenerationWizard = (props: Props) => {
   }
 
   return (
-    <WizardContainer>
-      <Network>{props.location.state.network}</Network>
-      <LandingHeader>Generate Keys</LandingHeader>
-
-      <KeyInputs step={step} setNumberOfKeys={setNumberOfKeys} index={index} setIndex={setIndex} setPassword={setPassword} error={error} />
-      <VerifyKeysPassword step={step} setVerifyPassword={setVerifyPassword} error={error} />
-      <KeysCreated step={step} />
-
-      <FooterContainer>
-        <Button variant="contained" onClick={prevClicked}>{prevLabel()}</Button>
-        <Button variant="contained" onClick={nextClicked}>{nextLabel()}</Button>
-      </FooterContainer>
-    </WizardContainer>
+    <MainGrid container spacing={5} direction="column">
+      <Grid item container>
+        <Grid item xs={10}/>
+        <Grid item xs={2}>
+          <Typography variant="caption" style={{color: "gray"}}>
+            Network: {props.location.state.network}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid item container>
+        <Grid item xs={12}>
+          <Typography variant="h1">
+            Generate Keys
+          </Typography>
+        </Grid>
+      </Grid>
+      <ContentGrid item container>
+        <Grid item xs={12}>
+          <KeyInputs step={step} setNumberOfKeys={setNumberOfKeys} index={index} setIndex={setIndex} setPassword={setPassword} numberOfKeysError={numberOfKeysError}
+            passwordStrengthError={passwordStrengthError} startingIndexError={startingIndexError} />
+          <VerifyKeysPassword step={step} setVerifyPassword={setVerifyPassword} passwordVerifyError={passwordVerifyError} />
+          <SelectFolder step={step} setFolderPath={setFolderPath} folderPath={folderPath} setFolderError={setFolderError} folderError={folderError} />
+          <KeysCreated step={step} folderPath={folderPath} />
+        </Grid>
+      </ContentGrid>
+      { step < 3 && <Grid item container>
+        <Grid item xs={2} text-align="center">
+          <Button variant="contained" color="primary" onClick={prevClicked}>{prevLabel()}</Button>
+        </Grid>
+        <Grid item xs={8} />
+        <Grid item xs={2} text-align="center">
+          <Button variant="contained" color="primary" onClick={nextClicked}>{nextLabel()}</Button>
+        </Grid>
+      </Grid> }
+      { step == 3 && <Grid item container>
+        <Grid item xs={12} text-align="center">
+          <Button variant="contained" color="primary" onClick={nextClicked}>{nextLabel()}</Button>
+        </Grid>
+      </Grid> }
+    </MainGrid>
   );
 }
 

@@ -12,7 +12,8 @@ app.on("ready", () => {
 
       // TODO: is it a problem to disable this?
       // https://www.electronjs.org/docs/tutorial/context-isolation#security-considerations
-      contextIsolation: false
+      contextIsolation: false,
+      enableRemoteModule: true,
     }
   });
 

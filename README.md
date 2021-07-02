@@ -27,3 +27,15 @@ Reach out to the EthStaker community:
 
 ## License
 [GPL](LICENSE)
+
+
+
+
+
+
+
+
+
+https://blog.logrocket.com/the-definitive-guide-to-react-material-d730c8a3e8ba/
+https://www.youtube.com/watch?v=vyJU9efvUtQ&ab_channel=TraversyMedia
+https://www.figma.com/file/jcF78fVjndvM2hOPvifl0N/Wagyu-Key?node-id=0%3A1

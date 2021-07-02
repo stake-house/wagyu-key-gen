@@ -5,15 +5,16 @@ const Container = styled.div`
 `;
 
 type KeysCreatedProps = {
-  step: number
+  step: number,
+  folderPath: string,
 }
 
 const KeysCreated = (props: KeysCreatedProps) => {
 
-  if (props.step == 2) {
+  if (props.step == 3) {
     return (
       <Container>
-        Your keys have been created.  They can be found in the direction 'dist/keys'
+        Your keys have been created.  They can be found in the directory '{props.folderPath}'
       </Container>
     );
   }

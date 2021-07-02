@@ -1,40 +1,17 @@
-import { Button, TextField } from "@material-ui/core";
+import { Button, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { RouteComponentProps, useHistory, withRouter } from "react-router-dom";
 import styled from "styled-components";
-import { Gray4, Heading } from "../colors";
+import { errors, MNEMONIC_LENGTH } from "../constants";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+const MainGrid = styled(Grid)`
+  width: 100%;
+  margin: 0px;
+  text-align: center;
 `;
 
-const Network = styled.div`
-  color: ${Gray4};
-  margin-top: 35px;
-  margin-right: 35px;
-  align-self: flex-end;
-`;
-
-const LandingHeader = styled.div`
-  font-weight: 700;
-  font-size: 35px;
-  margin-top: 30px;
-  color: ${Heading};
-  max-width: 550;
-`;
-
-const FooterContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  align-self: flex-end;
-  height: 70;
-  flex-grow:1;
-  min-width:100vw;
+const ContentGrid = styled(Grid)`
+  height: 450px;
 `;
 
 type IncomingState = {
@@ -45,6 +22,7 @@ type Props = RouteComponentProps<{}, any, IncomingState>;
 
 const MnemonicImport = (props: Props) => {
   const [mnemonic, setMnemonic] = useState("");
+  const [mnemonicError, setMnemonicError] = useState(false);
 
   let history = useHistory();
 
@@ -57,33 +35,69 @@ const MnemonicImport = (props: Props) => {
   }
 
   const toKeyGenerationWizard = () => {
-    // TODO: validate mnemonic
+    const mnemonicArray = mnemonic.split(" ");
 
-    const location = {
-      pathname: '/keygeneration',
-      state: {
-        network: props.location.state.network,
-        mnemonic: mnemonic,
-        index: null,
+    if (mnemonicArray.length != MNEMONIC_LENGTH) {
+      setMnemonicError(true);
+    } else {
+      setMnemonicError(false);
+
+      const location = {
+        pathname: '/keygeneration',
+        state: {
+          network: props.location.state.network,
+          mnemonic: mnemonic,
+          index: null,
+        }
       }
+  
+      history.push(location);
     }
-
-    history.push(location);
   }
 
   return (
-    <Container>
-      <Network>{props.location.state.network}</Network>
-      <LandingHeader>Import Mnemonic</LandingHeader>
-
-      VerifyMnemonic
-      <TextField id="mnemonic" label="Mnemonic" variant="outlined" onChange={updateInputMnemonic} />
-
-      <FooterContainer>
-        <Button variant="contained" onClick={toHome}>Back</Button>
-        <Button variant="contained" onClick={toKeyGenerationWizard}>Import</Button>
-      </FooterContainer>
-    </Container>
+    <MainGrid container spacing={5} direction="column">
+      <Grid item container>
+        <Grid item xs={10}/>
+        <Grid item xs={2}>
+          <Typography variant="caption" style={{color: "gray"}}>
+            Network: {props.location.state.network}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid item container>
+        <Grid item xs={12}>
+          <Typography variant="h1">
+            Import Mnemonic
+          </Typography>
+        </Grid>
+      </Grid>
+      <ContentGrid item container>
+        <Grid item xs={1} />
+        <Grid item xs={10}>
+          <TextField
+            id="mnemonic-input"
+            label="Type your mnemonic here"
+            multiline
+            fullWidth
+            rows={4}
+            variant="outlined"
+            color="primary"
+            error={mnemonicError}
+            helperText={ mnemonicError ? errors.MNEMONIC_FORMAT : ""}
+            onChange={updateInputMnemonic} />
+        </Grid>
+      </ContentGrid>
+      <Grid item container>
+        <Grid item xs={2} text-align="center">
+          <Button variant="contained" color="primary" onClick={toHome}>Back</Button>
+        </Grid>
+        <Grid item xs={8} />
+        <Grid item xs={2} text-align="center">
+          <Button variant="contained" color="primary" onClick={toKeyGenerationWizard}>Import</Button>
+        </Grid>
+      </Grid>
+    </MainGrid>
   )
 }
 
