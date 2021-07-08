@@ -3,7 +3,7 @@ import { remote, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import React, { Dispatch, SetStateAction } from 'react';
 import { errors } from '../../constants';
 
-type VerifyKeysPasswordProps = {
+type SelectFolderProps = {
   step: number,
   setFolderPath: Dispatch<SetStateAction<string>>,
   folderPath: string,
@@ -11,20 +11,22 @@ type VerifyKeysPasswordProps = {
   folderError: boolean,
 }
 
-const VerifyKeysPassword = (props: VerifyKeysPasswordProps) => {
-  const test = () => {
+const SelectFolder = (props: SelectFolderProps) => {
+  const chooseFolder = () => {
+    props.setFolderError(false);
+
     const options: OpenDialogOptions = {
       properties: ['openDirectory']
     };
 
-    const prom = remote.dialog.showOpenDialog(options);
-
-    prom.then((files: OpenDialogReturnValue) => {
-      if (files !== undefined) {
-          console.log(files.filePaths);
-          props.setFolderPath(files.filePaths[0]);
-      }            
-    });
+    remote.dialog.showOpenDialog(options)
+      .then((value: OpenDialogReturnValue) => {
+        if (value !== undefined && value.filePaths.length > 0) {
+          props.setFolderPath(value.filePaths[0]);
+        } else {
+          props.setFolderError(true);
+        }
+      });
   }
 
   if (props.step == 2) {
@@ -36,7 +38,7 @@ const VerifyKeysPassword = (props: VerifyKeysPasswordProps) => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" component="label" onClick={test}>
+          <Button variant="contained" component="label" onClick={chooseFolder}>
             Browse
           </Button>
         </Grid>
@@ -61,4 +63,4 @@ const VerifyKeysPassword = (props: VerifyKeysPasswordProps) => {
   return (null);
 }
 
-export default VerifyKeysPassword;
+export default SelectFolder;

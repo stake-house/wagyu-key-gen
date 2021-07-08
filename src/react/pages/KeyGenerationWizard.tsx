@@ -9,7 +9,8 @@ import { generateKeys } from '../commands/Eth2Deposit';
 import KeyInputs from '../components/KeyGeneratioinFlow/0-KeyInputs';
 import VerifyKeysPassword from '../components/KeyGeneratioinFlow/1-VerifyKeysPassword';
 import SelectFolder from '../components/KeyGeneratioinFlow/2-SelectFolder';
-import KeysCreated from '../components/KeyGeneratioinFlow/3-KeysCreated';
+import CreatingKeys from '../components/KeyGeneratioinFlow/3-CreatingKeys';
+import KeysCreated from '../components/KeyGeneratioinFlow/4-KeysCreated';
 
 const MainGrid = styled(Grid)`
   width: 100%;
@@ -43,7 +44,7 @@ const KeyGenerationWizard = (props: Props) => {
   const [folderError, setFolderError] = useState(false);
 
 
-  let history = useHistory(); 
+  const history = useHistory();
   
   const prevLabel = () => {
     switch (step) {
@@ -53,6 +54,10 @@ const KeyGenerationWizard = (props: Props) => {
         return "Back";
       case 2:
         return "Back";
+      case 3:
+        return ""; // no back button
+      case 4:
+        return ""; // no back button
     }
   }
 
@@ -91,12 +96,14 @@ const KeyGenerationWizard = (props: Props) => {
   const nextLabel = () => {
     switch (step) {
       case 0:
-        return "Next"
+        return "Next";
       case 1:
-        return "Verify"
+        return "Verify";
       case 2:
-        return "Create"
+        return "Create";
       case 3:
+        return ""; // no next button
+      case 4:
         return "Finished";
     }
   }
@@ -155,19 +162,14 @@ const KeyGenerationWizard = (props: Props) => {
       case 2: {
         if (folderPath != "") {
           setFolderError(false);
-
-          const un = uname();
-          console.log(un);
-
-          // TODO: loading state here
-          if (un == "Linux") {
-            console.log("On linux, generating keys.");
-            generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "", folderPath);
-          } else {
-            console.log("Pretended to generate keys since not on linux.");
-          }
-
+          console.log(step);
           setStep(step + 1);
+
+          handleKeyGeneration().then(() => {
+            console.log("keys generated " + step);
+            setStep(4);
+          });
+
         } else {
           setFolderError(true);
         }
@@ -175,8 +177,15 @@ const KeyGenerationWizard = (props: Props) => {
         break;
       }
 
-      // Keys Generated
+      // Keys are being generated
       case 3: {
+        // there is no next button here
+        // step is autoincremented once keys are created
+        break;
+      }
+
+      // Keys Generated
+      case 4: {
         close();
         break;
       }
@@ -195,6 +204,28 @@ const KeyGenerationWizard = (props: Props) => {
 
   const close = () => {
     ipcRenderer.send("close");
+  }
+
+  const handleKeyGeneration = async (): Promise<void> => {
+    const os = uname();
+
+    return new Promise<void>((resolve, reject) => {
+      if (os == "Linux") {
+        console.log("On linux, generating keys.");
+        generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "", folderPath);
+        resolve();
+      } else {
+        console.log("Pretended to generate keys since not on linux.");
+        var start = Date.now(),
+        now = start;
+        while (now - start < 2000) {
+          console.log("not done yet");
+          now = Date.now();
+        }
+        console.log("done");
+        resolve();
+      }
+    });
   }
 
   return (
@@ -220,6 +251,7 @@ const KeyGenerationWizard = (props: Props) => {
             passwordStrengthError={passwordStrengthError} startingIndexError={startingIndexError} />
           <VerifyKeysPassword step={step} setVerifyPassword={setVerifyPassword} passwordVerifyError={passwordVerifyError} />
           <SelectFolder step={step} setFolderPath={setFolderPath} folderPath={folderPath} setFolderError={setFolderError} folderError={folderError} />
+          <CreatingKeys step={step} mnemonic={props.location.state.mnemonic} index={index!} numberOfKeys={numberOfKeys} network={props.location.state.network} password={password} folderPath={folderPath} />
           <KeysCreated step={step} folderPath={folderPath} />
         </Grid>
       </ContentGrid>
@@ -232,7 +264,7 @@ const KeyGenerationWizard = (props: Props) => {
           <Button variant="contained" color="primary" onClick={nextClicked}>{nextLabel()}</Button>
         </Grid>
       </Grid> }
-      { step == 3 && <Grid item container>
+      { step == 4 && <Grid item container>
         <Grid item xs={12} text-align="center">
           <Button variant="contained" color="primary" onClick={nextClicked}>{nextLabel()}</Button>
         </Grid>

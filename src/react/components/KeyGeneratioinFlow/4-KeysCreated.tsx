@@ -11,7 +11,7 @@ type KeysCreatedProps = {
 
 const KeysCreated = (props: KeysCreatedProps) => {
 
-  if (props.step == 3) {
+  if (props.step == 4) {
     return (
       <Container>
         Your keys have been created.  They can be found in the directory '{props.folderPath}'
