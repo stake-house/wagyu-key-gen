@@ -212,10 +212,15 @@ const KeyGenerationWizard = (props: Props) => {
 
     if (os == "Linux") {
       console.log("On linux, generating keys.");
+      
       generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "", folderPath);
+
     } else {
       console.log("Pretended to generate keys since not on linux.");
-      executeCommandSync("/Users/colfaxselby/Documents/projects/stakehouse/wagyu-key-gen/sleep.sh")
+
+      // pause for a couple seconds
+      const end = Date.now() + 2000;
+      while (Date.now() < end) continue;
     }
   }
 
