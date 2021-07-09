@@ -6,6 +6,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { uname } from '../commands/BashUtils';
 import { generateKeys } from '../commands/Eth2Deposit';
+import { executeCommandSync } from '../commands/ExecuteCommand';
 import KeyInputs from '../components/KeyGeneratioinFlow/0-KeyInputs';
 import VerifyKeysPassword from '../components/KeyGeneratioinFlow/1-VerifyKeysPassword';
 import SelectFolder from '../components/KeyGeneratioinFlow/2-SelectFolder';
@@ -162,13 +163,13 @@ const KeyGenerationWizard = (props: Props) => {
       case 2: {
         if (folderPath != "") {
           setFolderError(false);
-          console.log(step);
           setStep(step + 1);
 
-          handleKeyGeneration().then(() => {
-            console.log("keys generated " + step);
+          setTimeout(() => {
+            handleKeyGeneration();
+            // Move on to the last page when done
             setStep(4);
-          });
+          }, 1000);
 
         } else {
           setFolderError(true);
@@ -206,26 +207,16 @@ const KeyGenerationWizard = (props: Props) => {
     ipcRenderer.send("close");
   }
 
-  const handleKeyGeneration = async (): Promise<void> => {
+  const handleKeyGeneration = () => {
     const os = uname();
 
-    return new Promise<void>((resolve, reject) => {
-      if (os == "Linux") {
-        console.log("On linux, generating keys.");
-        generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "", folderPath);
-        resolve();
-      } else {
-        console.log("Pretended to generate keys since not on linux.");
-        var start = Date.now(),
-        now = start;
-        while (now - start < 2000) {
-          console.log("not done yet");
-          now = Date.now();
-        }
-        console.log("done");
-        resolve();
-      }
-    });
+    if (os == "Linux") {
+      console.log("On linux, generating keys.");
+      generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "", folderPath);
+    } else {
+      console.log("Pretended to generate keys since not on linux.");
+      executeCommandSync("/Users/colfaxselby/Documents/projects/stakehouse/wagyu-key-gen/sleep.sh")
+    }
   }
 
   return (
@@ -251,7 +242,7 @@ const KeyGenerationWizard = (props: Props) => {
             passwordStrengthError={passwordStrengthError} startingIndexError={startingIndexError} />
           <VerifyKeysPassword step={step} setVerifyPassword={setVerifyPassword} passwordVerifyError={passwordVerifyError} />
           <SelectFolder step={step} setFolderPath={setFolderPath} folderPath={folderPath} setFolderError={setFolderError} folderError={folderError} />
-          <CreatingKeys step={step} mnemonic={props.location.state.mnemonic} index={index!} numberOfKeys={numberOfKeys} network={props.location.state.network} password={password} folderPath={folderPath} />
+          <CreatingKeys step={step} />
           <KeysCreated step={step} folderPath={folderPath} />
         </Grid>
       </ContentGrid>
