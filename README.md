@@ -6,9 +6,13 @@ Wagyu Key Gen is a React app running in Electron.  See `src/electron/` for the s
 
 Start by cloning this repo and enter the directory by running `git clone https://github.com/stake-house/wagyu-key-gen.git` and `cd wagyu-key-gen`.  Then run the following:
  - `yarn install`
- - `yarn build` (or run `yarn run build:watch` in a separate terminal to hot reload your changes)
-   - _If you are running with `build:watch` after saving your changes will automatically build.  In order to get them to show in the app press `ctrl+r` or `cmd+r`._
+ - `yarn build` (will reload build on changes)
+   - _In order to get them to show in the app press `ctrl+r` or `cmd+r` once the app is started._
  - `yarn start`
+
+### Material UI
+
+https://www.youtube.com/watch?v=pHclLuRolzE
 
 ### Storybook
  - `yarn storybook` to start storybook
@@ -23,3 +27,15 @@ Reach out to the EthStaker community:
 
 ## License
 [GPL](LICENSE)
+
+
+
+
+
+
+
+
+
+https://blog.logrocket.com/the-definitive-guide-to-react-material-d730c8a3e8ba/
+https://www.youtube.com/watch?v=vyJU9efvUtQ&ab_channel=TraversyMedia
+https://www.figma.com/file/jcF78fVjndvM2hOPvifl0N/Wagyu-Key?node-id=0%3A1

@@ -28,7 +28,13 @@ module.exports = {
       }, {
         test: /node_modules\/JSONStream\/index\.js$/,
         loader: 'shebang-loader'
-      }
+      }, {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      }, {
+        test: /\.(woff|woff2|eot|ttf|svg)$/,
+        loader: 'file-loader',
+      },
     ],
   },
   resolve: {
@@ -43,4 +49,3 @@ module.exports = {
   ],
   target: 'electron-renderer'
 };
-

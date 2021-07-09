@@ -1,4 +1,4 @@
-import { Black, Button, ButtonHover } from "../colors";
+import { Black, ButtonColor, ButtonHover } from "../colors";
 
 import { Link } from "react-router-dom";
 import React from "react";
@@ -30,7 +30,7 @@ const StyledButton = styled(Link)`
   align-items: center;
   align-self:flex-end;
   height: 24;
-  background-color: ${Button};
+  background-color: ${ButtonColor};
   padding: 16 24;
   border-radius: 10%;
   text-decoration: none;

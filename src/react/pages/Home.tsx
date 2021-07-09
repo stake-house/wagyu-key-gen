@@ -1,20 +1,14 @@
-import {
-  Black,
-  Button,
-  ButtonHover,
-  Gray4,
-  Heading,
-  MainContent,
-  Yellow,
-} from "../colors";
-import { Link, withRouter } from "react-router-dom";
+import { Link, useHistory, withRouter } from "react-router-dom";
 import React, { useState } from "react";
 
 import { KeyIcon } from "../components/icons/KeyIcon";
 import { NetworkPicker } from "../components/NetworkPicker";
-import {network} from "../constants";
+import {network, tooltips} from "../constants";
 import { shell } from "electron";
 import styled from "styled-components";
+import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
+import { Button } from '@material-ui/core';
+
 
 type ContainerProps = {
   showNetworkPicker: boolean,
@@ -45,67 +39,53 @@ const ModalBackground = styled.div`
   }}
 `;
 
-const Container = styled.div`
+const StyledMuiContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
 `;
 
 const Network = styled.div`
-  color: ${Gray4};
   margin-top: 35px;
   margin-right: 35px;
   align-self: flex-end;
+  color: gray;
 `;
 
-const LandingHeader = styled.div`
+const LandingHeader = styled(Typography)`
   font-size: 36px;
   margin-top: 50px;
   margin-bottom: 70px;
-  text-align: center;
 `;
 
-const Content = styled.div`
-  color: ${MainContent};
-  margin-top: 90px;
+const SubHeader = styled(Typography)`
+  margin-top: 110px;
 `;
 
 const Links = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
 `;
 
-const StyledLink = styled.span`
+const StyledLink = styled(Typography)`
   cursor: pointer;
-  color: ${Yellow};
+  display: inline;
 `;
 
-const EnterButton = styled(Link)`
-  color: ${Black};
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+const OptionsGrid = styled(Grid)`
+  margin-top: 55px;
   align-items: center;
-  height: 60px;
-  width: 120px;
-  background-color: ${Yellow};
-  border-radius: 10px;
-  text-decoration: none;
-
-  transition: 250ms background-color ease;
-  cursor: pointer;
-  margin-top: 80px;
-
-  &:hover {
-    background-color: ${ButtonHover};
-  }
 `;
 
 const Home = () => {
 
-  const [networkSelected, setNetworkSelected] = useState(network.PRATER)
-  const [showNetworkPicker, setShowNetworkPicker] = useState(false)
+  const [networkSelected, setNetworkSelected] = useState(network.PRATER);
+  const [showNetworkModal, setShowNetworkModal] = useState(false);
+  const [networkModalWasOpened, setNetworkModalWasOpened] = useState(false);
+  const [createMnemonicSelected, setCreateMnemonicSelected] = useState(false);
+  const [useExistingMnemonicSelected, setUseExistingMnemonicSelected] = useState(false);
+
+  let history = useHistory();
 
   const sendToDocs = () => {
     shell.openExternal("https://github.com/stake-house/wagyu-key-gen");
@@ -119,24 +99,92 @@ const Home = () => {
     shell.openExternal("https://invite.gg/ethstaker");
   }
 
-  const toggleShowNetworkPicker = () => {
-    setShowNetworkPicker(!showNetworkPicker);
+  const handleOpenNetworkModal = () => {
+    setShowNetworkModal(true);
+    setNetworkModalWasOpened(true);
+  }
+
+  const handleCloseNetworkModal = () => {
+    setShowNetworkModal(false);
+
+    if (createMnemonicSelected) {
+      handleCreateNewMnemonic();
+    } else if (useExistingMnemonicSelected) {
+      handleUseExistingMnemonic();
+    }
+  }
+
+  const handleCreateNewMnemonic = () => {
+    setCreateMnemonicSelected(true);
+
+    if (!networkModalWasOpened) {
+      handleOpenNetworkModal();
+    } else {
+      const location = {
+        pathname: "/mnemonicgeneration",
+        state: {
+          network: networkSelected,
+        },
+      }
+  
+      history.push(location);
+    }
+  }
+
+  const handleUseExistingMnemonic = () => {
+    setUseExistingMnemonicSelected(true);
+
+    if (!networkModalWasOpened) {
+      handleOpenNetworkModal();
+    } else {
+      const location = {
+        pathname: "/mnemonicimport",
+        state: {
+          network: networkSelected,
+        },
+      }
+  
+      history.push(location);
+    }
   }
 
   return (
-    <Container>
-      <Network><StyledLink onClick={toggleShowNetworkPicker}>{networkSelected}</StyledLink></Network>
-      <LandingHeader>Welcome!</LandingHeader>
+    <StyledMuiContainer>
+      <Network><Button color="primary" onClick={handleOpenNetworkModal}>{networkSelected}</Button></Network>
+      <Modal
+        open={showNetworkModal}
+        onClose={handleCloseNetworkModal}
+      >
+        <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
+      </Modal>
+
+      <LandingHeader variant="h1">Welcome!</LandingHeader>
       <KeyIcon />
-      <Content>Your key generator for Ethereum 2.0</Content>
+      <SubHeader>Your key generator for Ethereum 2.0</SubHeader>
+
       <Links>
-        <StyledLink onClick={sendToDocs}>Docs</StyledLink> | <StyledLink onClick={sendToGithub}>Github</StyledLink> | <StyledLink onClick={sendToDiscord}>Discord</StyledLink>
+        <StyledLink display="inline" color="primary" onClick={sendToDocs}>Docs</StyledLink>
+        &nbsp;|&nbsp;
+        <StyledLink display="inline" color="primary" onClick={sendToGithub}>Github</StyledLink>
+        &nbsp;|&nbsp;
+        <StyledLink display="inline" color="primary" onClick={sendToDiscord}>Discord</StyledLink>
       </Links>
-      <EnterButton to="/mnemonic">Enter</EnterButton>
-      <ModalBackground showNetworkPicker={showNetworkPicker}>
-        <NetworkPicker setShowNetworkPicker={setShowNetworkPicker} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
-      </ModalBackground>
-    </Container>
+
+      <OptionsGrid container spacing={2} direction="column">
+        <Grid item>
+          <Button variant="contained" color="primary" onClick={handleCreateNewMnemonic}>
+            Create New Mnemonic
+          </Button>
+        </Grid>
+        <Grid item>
+          <Tooltip title={tooltips.IMPORT_MNEMONIC}>
+            <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic}>
+              Use Existing Mnemonic
+            </Button>
+          </Tooltip>
+        </Grid>
+      </OptionsGrid>
+    </StyledMuiContainer>
   );
 };
 export default withRouter(Home);

@@ -17,8 +17,13 @@ const which = (tool: string): boolean => {
   return result == 0;
 }
 
+const uname = (): string => {
+  return executeCommandSyncReturnStdout("uname").trim();
+}
+
 export {
   doesFileExist,
   readlink,
+  uname,
   which
 };

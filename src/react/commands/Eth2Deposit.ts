@@ -13,8 +13,6 @@ const REQUIREMENT_PACKAGES_PATH = "dist/packages";
 const CREATE_MNEMONIC_PATH = SCRIPTS_PATH + "/create_mnemonic.py";
 const GENERATE_KEYS_PATH =  SCRIPTS_PATH + "/generate_keys.py";
 
-const KEYS_FOLDER_PATH = "dist/keys";
-
 const requireDepositPackages = (): boolean => {
 
   if (!existsSync(REQUIREMENT_PACKAGES_PATH)) {
@@ -71,7 +69,8 @@ const generateKeys = (
     count: number,
     network: string,
     password: string,
-    eth1_withdrawal_address: string
+    eth1_withdrawal_address: string,
+    folder: string,
   ): boolean => {
   if(!requireDepositPackages()) {
     return false;
@@ -92,7 +91,7 @@ const generateKeys = (
   const escapedPassword = escapeArgument(password);
   const escapedMnemonic = escapeArgument(mnemonic);
 
-  const cmd = `python3 ${GENERATE_KEYS_PATH} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${KEYS_FOLDER_PATH} ${network} ${escapedPassword}`;
+  const cmd = `python3 ${GENERATE_KEYS_PATH} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network} ${escapedPassword}`;
   
   try {
     execSync(cmd, {env: env});

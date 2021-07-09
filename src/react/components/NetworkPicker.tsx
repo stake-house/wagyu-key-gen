@@ -45,7 +45,7 @@ const Submit = styled.div`
 
 
 type NetworkPickerProps = {
-  setShowNetworkPicker: Dispatch<SetStateAction<boolean>>,
+  handleCloseNetworkModal: () => void,
   setNetworkSelected: Dispatch<SetStateAction<string>>,
   networkSelected: string,
 }
@@ -53,7 +53,7 @@ type NetworkPickerProps = {
 export const NetworkPicker = (props: NetworkPickerProps) => {
 
   const closePicker = () => {
-    props.setShowNetworkPicker(false);
+    props.handleCloseNetworkModal();
   }
 
   const networkChanged = (selected: React.ChangeEvent<HTMLInputElement>) => {

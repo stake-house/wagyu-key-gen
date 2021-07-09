@@ -10,7 +10,9 @@ module.exports = {
     path: path.resolve(__dirname, 'dist/electron')
   },
   module: {
-    rules: [{ test: /\.tsx?$/, loader: 'ts-loader' }]
+    rules: [
+      { test: /\.tsx?$/, loader: 'ts-loader' }
+    ]
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
