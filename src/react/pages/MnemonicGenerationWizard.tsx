@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction } from 'react';
 import { useHistory, withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
@@ -19,15 +19,16 @@ const ContentGrid = styled(Grid)`
   height: 450px;
 `;
 
-type IncomingState = {
+type Props = {
   network: string,
+  mnemonic: string,
+  setMnemonic: Dispatch<SetStateAction<string>>
 }
 
-type Props = RouteComponentProps<{}, any, IncomingState>;
+type RouteProps = RouteComponentProps<{}, any, {}>;
 
-const MnemonicGenerationWizard = (props: Props) => {
+const MnemonicGenerationWizard = (props: Props & RouteProps) => {
   const [step, setStep] = useState(0);
-  const [mnemonic, setMnemonic] = useState("");
   const [verifyMnemonic, setVerifyMnemonic] = useState("");
   const [mnemonicValidationError, setMnemonicValidationError] = useState(false);
 
@@ -53,7 +54,7 @@ const MnemonicGenerationWizard = (props: Props) => {
         break;
       }
       case 1: {
-        setMnemonic("");
+        props.setMnemonic("");
         setStep(step - 1);
         break;
       }
@@ -111,7 +112,7 @@ const MnemonicGenerationWizard = (props: Props) => {
 
       // VerifyMnemonic
       case 3: {
-        if (mnemonic.localeCompare(verifyMnemonic) == 0) {
+        if (props.mnemonic.localeCompare(verifyMnemonic) == 0) {
           setMnemonicValidationError(false);
           toKeyGenerationWizard();
         } else {
@@ -134,10 +135,9 @@ const MnemonicGenerationWizard = (props: Props) => {
 
   const toKeyGenerationWizard = () => {
     const location = {
-      pathname: '/keygeneration',
+      pathname: '/wizard/keygeneration',
       state: {
-        network: props.location.state.network,
-        mnemonic: mnemonic,
+        network: props.network,
         index: 0,
       }
     }
@@ -147,9 +147,9 @@ const MnemonicGenerationWizard = (props: Props) => {
 
   const uiCreateMnemonic = () => {
     if (uname() == "Linux") {
-      setMnemonic(createMnemonic('english'));
+      props.setMnemonic(createMnemonic('english'));
     } else {
-      setMnemonic("one two three four five six seven eight nine ten eleven twelve one two three four five six seven eight nine ten eleven twelve");
+      props.setMnemonic("one two three four five six seven eight nine ten eleven twelve one two three four five six seven eight nine ten eleven twelve");
     }
   }
 
@@ -160,7 +160,7 @@ const MnemonicGenerationWizard = (props: Props) => {
         <Grid item xs={10}/>
         <Grid item xs={2}>
           <Typography variant="caption" style={{color: "gray"}}>
-            Network: {props.location.state.network}
+            Network: {props.network}
           </Typography>
         </Grid>
       </Grid>
@@ -173,8 +173,8 @@ const MnemonicGenerationWizard = (props: Props) => {
       </Grid>
       <ContentGrid item container>
         <Grid item xs={12}>
-          <GenerateMnemonic step={step} setMnemonic={setMnemonic} />
-          <ShowMnemonic step={step} mnemonic={mnemonic} />
+          <GenerateMnemonic step={step} />
+          <ShowMnemonic step={step} mnemonic={props.mnemonic} />
           <VerifyMnemonic step={step} setVerifyMnemonic={setVerifyMnemonic} error={mnemonicValidationError} />
         </Grid>
       </ContentGrid>

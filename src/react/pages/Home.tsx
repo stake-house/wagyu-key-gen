@@ -121,7 +121,7 @@ const Home = () => {
       handleOpenNetworkModal();
     } else {
       const location = {
-        pathname: "/mnemonicgeneration",
+        pathname: "/wizard/mnemonicgeneration",
         state: {
           network: networkSelected,
         },
@@ -138,7 +138,7 @@ const Home = () => {
       handleOpenNetworkModal();
     } else {
       const location = {
-        pathname: "/mnemonicimport",
+        pathname: "/wizard/mnemonicimport",
         state: {
           network: networkSelected,
         },

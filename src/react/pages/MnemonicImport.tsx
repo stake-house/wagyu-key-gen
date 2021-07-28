@@ -1,5 +1,5 @@
 import { Button, Grid, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import { RouteComponentProps, useHistory, withRouter } from "react-router-dom";
 import styled from "styled-components";
 import { errors, MNEMONIC_LENGTH } from "../constants";
@@ -14,20 +14,21 @@ const ContentGrid = styled(Grid)`
   height: 450px;
 `;
 
-type IncomingState = {
+type Props = {
   network: string,
+  mnemonic: string,
+  setMnemonic: Dispatch<SetStateAction<string>>
 }
 
-type Props = RouteComponentProps<{}, any, IncomingState>;
+type RouteProps = RouteComponentProps<{}, any, {}>;
 
-const MnemonicImport = (props: Props) => {
-  const [mnemonic, setMnemonic] = useState("");
+const MnemonicImport = (props: Props & RouteProps) => {
   const [mnemonicError, setMnemonicError] = useState(false);
 
   let history = useHistory();
 
   const updateInputMnemonic = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMnemonic(e.target.value);
+    props.setMnemonic(e.target.value);
   }
 
   const toHome = () => {
@@ -35,7 +36,7 @@ const MnemonicImport = (props: Props) => {
   }
 
   const toKeyGenerationWizard = () => {
-    const mnemonicArray = mnemonic.split(" ");
+    const mnemonicArray = props.mnemonic.split(" ");
 
     if (mnemonicArray.length != MNEMONIC_LENGTH) {
       setMnemonicError(true);
@@ -43,10 +44,9 @@ const MnemonicImport = (props: Props) => {
       setMnemonicError(false);
 
       const location = {
-        pathname: '/keygeneration',
+        pathname: '/wizard/keygeneration',
         state: {
-          network: props.location.state.network,
-          mnemonic: mnemonic,
+          network: props.network,
           index: null,
         }
       }
@@ -61,7 +61,7 @@ const MnemonicImport = (props: Props) => {
         <Grid item xs={10}/>
         <Grid item xs={2}>
           <Typography variant="caption" style={{color: "gray"}}>
-            Network: {props.location.state.network}
+            Network: {props.network}
           </Typography>
         </Grid>
       </Grid>

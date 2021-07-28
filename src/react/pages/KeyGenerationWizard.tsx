@@ -23,15 +23,18 @@ const ContentGrid = styled(Grid)`
   height: 450px;
 `;
 
-type IncomingState = {
+type Props = {
   network: string,
-  mnemonic: string,
+  mnemonic: string
+}
+
+type IncomingState = {
   index: number | null,
 }
 
-type Props = RouteComponentProps<{}, any, IncomingState>;
+type RouteProps = RouteComponentProps<{}, any, IncomingState>;
 
-const KeyGenerationWizard = (props: Props) => {
+const KeyGenerationWizard = (props: Props & RouteProps) => {
   const [step, setStep] = useState(0);
   const [index, setIndex] = useState(props.location.state.index);
   const [numberOfKeys, setNumberOfKeys] = useState(0);
@@ -213,7 +216,7 @@ const KeyGenerationWizard = (props: Props) => {
     if (os == "Linux") {
       console.log("On linux, generating keys.");
       
-      generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.location.state.network.toLowerCase(), password, "", folderPath);
+      generateKeys(props.mnemonic, index!, numberOfKeys, props.network.toLowerCase(), password, "", folderPath);
 
     } else {
       console.log("Pretended to generate keys since not on linux.");
@@ -230,7 +233,7 @@ const KeyGenerationWizard = (props: Props) => {
         <Grid item xs={10}/>
         <Grid item xs={2}>
           <Typography variant="caption" style={{color: "gray"}}>
-            Network: {props.location.state.network}
+            Network: {props.network}
           </Typography>
         </Grid>
       </Grid>
