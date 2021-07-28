@@ -24,11 +24,11 @@ const ContentGrid = styled(Grid)`
 `;
 
 type Props = {
-  network: string
+  network: string,
+  mnemonic: string
 }
 
 type IncomingState = {
-  mnemonic: string,
   index: number | null,
 }
 
@@ -216,7 +216,7 @@ const KeyGenerationWizard = (props: Props & RouteProps) => {
     if (os == "Linux") {
       console.log("On linux, generating keys.");
       
-      generateKeys(props.location.state.mnemonic, index!, numberOfKeys, props.network.toLowerCase(), password, "", folderPath);
+      generateKeys(props.mnemonic, index!, numberOfKeys, props.network.toLowerCase(), password, "", folderPath);
 
     } else {
       console.log("Pretended to generate keys since not on linux.");

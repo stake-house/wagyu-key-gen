@@ -1,5 +1,5 @@
 import { Button, Grid, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import { RouteComponentProps, useHistory, withRouter } from "react-router-dom";
 import styled from "styled-components";
 import { errors, MNEMONIC_LENGTH } from "../constants";
@@ -15,19 +15,20 @@ const ContentGrid = styled(Grid)`
 `;
 
 type Props = {
-  network: string
+  network: string,
+  mnemonic: string,
+  setMnemonic: Dispatch<SetStateAction<string>>
 }
 
 type RouteProps = RouteComponentProps<{}, any, {}>;
 
 const MnemonicImport = (props: Props & RouteProps) => {
-  const [mnemonic, setMnemonic] = useState("");
   const [mnemonicError, setMnemonicError] = useState(false);
 
   let history = useHistory();
 
   const updateInputMnemonic = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMnemonic(e.target.value);
+    props.setMnemonic(e.target.value);
   }
 
   const toHome = () => {
@@ -35,7 +36,7 @@ const MnemonicImport = (props: Props & RouteProps) => {
   }
 
   const toKeyGenerationWizard = () => {
-    const mnemonicArray = mnemonic.split(" ");
+    const mnemonicArray = props.mnemonic.split(" ");
 
     if (mnemonicArray.length != MNEMONIC_LENGTH) {
       setMnemonicError(true);
@@ -45,7 +46,6 @@ const MnemonicImport = (props: Props & RouteProps) => {
       const location = {
         pathname: '/wizard/keygeneration',
         state: {
-          mnemonic: mnemonic,
           index: null,
         }
       }

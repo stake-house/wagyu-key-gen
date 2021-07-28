@@ -2,8 +2,7 @@ import { Grid, Typography } from '@material-ui/core';
 import React, { Dispatch, SetStateAction } from 'react';
 
 type GenerateMnemonicProps = {
-  step: number,
-  setMnemonic: Dispatch<SetStateAction<string>>,
+  step: number
 }
 
 const GenerateMnemonic = (props: GenerateMnemonicProps) => {

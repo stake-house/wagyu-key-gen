@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, useRouteMatch, RouteComponentProps } from "react-router-dom";
 import MnemonicGenerationWizard from "./MnemonicGenerationWizard";
 import MnemonicImport from "./MnemonicImport";
@@ -12,6 +12,7 @@ type Props = RouteComponentProps<{}, any, IncomingState>;
 
 function Wizard (props: Props) {
   let { path } = useRouteMatch();
+  const [mnemonic, setMnemonic] = useState("");
   const { network } = props.location.state;
 
   return (
@@ -19,17 +20,17 @@ function Wizard (props: Props) {
       <Route
         exact
         path={`${path}/mnemonicgeneration`}
-        render={routeProps => <MnemonicGenerationWizard {...routeProps} network={network} />} 
+        render={routeProps => <MnemonicGenerationWizard {...{ ...routeProps, network, mnemonic, setMnemonic }} />} 
       />
       <Route
         exact
         path={`${path}/mnemonicimport`}
-        render={routeProps => <MnemonicImport {...routeProps} network={network} />}
+        render={routeProps => <MnemonicImport {...{ ...routeProps, network, mnemonic, setMnemonic }} />}
       />
       <Route
         exact
         path={`${path}/keygeneration`}
-        render={routeProps => <KeyGenerationWizard {...routeProps} network={network} />}
+        render={routeProps => <KeyGenerationWizard {...{ ...routeProps, network, mnemonic }} />}
       />
     </Switch>
   );
