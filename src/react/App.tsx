@@ -3,9 +3,7 @@ import { HashRouter, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import React from "react";
 import styled from "styled-components";
-import MnemonicGenerationWizard from "./pages/MnemonicGenerationWizard";
-import MnemonicImport from "./pages/MnemonicImport";
-import KeyGenerationWizard from "./pages/KeyGenerationWizard";
+import Wizard from "./pages/Wizard";
 import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import theme from "./theme";
 import 'typeface-roboto';
@@ -25,9 +23,7 @@ const App = () => {
         <Container>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/mnemonicgeneration" component={MnemonicGenerationWizard} />
-            <Route exact path="/mnemonicimport" component={MnemonicImport} />
-            <Route exact path="/keygeneration" component={KeyGenerationWizard} />
+            <Route path="/wizard" component={Wizard} />
           </Switch>
         </Container>
       </HashRouter>

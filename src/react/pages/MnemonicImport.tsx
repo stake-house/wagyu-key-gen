@@ -14,13 +14,13 @@ const ContentGrid = styled(Grid)`
   height: 450px;
 `;
 
-type IncomingState = {
-  network: string,
+type Props = {
+  network: string
 }
 
-type Props = RouteComponentProps<{}, any, IncomingState>;
+type RouteProps = RouteComponentProps<{}, any, {}>;
 
-const MnemonicImport = (props: Props) => {
+const MnemonicImport = (props: Props & RouteProps) => {
   const [mnemonic, setMnemonic] = useState("");
   const [mnemonicError, setMnemonicError] = useState(false);
 
@@ -43,9 +43,8 @@ const MnemonicImport = (props: Props) => {
       setMnemonicError(false);
 
       const location = {
-        pathname: '/keygeneration',
+        pathname: '/wizard/keygeneration',
         state: {
-          network: props.location.state.network,
           mnemonic: mnemonic,
           index: null,
         }
@@ -61,7 +60,7 @@ const MnemonicImport = (props: Props) => {
         <Grid item xs={10}/>
         <Grid item xs={2}>
           <Typography variant="caption" style={{color: "gray"}}>
-            Network: {props.location.state.network}
+            Network: {props.network}
           </Typography>
         </Grid>
       </Grid>
