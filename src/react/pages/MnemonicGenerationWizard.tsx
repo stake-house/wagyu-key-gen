@@ -137,6 +137,7 @@ const MnemonicGenerationWizard = (props: Props & RouteProps) => {
     const location = {
       pathname: '/wizard/keygeneration',
       state: {
+        network: props.network,
         index: 0,
       }
     }

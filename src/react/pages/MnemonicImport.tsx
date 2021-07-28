@@ -46,6 +46,7 @@ const MnemonicImport = (props: Props & RouteProps) => {
       const location = {
         pathname: '/wizard/keygeneration',
         state: {
+          network: props.network,
           index: null,
         }
       }
