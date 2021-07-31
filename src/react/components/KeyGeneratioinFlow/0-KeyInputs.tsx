@@ -1,9 +1,8 @@
 import { Grid, TextField, Tooltip, Typography } from '@material-ui/core';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { errors, tooltips } from '../../constants';
 
 type GenerateKeysProps = {
-  step: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
   index: number | null,
   setIndex: Dispatch<SetStateAction<number | null>>,
@@ -14,7 +13,7 @@ type GenerateKeysProps = {
 }
 
 const KeyInputs = (props: GenerateKeysProps) => {
-  const [indexPassedIn, setIndexPassedIn] = useState(props.index != null);
+  const indexPassedIn = props.index != null
 
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
@@ -30,65 +29,61 @@ const KeyInputs = (props: GenerateKeysProps) => {
     props.setPassword(e.target.value);
   }
 
-  if (props.step == 0) {
-    return (
-      <Grid container direction="column" spacing={3}>
+  return (
+    <Grid container direction="column" spacing={3}>
+      <Grid item xs={12}>
+        <Typography variant="body1">
+          Nice!  Your mnemonic is verified.  Now lets collect some info about the keys to generate:
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Tooltip title={tooltips.NUMBER_OF_KEYS}>
+          <TextField
+              id="number-of-keys"
+              label="Number of New Keys"
+              variant="outlined"
+              type="number"
+              onChange={updateNumberOfKeys}
+              InputProps={{ inputProps: { min: 1 } }}
+              error={props.numberOfKeysError}
+              helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
+              style = {{width: 300}}
+            />
+        </Tooltip>
+      </Grid>
+      { !indexPassedIn &&
         <Grid item xs={12}>
-          <Typography variant="body1">
-            Nice!  Your mnemonic is verified.  Now lets collect some info about the keys to generate:
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Tooltip title={tooltips.NUMBER_OF_KEYS}>
+          <Tooltip title={tooltips.STARTING_INDEX}>
             <TextField
-                id="number-of-keys"
-                label="Number of New Keys"
+                id="index"
+                label="Amount of Existing (starting index)"
                 variant="outlined"
                 type="number"
-                onChange={updateNumberOfKeys}
-                InputProps={{ inputProps: { min: 1 } }}
-                error={props.numberOfKeysError}
-                helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
+                onChange={updateIndex}
+                InputProps={{ inputProps: { min: 0 } }}
+                error={props.startingIndexError}
+                helperText={props.startingIndexError ? errors.STARTING_INDEX : ""}
                 style = {{width: 300}}
               />
           </Tooltip>
         </Grid>
-        { !indexPassedIn &&
-          <Grid item xs={12}>
-            <Tooltip title={tooltips.STARTING_INDEX}>
-              <TextField
-                  id="index"
-                  label="Amount of Existing (starting index)"
-                  variant="outlined"
-                  type="number"
-                  onChange={updateIndex}
-                  InputProps={{ inputProps: { min: 0 } }}
-                  error={props.startingIndexError}
-                  helperText={props.startingIndexError ? errors.STARTING_INDEX : ""}
-                  style = {{width: 300}}
-                />
-            </Tooltip>
-          </Grid>
-        }
-        <Grid item xs={12}>
-          <Tooltip title={tooltips.PASSWORD}>
-            <TextField
-                id="password"
-                label="Password"
-                type="password"
-                variant="outlined"
-                onChange={updatePassword}
-                error={props.passwordStrengthError}
-                helperText={props.passwordStrengthError ? errors.PASSWORD_STRENGTH : ""}
-                style = {{width: 300}}
-              />
-          </Tooltip>
-        </Grid>
+      }
+      <Grid item xs={12}>
+        <Tooltip title={tooltips.PASSWORD}>
+          <TextField
+              id="password"
+              label="Password"
+              type="password"
+              variant="outlined"
+              onChange={updatePassword}
+              error={props.passwordStrengthError}
+              helperText={props.passwordStrengthError ? errors.PASSWORD_STRENGTH : ""}
+              style = {{width: 300}}
+            />
+        </Tooltip>
       </Grid>
-    );
-  }
-
-  return (null);
+    </Grid>
+  );
 }
 
 export default KeyInputs;

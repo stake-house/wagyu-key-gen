@@ -4,7 +4,7 @@ import { clipboard } from 'electron';
 import React from 'react';
 
 type ShowMnemonicProps = {
-  step: number,
+  showCopyWarning: boolean,
   mnemonic: string,
 }
 
@@ -14,45 +14,41 @@ const ShowMnemonic = (props: ShowMnemonicProps) => {
     clipboard.writeText(props.mnemonic);
   }
 
-  if (props.step == 1 || props.step == 2) {
-    return (
-      <Grid container direction="column" spacing={3}>
-        <Grid item xs={12}>
-          Below is your mnemonic.  Make sure you back it up - without it you will not be able to retrieve your funds.
-        </Grid>
-        <Grid item container xs={12}>
-          <Grid item xs={1} />
-          <Grid item xs={10}>
-            <TextField
-              id="mnemonic-display"
-              value={props.mnemonic}
-              multiline
-              fullWidth
-              rows={4}
-              variant="outlined"
-              color="primary"
-              disabled />
-          </Grid>
-          <Grid item xs={1} style={{alignSelf: "center"}}>
-            <Tooltip title="Copy">
-              <IconButton aria-label="copy" color="primary" onClick={copyMnemonic}>
-                <FileCopy />
-              </IconButton>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        { props.step == 2 &&
-          <Grid item xs={12}>
-            <Typography color="error">
-              Make sure you have copied your mnemonic down *offline*, you will be prompted for it next.
-            </Typography>
-          </Grid>
-        }
+  return (
+    <Grid container direction="column" spacing={3}>
+      <Grid item xs={12}>
+        Below is your mnemonic.  Make sure you back it up - without it you will not be able to retrieve your funds.
       </Grid>
-    );
-  }
-
-  return (null);
+      <Grid item container xs={12}>
+        <Grid item xs={1} />
+        <Grid item xs={10}>
+          <TextField
+            id="mnemonic-display"
+            value={props.mnemonic}
+            multiline
+            fullWidth
+            rows={4}
+            variant="outlined"
+            color="primary"
+            disabled />
+        </Grid>
+        <Grid item xs={1} style={{alignSelf: "center"}}>
+          <Tooltip title="Copy">
+            <IconButton aria-label="copy" color="primary" onClick={copyMnemonic}>
+              <FileCopy />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      </Grid>
+      { props.showCopyWarning &&
+        <Grid item xs={12}>
+          <Typography color="error">
+            Make sure you have copied your mnemonic down *offline*, you will be prompted for it next.
+          </Typography>
+        </Grid>
+      }
+    </Grid>
+  );
 }
 
 export default ShowMnemonic;

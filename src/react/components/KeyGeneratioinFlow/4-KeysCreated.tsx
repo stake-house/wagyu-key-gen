@@ -1,25 +1,19 @@
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
 `;
 
 type KeysCreatedProps = {
-  step: number,
   folderPath: string,
 }
 
-const KeysCreated = (props: KeysCreatedProps) => {
-
-  if (props.step == 4) {
-    return (
-      <Container>
-        Your keys have been created.  They can be found in the directory '{props.folderPath}'
-      </Container>
-    );
-  }
-
-  return (null);
+const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
+  return (
+    <Container>
+      Your keys have been created.  They can be found in the directory '{props.folderPath}'
+    </Container>
+  );
 }
 
 export default KeysCreated;

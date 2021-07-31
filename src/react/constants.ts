@@ -1,3 +1,5 @@
+import { StepKey } from './types';
+
 export const network = {
 	PYRMONT: "Pyrmont",
 	PRATER: "Prater",
@@ -21,4 +23,12 @@ export const tooltips = {
 	NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to generate.",
 	PASSWORD: "Pick a strong password (at least 8 characters) that will be used to protect your keys.",
 	STARTING_INDEX: "Each key is generated from sequentially, so we need to know how many you've generated in the past so we can create some new ones for you.",
-}
+};
+
+export const stepLabels = {
+	[StepKey.mnemonicImport]: 'Import Mnemonic',
+	[StepKey.mnemonicGeneration]: 'Create Mnemonic',
+	[StepKey.keyConfiguration]: 'Configure Keys',
+	[StepKey.keyGeneration]: 'Create Key Files',
+	[StepKey.finish]: 'Finish'
+};

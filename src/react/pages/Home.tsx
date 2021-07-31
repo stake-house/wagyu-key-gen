@@ -9,7 +9,6 @@ import styled from "styled-components";
 import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';
 
-
 type ContainerProps = {
   showNetworkPicker: boolean,
 }
