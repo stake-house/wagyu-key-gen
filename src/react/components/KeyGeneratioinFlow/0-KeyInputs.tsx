@@ -35,7 +35,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
       <Grid container direction="column" spacing={3}>
         <Grid item xs={12}>
           <Typography variant="body1">
-            Nice!  Your mnemonic is verified.  Now lets collect some info about the keys to generate:
+            Nice!  Your Secret Recovery Phrase has been verified. Now lets collect some info about the keys to generate:
           </Typography>
         </Grid>
         <Grid item xs={12}>

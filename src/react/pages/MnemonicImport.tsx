@@ -50,7 +50,7 @@ const MnemonicImport = (props: Props & RouteProps) => {
           index: null,
         }
       }
-  
+
       history.push(location);
     }
   }
@@ -68,7 +68,7 @@ const MnemonicImport = (props: Props & RouteProps) => {
       <Grid item container>
         <Grid item xs={12}>
           <Typography variant="h1">
-            Import Mnemonic
+            Import Secret Recovery Phrase
           </Typography>
         </Grid>
       </Grid>
@@ -77,7 +77,7 @@ const MnemonicImport = (props: Props & RouteProps) => {
         <Grid item xs={10}>
           <TextField
             id="mnemonic-input"
-            label="Type your mnemonic here"
+            label="Type your Secret Recovery Phrase here"
             multiline
             fullWidth
             rows={4}
