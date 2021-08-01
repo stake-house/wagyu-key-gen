@@ -1,5 +1,5 @@
 import { Grid, TextField, Tooltip, Typography } from '@material-ui/core';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { errors, tooltips } from '../../constants';
 
 type GenerateKeysProps = {
@@ -13,7 +13,7 @@ type GenerateKeysProps = {
 }
 
 const KeyInputs = (props: GenerateKeysProps) => {
-  const indexPassedIn = props.index != null
+  const [indexPassedIn] = useState(props.index != null);
 
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);

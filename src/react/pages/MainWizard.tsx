@@ -19,7 +19,7 @@ type RouteParams = {
   stepSequenceKey: string;
 };
 
-type Props = RouteComponentProps<{}, any, IncomingState>;
+type Props = RouteComponentProps<RouteParams, any, IncomingState>;
 
 const stepSequenceMap: Record<string, StepKey[]> = {
   mnemonicimport: [
@@ -41,6 +41,10 @@ const MainGrid = styled(Grid)`
   margin: 0px;
   text-align: center;
 `;
+
+const StyledStepper = styled(Stepper)`
+  background-color: transparent;
+`
 
 const Wizard: FC<Props> = (props): ReactElement => {
   const { stepSequenceKey } = useParams<RouteParams>();
@@ -76,13 +80,13 @@ const Wizard: FC<Props> = (props): ReactElement => {
   }
 
   const stepper = (
-    <Stepper activeStep={activeStepIndex} alternativeLabel>
+    <StyledStepper activeStep={activeStepIndex} alternativeLabel>
       {stepSequence.map((stepKey: StepKey) => (
         <Step key={stepKey}>
           <StepLabel>{stepLabels[stepKey]}</StepLabel>
         </Step>
       ))}
-    </Stepper>
+    </StyledStepper>
   );
 
   const commonProps = {
@@ -145,8 +149,7 @@ const Wizard: FC<Props> = (props): ReactElement => {
         <Grid item xs={10}/>
         <Grid item xs={2}>
           <Typography variant="caption" style={{color: "gray"}}>
-            Network: Pyrmont
-            {/* Network: Pyrmont {props.location.state.network} */}
+            Network: {props.location.state.network}
           </Typography>
         </Grid>
       </Grid>

@@ -1,10 +1,7 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement } from 'react';
 
-type GenerateMnemonicProps = {
-}
-
-const GenerateMnemonic: FC<GenerateMnemonicProps> = (props): ReactElement => {
+const GenerateMnemonic: FC<{}> = (): ReactElement => {
   return (
     <Grid container>
       <Grid item xs={1} />

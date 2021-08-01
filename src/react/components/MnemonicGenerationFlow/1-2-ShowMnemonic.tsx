@@ -1,14 +1,14 @@
 import { Tooltip, IconButton, Grid, TextField, Typography } from '@material-ui/core';
 import { FileCopy } from '@material-ui/icons';
 import { clipboard } from 'electron';
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 
 type ShowMnemonicProps = {
   showCopyWarning: boolean,
   mnemonic: string,
 }
 
-const ShowMnemonic = (props: ShowMnemonicProps) => {
+const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
 
   const copyMnemonic = () => {
     clipboard.writeText(props.mnemonic);

@@ -64,6 +64,7 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
       <StepNavigation
         onStepBack={props.onStepBack}
         onStepForward={onImport}
+        backLabel="Back"
         forwardLabel="Import"
         disableForward={disableImport}
       />
