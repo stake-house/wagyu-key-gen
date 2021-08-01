@@ -158,12 +158,13 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
           {content()}
         </Grid>
       </ContentGrid>
+      {/* props.children is the stepper */}
       {props.children}
       <StepNavigation
-        onStepBack={prevClicked}
-        onStepForward={nextClicked}
+        onPrev={prevClicked}
+        onNext={nextClicked}
         backLabel={prevLabel()}
-        forwardLabel={nextLabel()}
+        nextLabel={nextLabel()}
       />
     </Grid>
   );

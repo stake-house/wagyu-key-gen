@@ -155,13 +155,13 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       </ContentGrid>
       {props.children}
       <StepNavigation
-        onStepBack={prevClicked}
-        onStepForward={nextClicked}
+        onPrev={prevClicked}
+        onNext={nextClicked}
         backLabel={prevLabel()}
-        forwardLabel={nextLabel()}
-        disableForward={!props.folderPath}
+        nextLabel={nextLabel()}
+        disableNext={!props.folderPath}
         hideBack={step === 1}
-        hideForward={step === 1}
+        hideNext={step === 1}
       />
     </Grid>
   );

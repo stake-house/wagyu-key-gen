@@ -60,13 +60,14 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
             onChange={updateInputMnemonic} />
         </Grid>
       </ContentGrid>
+      {/* props.children is the stepper */}
       {props.children}
       <StepNavigation
-        onStepBack={props.onStepBack}
-        onStepForward={onImport}
+        onPrev={props.onStepBack}
+        onNext={onImport}
         backLabel="Back"
-        forwardLabel="Import"
-        disableForward={disableImport}
+        nextLabel="Import"
+        disableNext={disableImport}
       />
     </Grid>
   )

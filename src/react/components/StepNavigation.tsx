@@ -2,14 +2,14 @@ import React, { FC, ReactElement } from "react";
 import { Grid, Button } from "@material-ui/core";
 
 type Props = {
-  onStepBack: () => void,
-  onStepForward: () => void,
+  onPrev: () => void,
+  onNext: () => void,
   disableBack?: boolean,
-  disableForward?: boolean,
+  disableNext?: boolean,
   hideBack?: boolean,
-  hideForward?: boolean,
+  hideNext?: boolean,
   backLabel?: string,
-  forwardLabel?: string,
+  nextLabel?: string,
 }
 
 const StepNavigation: FC<Props> = (props): ReactElement => {
@@ -17,13 +17,13 @@ const StepNavigation: FC<Props> = (props): ReactElement => {
     <Grid item container>
       <Grid item xs={2} text-align="center">
         {!props.hideBack && (
-          <Button variant="contained" color="primary" disabled={props.disableBack} onClick={props.onStepBack}>{props.backLabel}</Button>
+          <Button variant="contained" color="primary" disabled={props.disableBack} onClick={props.onPrev}>{props.backLabel}</Button>
         )}
       </Grid>
       <Grid item xs={8} />
       <Grid item xs={2} text-align="center">
-        {!props.hideForward && (
-          <Button variant="contained" color="primary" disabled={props.disableForward} onClick={props.onStepForward}>{props.forwardLabel}</Button>
+        {!props.hideNext && (
+          <Button variant="contained" color="primary" disabled={props.disableNext} onClick={props.onNext}>{props.nextLabel}</Button>
         )}
       </Grid>
     </Grid>

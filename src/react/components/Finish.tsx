@@ -32,10 +32,10 @@ const Finish: FC<Props> = (props): ReactElement => {
       </ContentGrid>
       {props.children}
       <StepNavigation
-        onStepBack={props.onStepBack}
-        onStepForward={props.onStepForward}
+        onPrev={props.onStepBack}
+        onNext={props.onStepForward}
         backLabel="Back"
-        forwardLabel="Finish"
+        nextLabel="Finish"
       />
     </Grid>
   );

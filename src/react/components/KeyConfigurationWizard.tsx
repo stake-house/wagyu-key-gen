@@ -162,10 +162,10 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
       </ContentGrid>
       {props.children}
       <StepNavigation
-        onStepBack={prevClicked}
-        onStepForward={nextClicked}
+        onPrev={prevClicked}
+        onNext={nextClicked}
         backLabel={prevLabel()}
-        forwardLabel={nextLabel()}
+        nextLabel={nextLabel()}
       />
     </Grid>
   );
