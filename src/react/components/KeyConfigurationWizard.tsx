@@ -48,9 +48,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
       }
       case 1: {
         setPasswordVerifyError(false);
-        props.setNumberOfKeys(0);
         props.setPassword("");
-        // prosp.setKeyGenerationStartIndex(props.location.state.index);
         setVerifyPassword("");
         setStep(step - 1);
         break;
