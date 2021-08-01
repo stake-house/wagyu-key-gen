@@ -55,7 +55,7 @@ const Wizard: FC<Props> = (props): ReactElement => {
   const [mnemonic, setMnemonic] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [keyGenerationStartIndex, setKeyGenerationStartIndex] = useState(initialKeyGenerationStartIndex);
-  const [numberOfKeys, setNumberOfKeys] = useState(0);
+  const [numberOfKeys, setNumberOfKeys] = useState(1);
   const [password, setPassword] = useState("");
   const [folderPath, setFolderPath] = useState("");
 

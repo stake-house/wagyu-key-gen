@@ -127,9 +127,11 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
     switch(step) {
       case 0: return (
         <KeyInputs
+          numberOfKeys={props.numberOfKeys}
           setNumberOfKeys={props.setNumberOfKeys}
           index={props.keyGenerationStartIndex}
           setIndex={props.setKeyGenerationStartIndex}
+          password={props.password}
           setPassword={props.setPassword}
           numberOfKeysError={numberOfKeysError}
           passwordStrengthError={passwordStrengthError}

@@ -3,9 +3,11 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { errors, tooltips } from '../../constants';
 
 type GenerateKeysProps = {
+  numberOfKeys: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
   index: number | null,
   setIndex: Dispatch<SetStateAction<number | null>>,
+  password: string,
   setPassword: Dispatch<SetStateAction<string>>,
   numberOfKeysError: boolean,
   passwordStrengthError: boolean,
@@ -43,6 +45,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
               label="Number of New Keys"
               variant="outlined"
               type="number"
+              value={props.numberOfKeys}
               onChange={updateNumberOfKeys}
               InputProps={{ inputProps: { min: 1 } }}
               error={props.numberOfKeysError}
@@ -75,6 +78,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
               label="Password"
               type="password"
               variant="outlined"
+              value={props.password}
               onChange={updatePassword}
               error={props.passwordStrengthError}
               helperText={props.passwordStrengthError ? errors.PASSWORD_STRENGTH : ""}
