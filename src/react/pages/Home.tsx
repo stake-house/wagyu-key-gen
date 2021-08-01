@@ -1,13 +1,12 @@
-import { Link, useHistory, withRouter } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import React, { useState } from "react";
-
-import { KeyIcon } from "../components/icons/KeyIcon";
-import { NetworkPicker } from "../components/NetworkPicker";
-import {network, tooltips} from "../constants";
 import { shell } from "electron";
 import styled from "styled-components";
 import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';
+import { KeyIcon } from "../components/icons/KeyIcon";
+import { NetworkPicker } from "../components/NetworkPicker";
+import {network, tooltips} from "../constants";
 
 type ContainerProps = {
   showNetworkPicker: boolean,
