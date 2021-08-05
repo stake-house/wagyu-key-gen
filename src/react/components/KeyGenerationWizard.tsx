@@ -10,7 +10,7 @@ import StepNavigation from './StepNavigation';
 import { Network } from '../types';
 
 const ContentGrid = styled(Grid)`
-  height: 325px;
+  height: 320px;
   margin-top: 16px;
 `;
 

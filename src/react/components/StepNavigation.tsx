@@ -1,5 +1,6 @@
 import React, { FC, ReactElement } from "react";
 import { Grid, Button } from "@material-ui/core";
+import styled from 'styled-components';
 
 type Props = {
   onPrev: () => void,
@@ -14,17 +15,20 @@ type Props = {
 
 const StepNavigation: FC<Props> = (props): ReactElement => {
   return (
-    <Grid item container justifyContent="space-around">
-      <Grid item>
+    <Grid item container justifyContent="space-between">
+      <Grid item xs={2} />
+      <Grid item xs={2}>
         {!props.hideBack && (
           <Button variant="contained" color="primary" disabled={props.disableBack} onClick={props.onPrev}>{props.backLabel}</Button>
         )}
       </Grid>
-      <Grid item>
+      <Grid item xs={4} />
+      <Grid item xs={2}>
         {!props.hideNext && (
           <Button variant="contained" color="primary" disabled={props.disableNext} onClick={props.onNext}>{props.nextLabel}</Button>
         )}
       </Grid>
+      <Grid item xs={2} />
     </Grid>
   )
 }

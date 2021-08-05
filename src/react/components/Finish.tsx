@@ -5,7 +5,7 @@ import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
 import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
-  height: 325px;
+  height: 320px;
   margin-top: 16px;
 `;
 

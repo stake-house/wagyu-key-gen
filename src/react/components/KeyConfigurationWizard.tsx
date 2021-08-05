@@ -6,7 +6,7 @@ import VerifyKeysPassword from './KeyGeneratioinFlow/1-VerifyKeysPassword';
 import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
-  height: 325px;
+  height: 320px;
   margin-top: 16px;
 `;
 
@@ -14,6 +14,7 @@ type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
   keyGenerationStartIndex: number | null,
+  initialKeyGenerationStartIndex: number | null,
   setKeyGenerationStartIndex: Dispatch<SetStateAction<number | null>>,
   numberOfKeys: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
@@ -45,6 +46,8 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
         setPasswordStrengthError(false);
         setStartingIndexError(false);
         props.setPassword("");
+        props.setKeyGenerationStartIndex(props.initialKeyGenerationStartIndex);
+        props.setNumberOfKeys(1);
         props.onStepBack();
         break;
       }

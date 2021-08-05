@@ -3,6 +3,7 @@ import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import { errors } from '../../constants';
 
 type VerifyMnemonicProps = {
+  verifyMnemonic: string,
   setVerifyMnemonic: Dispatch<SetStateAction<string>>,
   error: boolean,
 }
@@ -31,6 +32,7 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
             color="primary"
             error={props.error}
             helperText={ props.error ? errors.MNEMONICS_DONT_MATCH : ""}
+            value={props.verifyMnemonic}
             onChange={updateInputMnemonic} />
         </Grid>
       </Grid>

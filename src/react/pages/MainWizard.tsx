@@ -54,6 +54,7 @@ const Wizard: FC<Props & RouteProps> = (props): ReactElement => {
     stepSequenceKey === StepSequenceKey.MnemonicGeneration ? 0 : null;
 
   const [mnemonic, setMnemonic] = useState("");
+  const [verifyMnemonic, setVerifyMnemonic] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [keyGenerationStartIndex, setKeyGenerationStartIndex] = useState(initialKeyGenerationStartIndex);
   const [numberOfKeys, setNumberOfKeys] = useState(1);
@@ -63,7 +64,6 @@ const Wizard: FC<Props & RouteProps> = (props): ReactElement => {
   const stepSequence = stepSequenceMap[stepSequenceKey];
   const activeStepKey = stepSequence[activeStepIndex];
   
-
   const onStepForward = () => {
     if (activeStepIndex === stepSequence.length - 1) {
       ipcRenderer.send("close");
@@ -106,13 +106,14 @@ const Wizard: FC<Props & RouteProps> = (props): ReactElement => {
         );
       case StepKey.MnemonicGeneration:
         return (
-          <MnemonicGenerationWizard {...{ ...commonProps, mnemonic, setMnemonic }} />
+          <MnemonicGenerationWizard {...{ ...commonProps, mnemonic, setMnemonic, verifyMnemonic, setVerifyMnemonic }} />
         );
       case StepKey.KeyConfiguration:
         return (
           <KeyConfigurationWizard
             {...commonProps}
             keyGenerationStartIndex={keyGenerationStartIndex}
+            initialKeyGenerationStartIndex={initialKeyGenerationStartIndex}
             setKeyGenerationStartIndex={setKeyGenerationStartIndex}
             numberOfKeys={numberOfKeys}
             setNumberOfKeys={setNumberOfKeys}

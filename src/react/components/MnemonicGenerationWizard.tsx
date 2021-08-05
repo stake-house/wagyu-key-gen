@@ -9,20 +9,23 @@ import VerifyMnemonic from './MnemonicGenerationFlow/3-VerifyMnemonic';
 import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
-  height: 325px;
+  height: 320px;
   margin-top: 16px;
 `;
 
 type Props = {
   mnemonic: string,
   setMnemonic: Dispatch<SetStateAction<string>>,
+  verifyMnemonic: string,
+  setVerifyMnemonic: Dispatch<SetStateAction<string>>,
   onStepBack: () => void,
   onStepForward: () => void
 }
 
 const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
-  const [step, setStep] = useState(0);
-  const [verifyMnemonic, setVerifyMnemonic] = useState("");
+  // If verifyMnemonic has a value, then the user is moving backwards through the stepper
+  const intitialStep = props.verifyMnemonic ? 3 : 0;
+  const [step, setStep] = useState(intitialStep);
   const [mnemonicValidationError, setMnemonicValidationError] = useState(false);
 
   const prevLabel = () => {
@@ -54,7 +57,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
       case 3: {
-        setVerifyMnemonic("");
+        props.setVerifyMnemonic("");
         setMnemonicValidationError(false)
         setStep(step - 1);
         break;
@@ -103,7 +106,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
 
       // VerifyMnemonic
       case 3: {
-        if (props.mnemonic.localeCompare(verifyMnemonic) == 0) {
+        if (props.mnemonic.localeCompare(props.verifyMnemonic) == 0) {
           setMnemonicValidationError(false);
           props.onStepForward();
         } else {
@@ -137,7 +140,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         <ShowMnemonic showCopyWarning={step === 2} mnemonic={props.mnemonic} />
       );
       case 3: return (
-        <VerifyMnemonic setVerifyMnemonic={setVerifyMnemonic} error={mnemonicValidationError} />
+        <VerifyMnemonic setVerifyMnemonic={props.setVerifyMnemonic} verifyMnemonic={props.verifyMnemonic} error={mnemonicValidationError} />
       );
       default:
         return null;
