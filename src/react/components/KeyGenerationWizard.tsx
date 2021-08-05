@@ -9,7 +9,8 @@ import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
 import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
-  height: 350px;
+  height: 325px;
+  margin-top: 16px;
 `;
 
 type Props = {
@@ -140,13 +141,11 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   return (
-    <Grid container spacing={5} direction="column">
-      <Grid item container>
-        <Grid item xs={12}>
-          <Typography variant="h1">
-            Generate Keys
-          </Typography>
-        </Grid>
+    <Grid container direction="column" spacing={2}>
+      <Grid item>
+        <Typography variant="h1">
+          Generate Keys
+        </Typography>
       </Grid>
       <ContentGrid item container>
         <Grid item xs={12}>

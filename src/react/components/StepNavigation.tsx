@@ -14,14 +14,13 @@ type Props = {
 
 const StepNavigation: FC<Props> = (props): ReactElement => {
   return (
-    <Grid item container>
-      <Grid item xs={2} text-align="center">
+    <Grid item container justifyContent="space-around">
+      <Grid item>
         {!props.hideBack && (
           <Button variant="contained" color="primary" disabled={props.disableBack} onClick={props.onPrev}>{props.backLabel}</Button>
         )}
       </Grid>
-      <Grid item xs={8} />
-      <Grid item xs={2} text-align="center">
+      <Grid item>
         {!props.hideNext && (
           <Button variant="contained" color="primary" disabled={props.disableNext} onClick={props.onNext}>{props.nextLabel}</Button>
         )}

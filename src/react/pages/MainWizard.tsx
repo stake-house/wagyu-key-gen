@@ -80,13 +80,15 @@ const Wizard: FC<Props> = (props): ReactElement => {
   }
 
   const stepper = (
-    <StyledStepper activeStep={activeStepIndex} alternativeLabel>
-      {stepSequence.map((stepKey: StepKey) => (
-        <Step key={stepKey}>
-          <StepLabel>{stepLabels[stepKey]}</StepLabel>
-        </Step>
-      ))}
-    </StyledStepper>
+    <Grid item>
+      <StyledStepper activeStep={activeStepIndex} alternativeLabel>
+        {stepSequence.map((stepKey: StepKey) => (
+          <Step key={stepKey}>
+            <StepLabel>{stepLabels[stepKey]}</StepLabel>
+          </Step>
+        ))}
+      </StyledStepper>
+    </Grid>
   );
 
   const commonProps = {
@@ -154,9 +156,7 @@ const Wizard: FC<Props> = (props): ReactElement => {
         </Grid>
       </Grid>
       <Grid item container>
-        <Grid item xs={12}>
-          {stepComponentSwitch()}
-        </Grid>
+        {stepComponentSwitch()}
       </Grid>
     </MainGrid>
   );

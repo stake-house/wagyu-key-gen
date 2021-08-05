@@ -29,7 +29,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
   }
 
   return (
-    <Grid container direction="column" spacing={3}>
+    <Grid item container direction="column" spacing={3}>
       <Grid item xs={12}>
         <Typography variant="body1">
           Choose a folder where we should save your keys.

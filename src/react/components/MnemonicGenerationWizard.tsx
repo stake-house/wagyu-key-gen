@@ -9,7 +9,8 @@ import VerifyMnemonic from './MnemonicGenerationFlow/3-VerifyMnemonic';
 import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
-  height: 350px;
+  height: 325px;
+  margin-top: 16px;
 `;
 
 type Props = {
@@ -145,13 +146,11 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
 
 
   return (
-    <Grid container spacing={5} direction="column">
-      <Grid item container>
-        <Grid item xs={12}>
-          <Typography variant="h1">
-            Generate Mnemonic
-          </Typography>
-        </Grid>
+    <Grid container direction="column" spacing={2}>
+      <Grid item>
+        <Typography variant="h1">
+          Generate Mnemonic
+        </Typography>
       </Grid>
       <ContentGrid item container>
         <Grid item xs={12}>
