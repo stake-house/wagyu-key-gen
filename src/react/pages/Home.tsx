@@ -1,15 +1,16 @@
-import { useHistory, withRouter } from "react-router-dom";
-import React, { useState } from "react";
+import { useHistory, withRouter, RouteComponentProps } from "react-router-dom";
+import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import { shell } from "electron";
 import styled from "styled-components";
 import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';
 import { KeyIcon } from "../components/icons/KeyIcon";
 import { NetworkPicker } from "../components/NetworkPicker";
-import {network, tooltips} from "../constants";
+import { tooltips } from "../constants";
+import { Network, StepSequenceKey } from '../types'
 
 type ContainerProps = {
-  showNetworkPicker: boolean,
+  showNetworkPicker: boolean
 }
 
 const ModalBackground = styled.div`
@@ -44,7 +45,7 @@ const StyledMuiContainer = styled(Container)`
   align-items: center;
 `;
 
-const Network = styled.div`
+const NetworkDiv = styled.div`
   margin-top: 35px;
   margin-right: 35px;
   align-self: flex-end;
@@ -75,9 +76,14 @@ const OptionsGrid = styled(Grid)`
   align-items: center;
 `;
 
-const Home = () => {
+type RouteProps = RouteComponentProps<{}, any, {}>;
 
-  const [networkSelected, setNetworkSelected] = useState(network.PRATER);
+type HomeProps = {
+  network: Network,
+  setNetwork: Dispatch<SetStateAction<Network>>
+}
+
+const Home: FC<HomeProps & RouteProps> = (props): ReactElement => {
   const [showNetworkModal, setShowNetworkModal] = useState(false);
   const [networkModalWasOpened, setNetworkModalWasOpened] = useState(false);
   const [createMnemonicSelected, setCreateMnemonicSelected] = useState(false);
@@ -119,10 +125,7 @@ const Home = () => {
       handleOpenNetworkModal();
     } else {
       const location = {
-        pathname: "/wizard/mnemonicgeneration",
-        state: {
-          network: networkSelected,
-        },
+        pathname: `/wizard/${StepSequenceKey.MnemonicGeneration}`
       }
   
       history.push(location);
@@ -136,10 +139,7 @@ const Home = () => {
       handleOpenNetworkModal();
     } else {
       const location = {
-        pathname: "/wizard/mnemonicimport",
-        state: {
-          network: networkSelected,
-        },
+        pathname: `/wizard/${StepSequenceKey.MnemonicImport}`
       }
   
       history.push(location);
@@ -148,12 +148,12 @@ const Home = () => {
 
   return (
     <StyledMuiContainer>
-      <Network><Button color="primary" onClick={handleOpenNetworkModal}>{networkSelected}</Button></Network>
+      <NetworkDiv><Button color="primary" onClick={handleOpenNetworkModal}>{props.network}</Button></NetworkDiv>
       <Modal
         open={showNetworkModal}
         onClose={handleCloseNetworkModal}
       >
-        <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
+        <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetwork={props.setNetwork} network={props.network}></NetworkPicker>
       </Modal>
 
       <LandingHeader variant="h1">Welcome!</LandingHeader>

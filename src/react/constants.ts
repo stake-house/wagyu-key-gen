@@ -1,11 +1,5 @@
 import { StepKey } from './types';
 
-export const network = {
-	PYRMONT: "Pyrmont",
-	PRATER: "Prater",
-	MAINNET: "Mainnet",
-}
-
 export const errors = {
 	MNEMONIC_FORMAT: "Mnemonic is not in the right format, please double check.",
 	MNEMONICS_DONT_MATCH: "Mnemonics don't match, please try again.",
@@ -26,9 +20,9 @@ export const tooltips = {
 };
 
 export const stepLabels = {
-	[StepKey.mnemonicImport]: 'Import Mnemonic',
-	[StepKey.mnemonicGeneration]: 'Create Mnemonic',
-	[StepKey.keyConfiguration]: 'Configure Keys',
-	[StepKey.keyGeneration]: 'Create Key Files',
-	[StepKey.finish]: 'Finish'
+	[StepKey.MnemonicImport]: 'Import Mnemonic',
+	[StepKey.MnemonicGeneration]: 'Create Mnemonic',
+	[StepKey.KeyConfiguration]: 'Configure Keys',
+	[StepKey.KeyGeneration]: 'Create Key Files',
+	[StepKey.Finish]: 'Finish'
 };

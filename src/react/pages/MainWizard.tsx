@@ -10,29 +10,30 @@ import KeyConfigurationWizard from "../components/KeyConfigurationWizard";
 import KeyGenerationWizard from "../components/KeyGenerationWizard";
 import Finish from '../components/Finish';
 import { stepLabels } from '../constants';
-
-type IncomingState = {
-  network: string,
-}
+import { Network, StepSequenceKey } from '../types';
 
 type RouteParams = {
-  stepSequenceKey: string;
+  stepSequenceKey: StepSequenceKey;
 };
 
-type Props = RouteComponentProps<RouteParams, any, IncomingState>;
+type RouteProps = RouteComponentProps<RouteParams, any, {}>;
+
+type Props = {
+  network: Network
+}
 
 const stepSequenceMap: Record<string, StepKey[]> = {
   mnemonicimport: [
-    StepKey.mnemonicImport,
-    StepKey.keyConfiguration,
-    StepKey.keyGeneration,
-    StepKey.finish
+    StepKey.MnemonicImport,
+    StepKey.KeyConfiguration,
+    StepKey.KeyGeneration,
+    StepKey.Finish
   ],
   mnemonicgeneration: [
-    StepKey.mnemonicGeneration,
-    StepKey.keyConfiguration,
-    StepKey.keyGeneration,
-    StepKey.finish
+    StepKey.MnemonicGeneration,
+    StepKey.KeyConfiguration,
+    StepKey.KeyGeneration,
+    StepKey.Finish
   ]
 }
 
@@ -46,11 +47,11 @@ const StyledStepper = styled(Stepper)`
   background-color: transparent;
 `
 
-const Wizard: FC<Props> = (props): ReactElement => {
+const Wizard: FC<Props & RouteProps> = (props): ReactElement => {
   const { stepSequenceKey } = useParams<RouteParams>();
   const history = useHistory();
   const initialKeyGenerationStartIndex =
-    stepSequenceKey === 'mnemonicgeneration' ? 0 : null;
+    stepSequenceKey === StepSequenceKey.MnemonicGeneration ? 0 : null;
 
   const [mnemonic, setMnemonic] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -99,15 +100,15 @@ const Wizard: FC<Props> = (props): ReactElement => {
 
   const stepComponentSwitch = (): ReactElement => {
     switch(activeStepKey) {
-      case StepKey.mnemonicImport:
+      case StepKey.MnemonicImport:
         return (
           <MnemonicImport {...{ ...commonProps, mnemonic, setMnemonic }} />
         );
-      case StepKey.mnemonicGeneration:
+      case StepKey.MnemonicGeneration:
         return (
           <MnemonicGenerationWizard {...{ ...commonProps, mnemonic, setMnemonic }} />
         );
-      case StepKey.keyConfiguration:
+      case StepKey.KeyConfiguration:
         return (
           <KeyConfigurationWizard
             {...commonProps}
@@ -119,12 +120,12 @@ const Wizard: FC<Props> = (props): ReactElement => {
             setPassword={setPassword}
           />
         );
-        case StepKey.keyGeneration:
+        case StepKey.KeyGeneration:
           return (
             <KeyGenerationWizard
               {...commonProps}
               mnemonic={mnemonic}
-              network={props.location.state.network}
+              network={props.network}
               keyGenerationStartIndex={keyGenerationStartIndex}
               numberOfKeys={numberOfKeys}
               password={password}
@@ -132,7 +133,7 @@ const Wizard: FC<Props> = (props): ReactElement => {
               setFolderPath={setFolderPath}
             />
           );
-        case StepKey.finish:
+        case StepKey.Finish:
           return (
             <Finish
               {...commonProps}
@@ -151,7 +152,7 @@ const Wizard: FC<Props> = (props): ReactElement => {
         <Grid item xs={10}/>
         <Grid item xs={2}>
           <Typography variant="caption" style={{color: "gray"}}>
-            Network: {props.location.state.network}
+            Network: {props.network}
           </Typography>
         </Grid>
       </Grid>

@@ -1,6 +1,7 @@
 import { executeCommandSync } from "./ExecuteCommand";
 import { execSync } from 'child_process';
 import { mkdir, existsSync } from 'fs';
+import { Network } from '../types'
 
 const ETH2_DEPOSIT_CLI_PATH = "src/vendors/eth2.0-deposit-cli-1.2.0";
 const SCRIPTS_PATH = "src/scripts";
@@ -67,7 +68,7 @@ const generateKeys = (
     mnemonic: string,
     index: number,
     count: number,
-    network: string,
+    network: Network,
     password: string,
     eth1_withdrawal_address: string,
     folder: string,
@@ -91,7 +92,7 @@ const generateKeys = (
   const escapedPassword = escapeArgument(password);
   const escapedMnemonic = escapeArgument(mnemonic);
 
-  const cmd = `python3 ${GENERATE_KEYS_PATH} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network} ${escapedPassword}`;
+  const cmd = `python3 ${GENERATE_KEYS_PATH} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
   
   try {
     execSync(cmd, {env: env});

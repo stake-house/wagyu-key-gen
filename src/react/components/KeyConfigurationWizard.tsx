@@ -44,6 +44,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
         setNumberOfKeysError(false);
         setPasswordStrengthError(false);
         setStartingIndexError(false);
+        props.setPassword("");
         props.onStepBack();
         break;
       }

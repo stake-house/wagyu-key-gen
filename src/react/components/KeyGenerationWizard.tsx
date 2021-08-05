@@ -7,6 +7,7 @@ import SelectFolder from './KeyGeneratioinFlow/2-SelectFolder';
 import CreatingKeys from './KeyGeneratioinFlow/3-CreatingKeys';
 import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
 import StepNavigation from './StepNavigation';
+import { Network } from '../types';
 
 const ContentGrid = styled(Grid)`
   height: 325px;
@@ -16,7 +17,7 @@ const ContentGrid = styled(Grid)`
 type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
-  network: string,
+  network: Network,
   mnemonic: string,
   keyGenerationStartIndex: number | null,
   numberOfKeys: number,
@@ -109,7 +110,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
         props.mnemonic,
         props.keyGenerationStartIndex!,
         props.numberOfKeys,
-        props.network.toLowerCase(),
+        props.network,
         props.password,
         eth1_withdrawal_address,
         props.folderPath

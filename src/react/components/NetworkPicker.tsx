@@ -2,7 +2,7 @@ import { BackgroundLight, ButtonHover, Yellow } from '../colors';
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
 import React, { Dispatch, SetStateAction } from 'react';
 
-import { network } from '../constants';
+import { Network } from '../types';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -46,8 +46,8 @@ const Submit = styled.div`
 
 type NetworkPickerProps = {
   handleCloseNetworkModal: () => void,
-  setNetworkSelected: Dispatch<SetStateAction<string>>,
-  networkSelected: string,
+  setNetwork: Dispatch<SetStateAction<Network>>,
+  network: Network,
 }
 
 export const NetworkPicker = (props: NetworkPickerProps) => {
@@ -57,7 +57,7 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
   }
 
   const networkChanged = (selected: React.ChangeEvent<HTMLInputElement>) => {
-    props.setNetworkSelected(selected.target.value);
+    props.setNetwork(selected.target.value as Network);
   }
 
   return (
@@ -65,10 +65,10 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
       <Header>Network</Header>
       {/* TODO: come up with a better way to pass selection back */}
       <FormControl component="fieldset">
-        <RadioGroup aria-label="gender" name="gender1" value={props.networkSelected} onChange={networkChanged}>
-          <FormControlLabel value={network.PRATER} control={<Radio />} label={network.PRATER} />
-          <FormControlLabel value={network.PYRMONT} control={<Radio />} label={network.PYRMONT} />
-          <FormControlLabel value={network.MAINNET} disabled control={<Radio />} label={network.MAINNET} />
+        <RadioGroup aria-label="gender" name="gender1" value={props.network} onChange={networkChanged}>
+          <FormControlLabel value={Network.PRATER} control={<Radio />} label={Network.PRATER} />
+          <FormControlLabel value={Network.PYRMONT} control={<Radio />} label={Network.PYRMONT} />
+          <FormControlLabel value={Network.MAINNET} disabled control={<Radio />} label={Network.MAINNET} />
         </RadioGroup>
       </FormControl>
       <Submit onClick={closePicker}>OK</Submit>
