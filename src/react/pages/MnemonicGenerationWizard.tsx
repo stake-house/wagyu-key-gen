@@ -167,7 +167,7 @@ const MnemonicGenerationWizard = (props: Props & RouteProps) => {
       <Grid item container>
         <Grid item xs={12}>
           <Typography variant="h1">
-            Generate Mnemonic
+            Generate Secret Recovery Phrase
           </Typography>
         </Grid>
       </Grid>

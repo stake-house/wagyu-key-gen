@@ -18,7 +18,7 @@ const ShowMnemonic = (props: ShowMnemonicProps) => {
     return (
       <Grid container direction="column" spacing={3}>
         <Grid item xs={12}>
-          Below is your mnemonic.  Make sure you back it up - without it you will not be able to retrieve your funds.
+          Below is your Secret Recovery Phrase.  Make sure you back it up - without it you will not be able to retrieve your funds.
         </Grid>
         <Grid item container xs={12}>
           <Grid item xs={1} />
@@ -44,7 +44,7 @@ const ShowMnemonic = (props: ShowMnemonicProps) => {
         { props.step == 2 &&
           <Grid item xs={12}>
             <Typography color="error">
-              Make sure you have copied your mnemonic down *offline*, you will be prompted for it next.
+              Make sure you have written down your Secret Recovery Phrase *offline*, you will be prompted for it next.
             </Typography>
           </Grid>
         }
