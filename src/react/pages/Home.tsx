@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { KeyIcon } from "../components/icons/KeyIcon";
 import { NetworkPicker } from "../components/NetworkPicker";
-import { network, tooltips } from "../constants";
+import {network, tooltips} from "../constants";
 import { shell } from "electron";
 import styled from "styled-components";
 import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
@@ -25,7 +25,6 @@ const ModalBackground = styled.div`
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-
   ${(props: ContainerProps) => {
     if (props.showNetworkPicker) {
       return `
@@ -75,10 +74,6 @@ const StyledLink = styled(Typography)`
 const OptionsGrid = styled(Grid)`
   margin-top: 55px;
   align-items: center;
-`;
-
-const NetworkPickerGrid = styled(Grid)`
-display: inline;
 `;
 
 const Home = () => {
@@ -154,15 +149,13 @@ const Home = () => {
 
   return (
     <StyledMuiContainer>
-          <Network>
-            Select Network: 
-            <Button color="primary" onClick={handleOpenNetworkModal}>{networkSelected}</Button></Network>
-            <Modal
-              open={showNetworkModal}
-              onClose={handleCloseNetworkModal}
-            >
-            <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
-          </Modal>
+      <Network>Select Network: <Button color="primary" onClick={handleOpenNetworkModal}>{networkSelected}</Button></Network>
+      <Modal
+        open={showNetworkModal}
+        onClose={handleCloseNetworkModal}
+      >
+        <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
+      </Modal>
 
       <LandingHeader variant="h1">Welcome!</LandingHeader>
       <KeyIcon />
@@ -184,7 +177,7 @@ const Home = () => {
         </Grid>
         <Grid item>
           <Tooltip title={tooltips.IMPORT_MNEMONIC}>
-            <Button style={{ color: "gray" }} size="small" onClick={handleUseExistingMnemonic}>
+            <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic}>
               Use Existing Secret Recovery Phrase
             </Button>
           </Tooltip>
