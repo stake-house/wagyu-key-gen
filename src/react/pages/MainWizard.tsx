@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useState } from 'react';
 import { ipcRenderer } from 'electron';
-import { RouteComponentProps, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { Stepper, Step, StepLabel, Grid, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 import { StepKey } from '../types';
@@ -11,16 +11,6 @@ import KeyGenerationWizard from "../components/KeyGenerationWizard";
 import Finish from '../components/Finish';
 import { stepLabels } from '../constants';
 import { Network, StepSequenceKey } from '../types';
-
-type RouteParams = {
-  stepSequenceKey: StepSequenceKey;
-};
-
-type RouteProps = RouteComponentProps<RouteParams, any, {}>;
-
-type Props = {
-  network: Network
-}
 
 const stepSequenceMap: Record<string, StepKey[]> = {
   mnemonicimport: [
@@ -47,7 +37,15 @@ const StyledStepper = styled(Stepper)`
   background-color: transparent;
 `
 
-const Wizard: FC<Props & RouteProps> = (props): ReactElement => {
+type RouteParams = {
+  stepSequenceKey: StepSequenceKey;
+};
+
+type WizardProps = {
+  network: Network
+}
+
+const Wizard: FC<WizardProps> = (props): ReactElement => {
   const { stepSequenceKey } = useParams<RouteParams>();
   const history = useHistory();
   const initialKeyGenerationStartIndex =

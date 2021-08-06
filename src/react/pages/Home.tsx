@@ -1,4 +1,4 @@
-import { useHistory, withRouter, RouteComponentProps } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import { shell } from "electron";
 import styled from "styled-components";
@@ -76,14 +76,12 @@ const OptionsGrid = styled(Grid)`
   align-items: center;
 `;
 
-type RouteProps = RouteComponentProps<{}, any, {}>;
-
 type HomeProps = {
   network: Network,
   setNetwork: Dispatch<SetStateAction<Network>>
 }
 
-const Home: FC<HomeProps & RouteProps> = (props): ReactElement => {
+const Home: FC<HomeProps> = (props): ReactElement => {
   const [showNetworkModal, setShowNetworkModal] = useState(false);
   const [networkModalWasOpened, setNetworkModalWasOpened] = useState(false);
   const [createMnemonicSelected, setCreateMnemonicSelected] = useState(false);
@@ -185,4 +183,4 @@ const Home: FC<HomeProps & RouteProps> = (props): ReactElement => {
     </StyledMuiContainer>
   );
 };
-export default withRouter(Home);
+export default Home;

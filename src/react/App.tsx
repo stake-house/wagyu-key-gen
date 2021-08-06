@@ -23,8 +23,8 @@ const App: FC = (): ReactElement => {
       <HashRouter>
         <Container>
           <Switch>
-            <Route exact path="/" render={routeProps => <Home {...routeProps} network={network} setNetwork={setNetwork} />} />
-            <Route exact path="/wizard/:stepSequenceKey" render={routeprops => <MainWizard network={network} />} />
+            <Route exact path="/" render={() => <Home network={network} setNetwork={setNetwork} />} />
+            <Route exact path="/wizard/:stepSequenceKey" render={() => <MainWizard network={network} />} />
           </Switch>
         </Container>
       </HashRouter>
