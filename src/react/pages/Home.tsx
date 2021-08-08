@@ -125,7 +125,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       const location = {
         pathname: `/wizard/${StepSequenceKey.MnemonicGeneration}`
       }
-  
+
       history.push(location);
     }
   }
@@ -139,7 +139,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       const location = {
         pathname: `/wizard/${StepSequenceKey.MnemonicImport}`
       }
-  
+
       history.push(location);
     }
   }
@@ -169,13 +169,13 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       <OptionsGrid container spacing={2} direction="column">
         <Grid item>
           <Button variant="contained" color="primary" onClick={handleCreateNewMnemonic}>
-            Create New Mnemonic
+            Create New Secret Recovery Phrase
           </Button>
         </Grid>
         <Grid item>
           <Tooltip title={tooltips.IMPORT_MNEMONIC}>
             <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic}>
-              Use Existing Mnemonic
+              Use Existing Secret Recovery Phrase
             </Button>
           </Tooltip>
         </Grid>
