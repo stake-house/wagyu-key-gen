@@ -40,14 +40,14 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Import Mnemonic
+          Import Secret Recovery Phrase
         </Typography>
       </Grid>
       <ContentGrid item container justifyContent="center">
         <Grid item xs={10}>
           <TextField
             id="mnemonic-input"
-            label="Type your mnemonic here"
+            label="Type your Secret Recovery Phrase here"
             multiline
             fullWidth
             rows={4}

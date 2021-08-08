@@ -113,6 +113,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             keyGenerationStartIndex={keyGenerationStartIndex}
             initialKeyGenerationStartIndex={initialKeyGenerationStartIndex}
             setKeyGenerationStartIndex={setKeyGenerationStartIndex}
+            showKeyGenerationStartIndexInput={initialKeyGenerationStartIndex == null}
             numberOfKeys={numberOfKeys}
             setNumberOfKeys={setNumberOfKeys}
             password={password}

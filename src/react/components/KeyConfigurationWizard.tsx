@@ -16,6 +16,7 @@ type Props = {
   keyGenerationStartIndex: number | null,
   initialKeyGenerationStartIndex: number | null,
   setKeyGenerationStartIndex: Dispatch<SetStateAction<number | null>>,
+  showKeyGenerationStartIndexInput: boolean,
   numberOfKeys: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
   password: string,
@@ -136,6 +137,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
           setNumberOfKeys={props.setNumberOfKeys}
           index={props.keyGenerationStartIndex}
           setIndex={props.setKeyGenerationStartIndex}
+          showIndexInput={props.showKeyGenerationStartIndexInput}
           password={props.password}
           setPassword={props.setPassword}
           numberOfKeysError={numberOfKeysError}

@@ -20,8 +20,8 @@ export const tooltips = {
 };
 
 export const stepLabels = {
-	[StepKey.MnemonicImport]: 'Import Mnemonic',
-	[StepKey.MnemonicGeneration]: 'Create Mnemonic',
+	[StepKey.MnemonicImport]: 'Import Secret Recovery Phrase',
+	[StepKey.MnemonicGeneration]: 'Create Secret Recovery Phrase',
 	[StepKey.KeyConfiguration]: 'Configure Keys',
 	[StepKey.KeyGeneration]: 'Create Key Files',
 	[StepKey.Finish]: 'Finish'

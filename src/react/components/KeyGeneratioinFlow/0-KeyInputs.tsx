@@ -7,6 +7,7 @@ type GenerateKeysProps = {
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
   index: number | null,
   setIndex: Dispatch<SetStateAction<number | null>>,
+  showIndexInput: boolean,
   password: string,
   setPassword: Dispatch<SetStateAction<string>>,
   numberOfKeysError: boolean,
@@ -15,8 +16,6 @@ type GenerateKeysProps = {
 }
 
 const KeyInputs = (props: GenerateKeysProps) => {
-  const [indexPassedIn] = useState(props.index != null);
-
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
     props.setNumberOfKeys(num);
@@ -54,7 +53,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
             />
         </Tooltip>
       </Grid>
-      { !indexPassedIn &&
+      { props.showIndexInput &&
         <Grid item xs={12}>
           <Tooltip title={tooltips.STARTING_INDEX}>
             <TextField
@@ -62,6 +61,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
                 label="Amount of Existing (starting index)"
                 variant="outlined"
                 type="number"
+                value={props.index}
                 onChange={updateIndex}
                 InputProps={{ inputProps: { min: 0 } }}
                 error={props.startingIndexError}

@@ -152,7 +152,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Generate Mnemonic
+          Generate Secret Recovery Phrase
         </Typography>
       </Grid>
       <ContentGrid item container>
