@@ -33,7 +33,7 @@ const Finish: FC<Props> = (props): ReactElement => {
       <StepNavigation
         onPrev={props.onStepBack}
         onNext={props.onStepForward}
-        backLabel="Back"
+        hideBack={true}
         nextLabel="Finish"
       />
     </Grid>
