@@ -1,8 +1,4 @@
-export const network = {
-	PYRMONT: "Pyrmont",
-	PRATER: "Prater",
-	MAINNET: "Mainnet",
-}
+import { StepKey } from './types';
 
 export const errors = {
 	MNEMONIC_FORMAT: "Secret Recovery Phrase is not in the right format, please double check.",
@@ -21,4 +17,12 @@ export const tooltips = {
 	NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to generate.",
 	PASSWORD: "Pick a strong password (at least 8 characters) that will be used to protect your keys.",
 	STARTING_INDEX: "Each key is generated sequentially, so we need to know how many you've generated in the past in order to create some new ones for you.",
-}
+};
+
+export const stepLabels = {
+	[StepKey.MnemonicImport]: 'Import Secret Recovery Phrase',
+	[StepKey.MnemonicGeneration]: 'Create Secret Recovery Phrase',
+	[StepKey.KeyConfiguration]: 'Configure Keys',
+	[StepKey.KeyGeneration]: 'Create Key Files',
+	[StepKey.Finish]: 'Finish'
+};
