@@ -34,7 +34,7 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
         </Grid>
         <Grid item xs={1} style={{alignSelf: "center"}}>
           <Tooltip title="Copy">
-            <IconButton aria-label="copy" color="primary" onClick={copyMnemonic}>
+            <IconButton aria-label="copy" color="primary" onClick={copyMnemonic} autoFocus>
               <FileCopy />
             </IconButton>
           </Tooltip>

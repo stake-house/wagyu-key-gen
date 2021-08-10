@@ -106,12 +106,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
 
       // VerifyMnemonic
       case 3: {
-        if (props.mnemonic.localeCompare(props.verifyMnemonic) == 0) {
-          setMnemonicValidationError(false);
-          props.onStepForward();
-        } else {
-          setMnemonicValidationError(true);
-        }
+        verifyMnemonic();
         break;
       }
 
@@ -120,6 +115,15 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
 
+    }
+  }
+
+  const verifyMnemonic = () => {
+    if (props.mnemonic.localeCompare(props.verifyMnemonic) == 0) {
+      setMnemonicValidationError(false);
+      props.onStepForward();
+    } else {
+      setMnemonicValidationError(true);
     }
   }
 
@@ -140,7 +144,12 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         <ShowMnemonic showCopyWarning={step === 2} mnemonic={props.mnemonic} />
       );
       case 3: return (
-        <VerifyMnemonic setVerifyMnemonic={props.setVerifyMnemonic} verifyMnemonic={props.verifyMnemonic} error={mnemonicValidationError} />
+        <VerifyMnemonic
+          setVerifyMnemonic={props.setVerifyMnemonic}
+          verifyMnemonic={props.verifyMnemonic}
+          error={mnemonicValidationError}
+          onVerifyMnemonic={verifyMnemonic}
+        />
       );
       default:
         return null;
