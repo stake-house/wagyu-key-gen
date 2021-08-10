@@ -36,6 +36,12 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
     }
   }
 
+  const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+    if (evt.key === 'Enter') {
+      onImport();
+    }
+  }
+
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
@@ -53,10 +59,12 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
             rows={4}
             variant="outlined"
             color="primary"
+            autoFocus
             error={mnemonicError}
             helperText={ mnemonicError ? errors.MNEMONIC_FORMAT : ""}
             value={props.mnemonic}
-            onChange={updateInputMnemonic} />
+            onChange={updateInputMnemonic}
+            onKeyDown={handleKeyDown}/>
         </Grid>
       </ContentGrid>
       {/* props.children is the stepper */}

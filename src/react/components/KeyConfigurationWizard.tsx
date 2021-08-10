@@ -80,45 +80,13 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
 
       // Inputs
       case 0: {
-        let isError = false;
-
-        if (props.numberOfKeys < 1) {
-          setNumberOfKeysError(true);
-          isError = true;
-        } else {
-          setNumberOfKeysError(false);
-        }
-        
-        if (props.password.length < 8) {
-          setPasswordStrengthError(true);
-          isError = true;
-        } else {
-          setPasswordStrengthError(false);
-        }
-        
-        if (props.keyGenerationStartIndex == null || props.keyGenerationStartIndex < 0) {
-          setStartingIndexError(true);
-          isError = true;
-        } else {
-          setStartingIndexError(false);
-        }
-
-        if (!isError) {
-          setStep(step + 1);
-        }
-
+        validateInputs();
         break;
       }
 
       // Verify Password
       case 1: {
-        if (props.password.localeCompare(verifyPassword) == 0) {
-          setPasswordVerifyError(false);
-          props.onStepForward();
-        } else {
-          setPasswordVerifyError(true);
-        }
-
+        confirmPassword();
         break;
       }
 
@@ -126,6 +94,44 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
         console.log("This should never happen.")
         break;
       }
+    }
+  }
+
+  const validateInputs = () => {
+    let isError = false;
+
+    if (props.numberOfKeys < 1) {
+      setNumberOfKeysError(true);
+      isError = true;
+    } else {
+      setNumberOfKeysError(false);
+    }
+    
+    if (props.password.length < 8) {
+      setPasswordStrengthError(true);
+      isError = true;
+    } else {
+      setPasswordStrengthError(false);
+    }
+    
+    if (props.keyGenerationStartIndex == null || props.keyGenerationStartIndex < 0) {
+      setStartingIndexError(true);
+      isError = true;
+    } else {
+      setStartingIndexError(false);
+    }
+
+    if (!isError) {
+      setStep(step + 1);
+    }
+  }
+
+  const confirmPassword = () => {
+    if (props.password.localeCompare(verifyPassword) == 0) {
+      setPasswordVerifyError(false);
+      props.onStepForward();
+    } else {
+      setPasswordVerifyError(true);
     }
   }
 
@@ -143,10 +149,15 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
           numberOfKeysError={numberOfKeysError}
           passwordStrengthError={passwordStrengthError}
           startingIndexError={startingIndexError}
+          onFinish={validateInputs}
         />
       );
       case 1: return (
-        <VerifyKeysPassword setVerifyPassword={setVerifyPassword} passwordVerifyError={passwordVerifyError} />
+        <VerifyKeysPassword
+          setVerifyPassword={setVerifyPassword}
+          passwordVerifyError={passwordVerifyError}
+          onFinish={confirmPassword}
+        />
       );
       default:
         return null;

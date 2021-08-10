@@ -1,5 +1,5 @@
 import { BackgroundLight, ButtonHover, Yellow } from '../colors';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Button } from '@material-ui/core';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { Network } from '../types';
@@ -24,25 +24,14 @@ const Header = styled.div`
   margin-bottom: 30px;
 `;
 
-const Submit = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${Yellow};
-  width: 100px;
-  height: 50px;
-  border-radius: 10px;
-  color: Black;
+const Submit = styled(Button)`
+  margin: 35px auto 0;
   margin-top: 35px;
-
-  transition: 250ms background-color ease;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${ButtonHover};
-  }
 `;
 
+const Fieldset = styled.fieldset`
+  border: none;
+`
 
 type NetworkPickerProps = {
   handleCloseNetworkModal: () => void,
@@ -52,7 +41,8 @@ type NetworkPickerProps = {
 
 export const NetworkPicker = (props: NetworkPickerProps) => {
 
-  const closePicker = () => {
+  const closePicker = (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
     props.handleCloseNetworkModal();
   }
 
@@ -64,14 +54,18 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
     <Container>
       <Header>Network</Header>
       {/* TODO: come up with a better way to pass selection back */}
-      <FormControl component="fieldset">
-        <RadioGroup aria-label="gender" name="gender1" value={props.network} onChange={networkChanged}>
-          <FormControlLabel value={Network.PRATER} control={<Radio />} label={Network.PRATER} />
-          <FormControlLabel value={Network.PYRMONT} control={<Radio />} label={Network.PYRMONT} />
-          <FormControlLabel value={Network.MAINNET} disabled control={<Radio />} label={Network.MAINNET} />
-        </RadioGroup>
-      </FormControl>
-      <Submit onClick={closePicker}>OK</Submit>
+      <form onSubmit={closePicker} style={{textAlign: 'center'}}>
+        <div>
+          <FormControl focused>
+            <RadioGroup aria-label="gender" name="gender1" value={props.network} onChange={networkChanged}>
+              <FormControlLabel value={Network.PRATER} control={<Radio />} label={Network.PRATER} />
+              <FormControlLabel value={Network.PYRMONT} control={<Radio />} label={Network.PYRMONT} />
+              <FormControlLabel value={Network.MAINNET} disabled control={<Radio />} label={Network.MAINNET} />
+            </RadioGroup>
+          </FormControl>
+        </div>
+        <Submit variant="contained" color="primary" type="submit" tabIndex={1}>OK</Submit>
+      </form>
     </Container>
   )
 }

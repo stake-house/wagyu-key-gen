@@ -1,5 +1,6 @@
 import { Grid, TextField, Tooltip, Typography } from '@material-ui/core';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
+import styled from "styled-components";
 import { errors, tooltips } from '../../constants';
 
 type GenerateKeysProps = {
@@ -13,7 +14,19 @@ type GenerateKeysProps = {
   numberOfKeysError: boolean,
   passwordStrengthError: boolean,
   startingIndexError: boolean,
+  onFinish: () => void
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+`
+
+const StyledTextField = styled(TextField)`
+  margin: 12px 0;
+  width: 300px;
+`
 
 const KeyInputs = (props: GenerateKeysProps) => {
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +43,12 @@ const KeyInputs = (props: GenerateKeysProps) => {
     props.setPassword(e.target.value);
   }
 
+  const handleKeyDown = (evt: React.KeyboardEvent<HTMLFormElement>) => {
+    if (evt.key === 'Enter') {
+      props.onFinish();
+    }
+  }
+
   return (
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
@@ -38,25 +57,24 @@ const KeyInputs = (props: GenerateKeysProps) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Tooltip title={tooltips.NUMBER_OF_KEYS}>
-          <TextField
+        <Form onKeyDown={handleKeyDown}>
+          <Tooltip title={tooltips.NUMBER_OF_KEYS}>
+            <StyledTextField
               id="number-of-keys"
               label="Number of New Keys"
               variant="outlined"
               type="number"
+              autoFocus
               value={props.numberOfKeys}
               onChange={updateNumberOfKeys}
               InputProps={{ inputProps: { min: 1 } }}
               error={props.numberOfKeysError}
               helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
-              style = {{width: 300}}
             />
-        </Tooltip>
-      </Grid>
-      { props.showIndexInput &&
-        <Grid item xs={12}>
-          <Tooltip title={tooltips.STARTING_INDEX}>
-            <TextField
+          </Tooltip>
+          { props.showIndexInput &&
+            <Tooltip title={tooltips.STARTING_INDEX}>
+              <StyledTextField
                 id="index"
                 label="Amount of Existing (starting index)"
                 variant="outlined"
@@ -66,14 +84,11 @@ const KeyInputs = (props: GenerateKeysProps) => {
                 InputProps={{ inputProps: { min: 0 } }}
                 error={props.startingIndexError}
                 helperText={props.startingIndexError ? errors.STARTING_INDEX : ""}
-                style = {{width: 300}}
               />
-          </Tooltip>
-        </Grid>
-      }
-      <Grid item xs={12}>
-        <Tooltip title={tooltips.PASSWORD}>
-          <TextField
+            </Tooltip>
+          }
+          <Tooltip title={tooltips.PASSWORD}>
+            <StyledTextField
               id="password"
               label="Password"
               type="password"
@@ -82,9 +97,9 @@ const KeyInputs = (props: GenerateKeysProps) => {
               onChange={updatePassword}
               error={props.passwordStrengthError}
               helperText={props.passwordStrengthError ? errors.PASSWORD_STRENGTH : ""}
-              style = {{width: 300}}
             />
-        </Tooltip>
+          </Tooltip>
+        </Form>
       </Grid>
     </Grid>
   );

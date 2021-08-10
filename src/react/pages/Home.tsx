@@ -144,9 +144,13 @@ const Home: FC<HomeProps> = (props): ReactElement => {
     }
   }
 
+  const tabIndex = (priority: number) => showNetworkModal ? -1 : priority;
+
   return (
     <StyledMuiContainer>
-      <NetworkDiv><Button color="primary" onClick={handleOpenNetworkModal}>{props.network}</Button></NetworkDiv>
+      <NetworkDiv>
+        <Button color="primary" onClick={handleOpenNetworkModal} tabIndex={tabIndex(1)}>{props.network}</Button>
+      </NetworkDiv>
       <Modal
         open={showNetworkModal}
         onClose={handleCloseNetworkModal}
@@ -159,22 +163,22 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       <SubHeader>Your key generator for Ethereum 2.0</SubHeader>
 
       <Links>
-        <StyledLink display="inline" color="primary" onClick={sendToDocs}>Docs</StyledLink>
+        <StyledLink display="inline" color="primary" onClick={sendToDocs} tabIndex={tabIndex(0)}>Docs</StyledLink>
         &nbsp;|&nbsp;
-        <StyledLink display="inline" color="primary" onClick={sendToGithub}>Github</StyledLink>
+        <StyledLink display="inline" color="primary" onClick={sendToGithub} tabIndex={tabIndex(0)}>Github</StyledLink>
         &nbsp;|&nbsp;
-        <StyledLink display="inline" color="primary" onClick={sendToDiscord}>Discord</StyledLink>
+        <StyledLink display="inline" color="primary" onClick={sendToDiscord} tabIndex={tabIndex(0)}>Discord</StyledLink>
       </Links>
 
       <OptionsGrid container spacing={2} direction="column">
         <Grid item>
-          <Button variant="contained" color="primary" onClick={handleCreateNewMnemonic}>
+          <Button variant="contained" color="primary" onClick={handleCreateNewMnemonic} tabIndex={tabIndex(1)}>
             Create New Secret Recovery Phrase
           </Button>
         </Grid>
         <Grid item>
           <Tooltip title={tooltips.IMPORT_MNEMONIC}>
-            <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic}>
+            <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic} tabIndex={tabIndex(1)}>
               Use Existing Secret Recovery Phrase
             </Button>
           </Tooltip>

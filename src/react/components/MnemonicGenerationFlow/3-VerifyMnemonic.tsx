@@ -6,12 +6,19 @@ type VerifyMnemonicProps = {
   verifyMnemonic: string,
   setVerifyMnemonic: Dispatch<SetStateAction<string>>,
   error: boolean,
+  onVerifyMnemonic: () => void
 }
 
 const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
 
   const updateInputMnemonic = (e: React.ChangeEvent<HTMLInputElement>) => {
     props.setVerifyMnemonic(e.currentTarget.value);
+  }
+
+  const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+    if (evt.key === 'Enter') {
+      props.onVerifyMnemonic();
+    }
   }
 
   return (
@@ -28,12 +35,14 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
             multiline
             fullWidth
             rows={4}
+            autoFocus
             variant="outlined"
             color="primary"
             error={props.error}
             helperText={ props.error ? errors.MNEMONICS_DONT_MATCH : ""}
             value={props.verifyMnemonic}
-            onChange={updateInputMnemonic} />
+            onChange={updateInputMnemonic}
+            onKeyDown={handleKeyDown} />
         </Grid>
       </Grid>
     </Grid>

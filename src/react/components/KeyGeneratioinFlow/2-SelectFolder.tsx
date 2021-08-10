@@ -36,7 +36,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Button variant="contained" component="label" onClick={chooseFolder}>
+        <Button variant="contained" component="label" onClick={chooseFolder} tabIndex={1}>
           Browse
         </Button>
       </Grid>
