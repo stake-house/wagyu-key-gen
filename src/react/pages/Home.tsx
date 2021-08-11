@@ -1,17 +1,16 @@
-import { Link, useHistory, withRouter } from "react-router-dom";
-import React, { useState } from "react";
-
-import { KeyIcon } from "../components/icons/KeyIcon";
-import { NetworkPicker } from "../components/NetworkPicker";
-import {network, tooltips} from "../constants";
+import { useHistory } from "react-router-dom";
+import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import { shell } from "electron";
 import styled from "styled-components";
 import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';
-
+import { KeyIcon } from "../components/icons/KeyIcon";
+import { NetworkPicker } from "../components/NetworkPicker";
+import { tooltips } from "../constants";
+import { Network, StepSequenceKey } from '../types'
 
 type ContainerProps = {
-  showNetworkPicker: boolean,
+  showNetworkPicker: boolean
 }
 
 const ModalBackground = styled.div`
@@ -45,7 +44,7 @@ const StyledMuiContainer = styled(Container)`
   align-items: center;
 `;
 
-const Network = styled.div`
+const NetworkDiv = styled.div`
   margin-top: 35px;
   margin-right: 35px;
   align-self: flex-end;
@@ -76,9 +75,12 @@ const OptionsGrid = styled(Grid)`
   align-items: center;
 `;
 
-const Home = () => {
+type HomeProps = {
+  network: Network,
+  setNetwork: Dispatch<SetStateAction<Network>>
+}
 
-  const [networkSelected, setNetworkSelected] = useState(network.PRATER);
+const Home: FC<HomeProps> = (props): ReactElement => {
   const [showNetworkModal, setShowNetworkModal] = useState(false);
   const [networkModalWasOpened, setNetworkModalWasOpened] = useState(false);
   const [createMnemonicSelected, setCreateMnemonicSelected] = useState(false);
@@ -120,10 +122,7 @@ const Home = () => {
       handleOpenNetworkModal();
     } else {
       const location = {
-        pathname: "/wizard/mnemonicgeneration",
-        state: {
-          network: networkSelected,
-        },
+        pathname: `/wizard/${StepSequenceKey.MnemonicGeneration}`
       }
 
       history.push(location);
@@ -137,24 +136,25 @@ const Home = () => {
       handleOpenNetworkModal();
     } else {
       const location = {
-        pathname: "/wizard/mnemonicimport",
-        state: {
-          network: networkSelected,
-        },
+        pathname: `/wizard/${StepSequenceKey.MnemonicImport}`
       }
 
       history.push(location);
     }
   }
 
+  const tabIndex = (priority: number) => showNetworkModal ? -1 : priority;
+
   return (
     <StyledMuiContainer>
-      <Network>Select Network: <Button color="primary" onClick={handleOpenNetworkModal}>{networkSelected}</Button></Network>
+      <NetworkDiv>
+        Select Network: <Button color="primary" onClick={handleOpenNetworkModal} tabIndex={tabIndex(1)}>{props.network}</Button>
+      </NetworkDiv>
       <Modal
         open={showNetworkModal}
         onClose={handleCloseNetworkModal}
       >
-        <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetworkSelected={setNetworkSelected} networkSelected={networkSelected}></NetworkPicker>
+        <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetwork={props.setNetwork} network={props.network}></NetworkPicker>
       </Modal>
 
       <LandingHeader variant="h1">Welcome!</LandingHeader>
@@ -162,22 +162,22 @@ const Home = () => {
       <SubHeader>Your key generator for Ethereum 2.0</SubHeader>
 
       <Links>
-        <StyledLink display="inline" color="primary" onClick={sendToDocs}>Docs</StyledLink>
+        <StyledLink display="inline" color="primary" onClick={sendToDocs} tabIndex={tabIndex(0)}>Docs</StyledLink>
         &nbsp;|&nbsp;
-        <StyledLink display="inline" color="primary" onClick={sendToGithub}>Github</StyledLink>
+        <StyledLink display="inline" color="primary" onClick={sendToGithub} tabIndex={tabIndex(0)}>Github</StyledLink>
         &nbsp;|&nbsp;
-        <StyledLink display="inline" color="primary" onClick={sendToDiscord}>Discord</StyledLink>
+        <StyledLink display="inline" color="primary" onClick={sendToDiscord} tabIndex={tabIndex(0)}>Discord</StyledLink>
       </Links>
 
       <OptionsGrid container spacing={2} direction="column">
         <Grid item>
-          <Button variant="contained" color="primary" onClick={handleCreateNewMnemonic}>
+          <Button variant="contained" color="primary" onClick={handleCreateNewMnemonic} tabIndex={tabIndex(1)}>
             Create New Secret Recovery Phrase
           </Button>
         </Grid>
         <Grid item>
           <Tooltip title={tooltips.IMPORT_MNEMONIC}>
-            <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic}>
+            <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic} tabIndex={tabIndex(1)}>
               Use Existing Secret Recovery Phrase
             </Button>
           </Tooltip>
@@ -186,4 +186,5 @@ const Home = () => {
     </StyledMuiContainer>
   );
 };
-export default withRouter(Home);
+
+export default Home;
