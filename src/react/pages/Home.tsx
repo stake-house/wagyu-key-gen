@@ -24,7 +24,6 @@ const ModalBackground = styled.div`
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-
   ${(props: ContainerProps) => {
     if (props.showNetworkPicker) {
       return `
@@ -149,7 +148,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
   return (
     <StyledMuiContainer>
       <NetworkDiv>
-        <Button color="primary" onClick={handleOpenNetworkModal} tabIndex={tabIndex(1)}>{props.network}</Button>
+        Select Network: <Button color="primary" onClick={handleOpenNetworkModal} tabIndex={tabIndex(1)}>{props.network}</Button>
       </NetworkDiv>
       <Modal
         open={showNetworkModal}
@@ -187,4 +186,5 @@ const Home: FC<HomeProps> = (props): ReactElement => {
     </StyledMuiContainer>
   );
 };
+
 export default Home;
