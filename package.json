@@ -30,6 +30,7 @@
   "dependencies": {
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@rauschma/stringio": "^1.4.0",
     "css-loader": "^5.2.6",
     "file-loader": "^6.2.0",
