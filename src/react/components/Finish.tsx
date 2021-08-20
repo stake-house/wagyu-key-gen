@@ -34,7 +34,8 @@ const Finish: FC<Props> = (props): ReactElement => {
         onPrev={props.onStepBack}
         onNext={props.onStepForward}
         hideBack={true}
-        nextLabel="Finish"
+        nextLabel="Close"
+        centerNext={true}
       />
     </Grid>
   );
