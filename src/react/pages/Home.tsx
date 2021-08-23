@@ -73,7 +73,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
   }
 
   const sendToDiscord = () => {
-    shell.openExternal("https://invite.gg/ethstaker");
+    shell.openExternal("https://discord.io/ethstaker");
   }
 
   const handleOpenNetworkModal = () => {
