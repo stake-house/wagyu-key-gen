@@ -29,12 +29,12 @@ const NetworkDiv = styled.div`
 
 const LandingHeader = styled(Typography)`
   font-size: 36px;
-  margin-top: 50px;
-  margin-bottom: 70px;
+  margin-top: 45px;
+  margin-bottom: 60px;
 `;
 
 const SubHeader = styled(Typography)`
-  margin-top: 110px;
+  margin-top: 100px;
 `;
 
 const Links = styled.div`
@@ -47,7 +47,7 @@ const StyledLink = styled(Typography)`
 `;
 
 const OptionsGrid = styled(Grid)`
-  margin-top: 55px;
+  margin-top: 50px;
   align-items: center;
 `;
 
