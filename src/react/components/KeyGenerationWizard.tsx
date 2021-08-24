@@ -145,7 +145,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Generate Keys
+          Create Keys
         </Typography>
       </Grid>
       <ContentGrid item container>

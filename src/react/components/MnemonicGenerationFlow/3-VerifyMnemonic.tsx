@@ -24,14 +24,14 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
   return (
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
-        Please retype your Secret Recovery Phrase here to make sure you have it saved correctly.
+        Please retype your Secret Recovery Phrase here to make sure you have it saved correctly. Mistakes could cause a loss of funds.
       </Grid>
       <Grid item container xs={12}>
         <Grid item xs={1} />
         <Grid item xs={10}>
           <TextField
             id="verify-mnemonic"
-            label="Type your Secret Recovery Phrase here"
+            label="Confirm your Secret Recovery Phrase"
             multiline
             fullWidth
             rows={4}

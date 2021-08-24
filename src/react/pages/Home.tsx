@@ -9,10 +9,6 @@ import { NetworkPicker } from "../components/NetworkPicker";
 import { tooltips } from "../constants";
 import { Network, StepSequenceKey } from '../types'
 
-type ContainerProps = {
-  showNetworkPicker: boolean
-}
-
 const StyledMuiContainer = styled(Container)`
   display: flex;
   flex-direction: column;
