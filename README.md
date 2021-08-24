@@ -5,20 +5,20 @@ Wagyu Key Gen is a GUI application providing functionality to the [eth2.0-deposi
 Prior to running Wagyu Key Gen a few dependencies need to be installed. 
 
 - Install yarn & npm
-    1. `sudo apt update`
-    2. `sudo apt remove cmdtest yarn`
-    3. `sudo apt install npm`
-    4. `sudo npm install -g yarn`
+    - `sudo apt update`
+    - `sudo apt remove cmdtest yarn`
+    - `sudo apt install npm`
+    - `sudo npm install -g yarn`
 - pip 
-    1. `sudo apt install python3-pip`
+    - `sudo apt install python3-pip`
 - Pycryptodome
-    1. `pip install pycryptodome`
+    - `pip install pycryptodome`
 - ETH utilis
-    1. `pip install eth_utils`
+    - `pip install eth_utils`
 - pyecc
-    1. `pip install py_ecc`
+    - `pip install py_ecc`
 - ssz
-    1. `pip install ssz`
+    - `pip install ssz`
 
 NOTE: Additionally, make sure you are running the latest version of Node.js with NPM. Wagyu Key Gen requires at least Node version 12.13.0.
 
