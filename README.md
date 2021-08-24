@@ -1,6 +1,8 @@
 # Wagyu Key Gen
 Wagyu Key Gen is a GUI application providing functionality to the [eth2.0-deposit-cli](https://github.com/ethereum/eth2.0-deposit-cli). It is a React app running in Electron.  See `src/electron/` for the simple electron app and `src/react/` for where the magic happens.
 
+Currenly Wagyu Key Gen only runs on linux.
+
 ## Environment Configuration & Dependencies
 Prior to running Wagyu Key Gen a few dependencies need to be installed. 
 
