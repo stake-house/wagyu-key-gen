@@ -1,6 +1,5 @@
 import React, { FC, ReactElement } from "react";
 import { Grid, Button } from "@material-ui/core";
-import styled from 'styled-components';
 
 type Props = {
   onPrev: () => void,
@@ -11,7 +10,6 @@ type Props = {
   hideNext?: boolean,
   backLabel?: string,
   nextLabel?: string,
-  centerNext?: boolean,
 }
 
 const StepNavigation: FC<Props> = (props): ReactElement => {
@@ -23,13 +21,9 @@ const StepNavigation: FC<Props> = (props): ReactElement => {
           <Button variant="contained" color="primary" disabled={props.disableBack} onClick={props.onPrev} tabIndex={3}>{props.backLabel}</Button>
         )}
       </Grid>
-      <Grid item xs={4}>
-        {!props.hideNext && props.centerNext && (
-          <Button variant="contained" color="primary" disabled={props.disableNext} onClick={props.onNext} tabIndex={2}>{props.nextLabel}</Button>
-        )}
-      </Grid>
+      <Grid item xs={4} />
       <Grid item xs={2}>
-        {!props.hideNext  && !props.centerNext && (
+        {!props.hideNext  && (
           <Button variant="contained" color="primary" disabled={props.disableNext} onClick={props.onNext} tabIndex={2}>{props.nextLabel}</Button>
         )}
       </Grid>

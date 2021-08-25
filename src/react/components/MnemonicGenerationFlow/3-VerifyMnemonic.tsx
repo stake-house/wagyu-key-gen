@@ -24,7 +24,7 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
   return (
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
-        Please retype your Secret Recovery Phrase here to make sure you have it saved correctly. Mistakes could cause a loss of funds.
+        Please retype your Secret Recovery Phrase here to make sure you have it saved correctly.
       </Grid>
       <Grid item container xs={12}>
         <Grid item xs={1} />
