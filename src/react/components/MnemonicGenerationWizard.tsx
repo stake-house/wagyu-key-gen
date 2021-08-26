@@ -72,7 +72,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   const nextLabel = () => {
     switch (step) {
       case 0:
-        return "Generate";
+        return "Create";
       case 1:
         return "Next";
       case 2:
@@ -161,7 +161,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Generate Secret Recovery Phrase
+          Create Secret Recovery Phrase
         </Typography>
       </Grid>
       <ContentGrid item container>

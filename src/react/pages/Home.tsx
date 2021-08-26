@@ -9,34 +9,6 @@ import { NetworkPicker } from "../components/NetworkPicker";
 import { tooltips } from "../constants";
 import { Network, StepSequenceKey } from '../types'
 
-type ContainerProps = {
-  showNetworkPicker: boolean
-}
-
-const ModalBackground = styled.div`
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  ${(props: ContainerProps) => {
-    if (props.showNetworkPicker) {
-      return `
-        display: block;
-      `;
-    } else {
-      return `
-        display: none;
-      `;
-    }
-  }}
-`;
-
 const StyledMuiContainer = styled(Container)`
   display: flex;
   flex-direction: column;
@@ -53,12 +25,12 @@ const NetworkDiv = styled.div`
 
 const LandingHeader = styled(Typography)`
   font-size: 36px;
-  margin-top: 50px;
-  margin-bottom: 70px;
+  margin-top: 45px;
+  margin-bottom: 60px;
 `;
 
 const SubHeader = styled(Typography)`
-  margin-top: 110px;
+  margin-top: 100px;
 `;
 
 const Links = styled.div`
@@ -71,7 +43,7 @@ const StyledLink = styled(Typography)`
 `;
 
 const OptionsGrid = styled(Grid)`
-  margin-top: 55px;
+  margin-top: 50px;
   align-items: center;
 `;
 
@@ -97,7 +69,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
   }
 
   const sendToDiscord = () => {
-    shell.openExternal("https://invite.gg/ethstaker");
+    shell.openExternal("https://discord.io/ethstaker");
   }
 
   const handleOpenNetworkModal = () => {

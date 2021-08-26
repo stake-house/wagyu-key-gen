@@ -1,8 +1,8 @@
 import { StepKey } from './types';
 
 export const errors = {
-	MNEMONIC_FORMAT: "Secret Recovery Phrase is not in the right format, please double check.",
-	MNEMONICS_DONT_MATCH: "Secret Recovery Phrase does not match, please try again.",
+	MNEMONIC_FORMAT: "Invalid format. Your Secret Recovery Phrase should be a 24 word list.",
+	MNEMONICS_DONT_MATCH: "The Secret Recovery Phrase you entered does not match what was given to you. Please try again.",
 	NUMBER_OF_KEYS: "Please input number of keys.",
 	PASSWORD_STRENGTH: "Password must be at least 8 characters.",
 	PASSWORD_MATCH: "Passwords don't match.",
@@ -13,16 +13,16 @@ export const errors = {
 export const MNEMONIC_LENGTH = 24;
 
 export const tooltips = {
-	IMPORT_MNEMONIC: "If you've already generated a Secret Recovery Phrase, you can generate more keys from it by importing it here.",
-	NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to generate.",
+	IMPORT_MNEMONIC: "If you've already created a Secret Recovery Phrase, you can create more keys from it by importing it here.",
+	NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to create.",
 	PASSWORD: "Pick a strong password (at least 8 characters) that will be used to protect your keys.",
-	STARTING_INDEX: "Each key is generated sequentially, so we need to know how many you've generated in the past in order to create some new ones for you.",
+	STARTING_INDEX: "Each key is created sequentially, so we need to know how many you've created in the past in order to create some new ones for you.",
 };
 
 export const stepLabels = {
 	[StepKey.MnemonicImport]: 'Import Secret Recovery Phrase',
 	[StepKey.MnemonicGeneration]: 'Create Secret Recovery Phrase',
-	[StepKey.KeyConfiguration]: 'Configure Keys',
-	[StepKey.KeyGeneration]: 'Create Key Files',
+	[StepKey.KeyConfiguration]: 'Configure Validator Keys',
+	[StepKey.KeyGeneration]: 'Create Validator Key Files',
 	[StepKey.Finish]: 'Finish'
 };

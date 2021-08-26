@@ -1,8 +1,7 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Button, Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
-import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -21,7 +20,7 @@ const Finish: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Generate Keys
+          Create Keys
         </Typography>
       </Grid>
       <ContentGrid item container>
@@ -30,12 +29,13 @@ const Finish: FC<Props> = (props): ReactElement => {
         </Grid>
       </ContentGrid>
       {props.children}
-      <StepNavigation
-        onPrev={props.onStepBack}
-        onNext={props.onStepForward}
-        hideBack={true}
-        nextLabel="Finish"
-      />
+      <Grid item container justifyContent="space-between">
+        <Grid item xs={5} />
+        <Grid item xs={2}>
+          <Button variant="contained" color="primary" onClick={props.onStepForward} tabIndex={2}>Close</Button>
+        </Grid>
+        <Grid item xs={5} />
+      </Grid>
     </Grid>
   );
 }

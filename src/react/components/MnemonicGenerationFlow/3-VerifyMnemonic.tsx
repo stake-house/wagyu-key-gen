@@ -31,7 +31,7 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
         <Grid item xs={10}>
           <TextField
             id="verify-mnemonic"
-            label="Type your Secret Recovery Phrase here"
+            label="Confirm your Secret Recovery Phrase"
             multiline
             fullWidth
             rows={4}

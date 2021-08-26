@@ -53,7 +53,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
         <Typography variant="body1">
-          Nice!  Your Secret Recovery Phrase has been verified. Now lets collect some info about the keys to generate:
+          Nice!  Your Secret Recovery Phrase matches. Now let's collect some info about the keys to create:
         </Typography>
       </Grid>
       <Grid item xs={12}>
