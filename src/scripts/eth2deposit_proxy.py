@@ -2,6 +2,10 @@ import os
 import argparse
 import json
 
+from eth2deposit.key_handling.key_derivation.mnemonic import (
+    get_mnemonic,
+)
+
 from eth_utils import is_hex_address, to_normalized_address
 
 from eth2deposit.credentials import (
@@ -19,6 +23,9 @@ from eth2deposit.utils.constants import (
 from eth2deposit.settings import (
     get_chain_setting,
 )
+
+def create_mnemonic(word_list, language='english'):
+    return get_mnemonic(language=language, words_path=word_list)
 
 def generate_keys(args):
     eth1_withdrawal_address = None
@@ -54,15 +61,42 @@ def generate_keys(args):
     if not verify_deposit_data_json(deposits_file, credentials.credentials):
         raise ValidationError("Failed to verify the deposit data JSON files.")
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("mnemonic", help="Mnemonic", type=str)
-    parser.add_argument("index", help="Validator start index", type=int)
-    parser.add_argument("count", help="Validator count", type=int)
-    parser.add_argument("folder", help="Where to put the deposit data and keystore files", type=str)
-    parser.add_argument("network", help="For which network to create these keys for", type=str)
-    parser.add_argument("password", help="Password for the keystore files", type=str)
-    parser.add_argument("--eth1_withdrawal_address", help="Optional eth1 withdrawal address", type=str)
-    args = parser.parse_args()
+def parse_create_mnemonic(args):
+    mnemonic = None
+    if args.language:
+        mnemonic = create_mnemonic(args.wordlist, language=args.language)
+    else:
+        mnemonic = create_mnemonic(args.wordlist)
 
+    print(json.dumps({
+        'mnemonic': mnemonic
+    }))
+
+def parse_generate_keys(args):
     generate_keys(args)
+
+def main():
+    main_parser = argparse.ArgumentParser()
+
+    subparsers = main_parser.add_subparsers(title="subcommands")
+    
+    create_parser = subparsers.add_parser("create_mnemonic")
+    create_parser.add_argument("wordlist", help="Path to word list directory", type=str)
+    create_parser.add_argument("--language", help="Language", type=str)
+    create_parser.set_defaults(func=parse_create_mnemonic)
+
+    generate_parser = subparsers.add_parser("generate_keys")
+    generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
+    generate_parser.add_argument("index", help="Validator start index", type=int)
+    generate_parser.add_argument("count", help="Validator count", type=int)
+    generate_parser.add_argument("folder", help="Where to put the deposit data and keystore files", type=str)
+    generate_parser.add_argument("network", help="For which network to create these keys for", type=str)
+    generate_parser.add_argument("password", help="Password for the keystore files", type=str)
+    generate_parser.add_argument("--eth1_withdrawal_address", help="Optional eth1 withdrawal address", type=str)
+    generate_parser.set_defaults(func=parse_generate_keys)
+
+    args = main_parser.parse_args()
+    args.func(args)
+
+if __name__ == "__main__":
+    main()

@@ -11,8 +11,8 @@ const WORD_LIST_PATH = ETH2_DEPOSIT_CLI_PATH + "/eth2deposit/key_handling/key_de
 
 const REQUIREMENT_PACKAGES_PATH = "dist/packages";
 
-const CREATE_MNEMONIC_PATH = SCRIPTS_PATH + "/create_mnemonic.py";
-const GENERATE_KEYS_PATH =  SCRIPTS_PATH + "/generate_keys.py";
+const CREATE_MNEMONIC_PATH = SCRIPTS_PATH + "/eth2deposit_proxy.py create_mnemonic";
+const GENERATE_KEYS_PATH =  SCRIPTS_PATH + "/eth2deposit_proxy.py generate_keys";
 
 const requireDepositPackages = (): boolean => {
 
