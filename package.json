@@ -14,6 +14,7 @@
     "@types/styled-components": "^5.1.11",
     "babel-loader": "^8.2.2",
     "electron": "^13.1.6",
+    "electron-builder": "^22.11.7",
     "ts-loader": "^9.2.3",
     "typescript": "^4.3.5",
     "webpack": "^5.44.0",
@@ -26,7 +27,9 @@
     "buildcli": "src/scripts/bundle_proxy_linux.sh",
     "start": "electron ./dist/electron/index.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
-    "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development"
+    "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.1",
@@ -44,5 +47,11 @@
     "style-loader": "^3.0.0",
     "styled-components": "^5.3.0",
     "typeface-roboto": "^1.1.13"
+  },
+  "build": {
+    "appId": "com.electron.wagyukeygen",
+    "mac": {
+      "category": "public.app-category.utilities"
+    }
   }
 }
