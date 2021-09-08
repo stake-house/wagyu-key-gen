@@ -1,7 +1,8 @@
 import { executeCommandSync } from "./ExecuteCommand";
 import { execSync } from 'child_process';
-import { mkdir, existsSync } from 'fs';
+import { mkdir, existsSync, access, constants } from 'fs';
 import { Network } from '../types'
+import { cwd } from 'process';
 
 const ETH2_DEPOSIT_CLI_PATH = "src/vendors/eth2.0-deposit-cli-1.2.0";
 const SCRIPTS_PATH = "src/scripts";
@@ -11,8 +12,13 @@ const WORD_LIST_PATH = ETH2_DEPOSIT_CLI_PATH + "/eth2deposit/key_handling/key_de
 
 const REQUIREMENT_PACKAGES_PATH = "dist/packages";
 
-const CREATE_MNEMONIC_PATH = SCRIPTS_PATH + "/eth2deposit_proxy.py create_mnemonic";
-const GENERATE_KEYS_PATH =  SCRIPTS_PATH + "/eth2deposit_proxy.py generate_keys";
+const ETH2DEPOSIT_PROXY_PATH =  SCRIPTS_PATH + "/eth2deposit_proxy.py";
+
+const SFE_PATH = "dist/bin/eth2deposit_proxy";
+const DIST_WORD_LIST_PATH = cwd() + "/dist/word_lists";
+
+const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
+const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 
 const requireDepositPackages = (): boolean => {
 
@@ -28,19 +34,35 @@ const requireDepositPackages = (): boolean => {
   }
 }
 
+const singleFileExecutableExists = (): boolean => {
+  access(SFE_PATH, constants.F_OK, (err) => {
+    return false;
+  });
+  return true;
+}
+
 const createMnemonic = (language: string): string => {
-  if(!requireDepositPackages()) {
-    return '';
+  let cmd = "";
+  let env = process.env;
+
+  const escapedLanguage = escapeArgument(language);
+
+  if(singleFileExecutableExists()) {
+    cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
+    console.log('Calling SFE for create mnemonic');
+  } else {
+    if(!requireDepositPackages()) {
+      return '';
+    }
+  
+    const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
+  
+    const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
+  
+    env.PYTHONPATH = expythonpath;
+  
+    cmd = "python3 " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
   }
-
-  const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
-
-  const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
-
-  const env = process.env;
-  env.PYTHONPATH = expythonpath;
-
-  const cmd = "python3 " + CREATE_MNEMONIC_PATH + " " + WORD_LIST_PATH + " --language " + language;
 
   try {
     const result = JSON.parse(execSync(cmd, {env: env}).toString())
@@ -77,22 +99,33 @@ const generateKeys = (
     return false;
   }
 
-  const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
+  let cmd = "";
+  let env = process.env;
 
-  const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
-  
-  const env = process.env;
-  env.PYTHONPATH = expythonpath;
-
-  var withdrawalAddress: string = "";
+  let withdrawalAddress: string = "";
   if (eth1_withdrawal_address != "") {
     withdrawalAddress = `--eth1_withdrawal_address ${eth1_withdrawal_address}`;
   }
   
   const escapedPassword = escapeArgument(password);
   const escapedMnemonic = escapeArgument(mnemonic);
+  
+  if(singleFileExecutableExists()) {
+    cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+    console.log('Calling SFE for generate keys');
+  } else {
+    if(!requireDepositPackages()) {
+      return false;
+    }
+  
+    const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
 
-  const cmd = `python3 ${GENERATE_KEYS_PATH} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+    const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
+    
+    env.PYTHONPATH = expythonpath;
+
+    cmd = `python3 ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+  }
   
   try {
     execSync(cmd, {env: env});

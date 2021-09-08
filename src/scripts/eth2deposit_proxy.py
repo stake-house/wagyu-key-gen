@@ -96,7 +96,10 @@ def main():
     generate_parser.set_defaults(func=parse_generate_keys)
 
     args = main_parser.parse_args()
-    args.func(args)
+    if not args or 'func' not in args:
+        main_parser.parse_args(['-h'])
+    else:
+        args.func(args)
 
 if __name__ == "__main__":
     main()
