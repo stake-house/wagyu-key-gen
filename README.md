@@ -22,7 +22,10 @@ Prior to running Wagyu Key Gen a few dependencies need to be installed.
 - ssz
     - `pip install ssz`
 
-NOTE: Additionally, make sure you are running the latest version of Node.js with NPM. Wagyu Key Gen requires at least Node version 12.13.0.
+- pyinstaller (to bundle python parts)
+    - `pip install pyinstaller`
+
+NOTE: Additionally, make sure you are running the latest version of Node.js with NPM. Wagyu Key Gen requires at least Node version 12.13.0. On Ubuntu/Debian, you can install a more recent version using [NodeSource](https://github.com/nodesource/distributions/blob/master/README.md).
 
 ## Start Wagyu Key Gen
 Start by cloning this repo and entering the directory.
