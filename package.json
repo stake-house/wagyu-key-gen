@@ -50,6 +50,7 @@
   },
   "build": {
     "appId": "com.electron.wagyukeygen",
+    "productName": "Wagyu Key Gen",
     "files": [
       "build/**/*",
       "package.json"
