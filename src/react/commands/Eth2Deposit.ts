@@ -14,8 +14,8 @@ const REQUIREMENT_PACKAGES_PATH = "dist/packages";
 
 const ETH2DEPOSIT_PROXY_PATH =  SCRIPTS_PATH + "/eth2deposit_proxy.py";
 
-const SFE_PATH = "dist/deposit_cli/bin/eth2deposit_proxy";
-const DIST_WORD_LIST_PATH = cwd() + "/dist/deposit_cli/word_lists";
+const SFE_PATH = "build/bin/eth2deposit_proxy";
+const DIST_WORD_LIST_PATH = cwd() + "/build/word_lists";
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";

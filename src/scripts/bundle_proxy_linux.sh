@@ -7,8 +7,8 @@ ETH2DEPOSITCLIPATH=$SCRIPTPATH/../vendors/eth2.0-deposit-cli-1.2.0
 ETH2REQUIREMENTSPATH=$ETH2DEPOSITCLIPATH/requirements.txt
 
 PYTHONPATH=$TARGETPACKAGESPATH:$ETH2DEPOSITCLIPATH:$(python3 -c "import sys;print(':'.join(sys.path))")
-DISTBINPATH=$SCRIPTPATH/../../dist/deposit_cli/bin
-DISTWORDSPATH=$SCRIPTPATH/../../dist/deposit_cli/word_lists
+DISTBINPATH=$SCRIPTPATH/../../build/bin
+DISTWORDSPATH=$SCRIPTPATH/../../build/word_lists
 SRCWORDSPATH=$SCRIPTPATH/../vendors/eth2.0-deposit-cli-1.2.0/eth2deposit/key_handling/key_derivation/word_lists
 
 mkdir -p $DISTBINPATH
