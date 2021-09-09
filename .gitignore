@@ -1,3 +1,8 @@
 node_modules/
 dist/
 .yarn
+
+# For pyinstaller
+build/
+src/scripts/__pycache__/
+eth2deposit_proxy.spec
