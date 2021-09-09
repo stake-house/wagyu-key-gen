@@ -57,10 +57,6 @@
     ],
     "mac": {
       "category": "public.app-category.utilities"
-    },
-    "linux": {
-      "target": "deb",
-      "icon": "build/icon.png"
     }
   }
 }
