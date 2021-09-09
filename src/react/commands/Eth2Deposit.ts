@@ -14,8 +14,8 @@ const REQUIREMENT_PACKAGES_PATH = "dist/packages";
 
 const ETH2DEPOSIT_PROXY_PATH =  SCRIPTS_PATH + "/eth2deposit_proxy.py";
 
-const SFE_PATH = "dist/bin/eth2deposit_proxy";
-const DIST_WORD_LIST_PATH = cwd() + "/dist/word_lists";
+const SFE_PATH = "dist/deposit_cli/bin/eth2deposit_proxy";
+const DIST_WORD_LIST_PATH = cwd() + "/dist/deposit_cli/word_lists";
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
@@ -49,7 +49,7 @@ const createMnemonic = (language: string): string => {
 
   if(singleFileExecutableExists()) {
     cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
-    console.log('Calling SFE for create mnemonic');
+    console.log('Calling SFE for create mnemonic with cmd: ' + cmd);
   } else {
     if(!requireDepositPackages()) {
       return '';

@@ -21,8 +21,8 @@
     "webpack-serve": "^4.0.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.react.config.js --config webpack.electron.config.js",
-    "build:watch": "webpack --config webpack.react.config.js --config webpack.electron.config.js --watch",
+    "build": "yarn run buildcli && webpack --config webpack.react.config.js --config webpack.electron.config.js",
+    "build:watch": "yarn run buildcli && webpack --config webpack.react.config.js --config webpack.electron.config.js --watch",
     "buildcli": "src/scripts/bundle_proxy_linux.sh",
     "start": "electron ./dist/electron/index.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
