@@ -128,11 +128,8 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const uiCreateMnemonic = () => {
-    if (uname() == "Linux") {
-      props.setMnemonic(createMnemonic('english'));
-    } else {
-      props.setMnemonic("one two three four five six seven eight nine ten eleven twelve one two three four five six seven eight nine ten eleven twelve");
-    }
+    console.log("Generating mnemonic...");
+    props.setMnemonic(createMnemonic('english'));
   }
 
   const content = () => {
