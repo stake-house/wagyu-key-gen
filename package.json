@@ -57,6 +57,11 @@
     ],
     "mac": {
       "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": "AppImage",
+      "executableName": "Wagyu Key Gen",
+      "icon": "icon.icns"
     }
   }
 }
