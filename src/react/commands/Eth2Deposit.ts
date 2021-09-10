@@ -40,46 +40,53 @@ const requireDepositPackages = (): boolean => {
   }
 }
 
-const createMnemonic = (language: string): string => {
-  let cmd = "";
-  let env = process.env;
-
-  const escapedLanguage = escapeArgument(language);
-
-  if (doesFileExist(BUNDLED_SFE_PATH)) {
-    cmd = BUNDLED_SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + BUNDLED_DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
-    console.log('Calling bundled SFE for create mnemonic with cmd: ' + cmd);
-  } else if (doesFileExist(SFE_PATH)) {
-      cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
-      console.log('Calling unbundled SFE for create mnemonic with cmd: ' + cmd);
-  } else {
-    if (!requireDepositPackages()) {
-      return '';
-    }
+const createMnemonic = (language: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(function() {
+      let cmd = "";
+      let env = process.env;
+    
+      const escapedLanguage = escapeArgument(language);
+    
+      if (doesFileExist(BUNDLED_SFE_PATH)) {
+        cmd = BUNDLED_SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + BUNDLED_DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
+        console.log('Calling bundled SFE for create mnemonic with cmd: ' + cmd);
+      } else if (doesFileExist(SFE_PATH)) {
+          cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
+          console.log('Calling unbundled SFE for create mnemonic with cmd: ' + cmd);
+      } else {
+        if (!requireDepositPackages()) {
+          reject("Failed to generate mnemonic, don't have the required packages.");
+        }
+      
+        const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
+      
+        const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
+      
+        env.PYTHONPATH = expythonpath;
+      
+        cmd = "python3 " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
+      }
+    
+      try {
+        const mnemonicResult = execSync(cmd, {env: env});
+        const mnemonicResultString = mnemonicResult.toString();
   
-    const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
-  
-    const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
-  
-    env.PYTHONPATH = expythonpath;
-  
-    cmd = "python3 " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
-  }
-
-  try {
-    const result = JSON.parse(execSync(cmd, {env: env}).toString())
-    return result.mnemonic;
-  } 
-  catch (error) {
-    // TODO: more robust error handling
-    error.status;
-    error.message;
-    error.stderr;
-    error.stdout;
-    console.log(error.message);
-    return error.status;
-  }
-
+        const result = JSON.parse(mnemonicResultString);
+        resolve(result.mnemonic);
+      } 
+      catch (error) {
+        // TODO: more robust error handling
+        error.status;
+        error.message;
+        error.stderr;
+        error.stdout;
+        console.log(error.message);
+        
+        reject(error.message);
+      }
+    }, 1000)
+  });
 }
 
 const escapeArgument = (argument: string): string => {

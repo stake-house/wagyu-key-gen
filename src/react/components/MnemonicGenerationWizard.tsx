@@ -75,6 +75,10 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
     }
   }
 
+  const disableNext = () => {
+    return step == 1 && props.mnemonic == "";
+  }
+
   const nextClicked = () => {
     setStep(step + 1);
   }
@@ -91,7 +95,13 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
 
   const uiCreateMnemonic = () => {
     console.log("Generating mnemonic...");
-    props.setMnemonic(createMnemonic('english'));
+    createMnemonic('english')
+      .then((mnemonic) => {
+        props.setMnemonic(mnemonic);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   const content = () => {
@@ -135,6 +145,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         onNext={nextClicked}
         backLabel={prevLabel()}
         nextLabel={nextLabel()}
+        disableNext={disableNext()}
       />
     </Grid>
   );
