@@ -21,9 +21,15 @@ Prior to running Wagyu Key Gen a few dependencies need to be installed.
     - `pip install py_ecc`
 - ssz
     - `pip install ssz`
-
 - pyinstaller (to bundle python parts)
     - `pip install pyinstaller`
+
+- On Windows, install Node.js, npm, yarn and Python 3
+    - Download and install Node.js and npm from https://nodejs.org/en/download/ (Use LTS version). It should also install Python 3 with chocolatey.
+    - `npm install -g yarn`
+- pip
+    - Download the get-pip.py script from https://bootstrap.pypa.io/get-pip.py
+    - `python get-pip.py`
 
 NOTE: Additionally, make sure you are running the latest version of Node.js with NPM. Wagyu Key Gen requires at least Node version 12.13.0. On Ubuntu/Debian, you can install a more recent version using [NodeSource](https://github.com/nodesource/distributions/blob/master/README.md).
 
