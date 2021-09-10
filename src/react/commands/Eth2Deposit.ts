@@ -1,6 +1,6 @@
 import { executeCommandSync } from "./ExecuteCommand";
 import { execSync } from 'child_process';
-import { mkdir, existsSync, access, constants } from 'fs';
+import { mkdir, existsSync, accessSync, constants } from 'fs';
 import { Network } from '../types'
 import { cwd } from 'process';
 
@@ -26,6 +26,7 @@ const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
+const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
 
 const requireDepositPackages = (): boolean => {
 
@@ -42,10 +43,12 @@ const requireDepositPackages = (): boolean => {
 }
 
 const singleFileExecutableExists = (): boolean => {
-  access(SFE_PATH, constants.F_OK, (err) => {
+  try {
+    accessSync(SFE_PATH, constants.F_OK);
+    return true;
+  } catch (err) {
     return false;
-  });
-  return true;
+  }
 }
 
 const createMnemonic = (language: string): string => {
@@ -56,15 +59,15 @@ const createMnemonic = (language: string): string => {
 
   if(singleFileExecutableExists()) {
     cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
-    console.log('Calling SFE for create mnemonic with cmd = ' + cmd);
+    console.log('Calling SFE for create mnemonic');
   } else {
     if(!requireDepositPackages()) {
       return '';
     }
   
-    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print(':'.join(sys.path))\"");
+    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
   
-    const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
+    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
   
     env.PYTHONPATH = expythonpath;
   
@@ -133,9 +136,9 @@ const generateKeys = (
       return false;
     }
   
-    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print(':'.join(sys.path))\"");
+    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
 
-    const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
+    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
     
     env.PYTHONPATH = expythonpath;
 
