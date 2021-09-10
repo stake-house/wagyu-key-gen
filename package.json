@@ -1,7 +1,7 @@
 {
   "name": "wagyukeygen",
   "version": "1.0.0",
-  "description": "Wagyu Key Gen.",
+  "description": "GUI key generation tool wrapping the deposit cli.",
   "main": "./build/electron/index.js",
   "author": "Colfax Selby <colfax.selby@gmail.com>",
   "license": "MIT",
@@ -29,7 +29,8 @@
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
     "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development",
     "pack": "electron-builder --dir",
-    "dist": "yarn run build && electron-builder"
+    "bdist": "yarn run build && electron-builder",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.1",
@@ -50,10 +51,14 @@
   },
   "build": {
     "appId": "com.electron.wagyukeygen",
-    "productName": "Wagyu Key Gen",
+    "productName": "WagyuKeyGen",
     "files": [
       "build/**/*",
       "package.json"
+    ],
+    "extraFiles": [
+      "build/bin/eth2deposit_proxy",
+      "build/word_lists/*"
     ],
     "mac": {
       "category": "public.app-category.utilities"
