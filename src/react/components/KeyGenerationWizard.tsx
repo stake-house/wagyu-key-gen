@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import { uname } from '../commands/BashUtils';
 import { generateKeys } from '../commands/Eth2Deposit';
 import SelectFolder from './KeyGeneratioinFlow/2-SelectFolder';
 import CreatingKeys from './KeyGeneratioinFlow/3-CreatingKeys';
@@ -100,29 +99,18 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const handleKeyGeneration = () => {
-    const os = uname();
     const eth1_withdrawal_address = "";
-
-    if (os == "Linux") {
-      console.log("On linux, generating keys.");
       
-      generateKeys(
-        props.mnemonic,
-        props.keyGenerationStartIndex!,
-        props.numberOfKeys,
-        props.network,
-        props.password,
-        eth1_withdrawal_address,
-        props.folderPath
-      );
+    generateKeys(
+      props.mnemonic,
+      props.keyGenerationStartIndex!,
+      props.numberOfKeys,
+      props.network,
+      props.password,
+      eth1_withdrawal_address,
+      props.folderPath
+    );
 
-    } else {
-      console.log("Pretended to generate keys since not on linux.");
-
-      // pause for a couple seconds
-      const end = Date.now() + 2000;
-      while (Date.now() < end) continue;
-    }
   }
 
   const content = () => {

@@ -4,21 +4,28 @@ import { mkdir, existsSync, access, constants } from 'fs';
 import { Network } from '../types'
 import { cwd } from 'process';
 
-const ETH2_DEPOSIT_CLI_PATH = "src/vendors/eth2.0-deposit-cli-1.2.0";
-const SCRIPTS_PATH = "src/scripts";
+import path from "path";
+import process from "process";
 
-const REQUIREMENTS_PATH = ETH2_DEPOSIT_CLI_PATH + "/requirements.txt";
-const WORD_LIST_PATH = ETH2_DEPOSIT_CLI_PATH + "/eth2deposit/key_handling/key_derivation/word_lists";
+const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-1.2.0";
 
-const REQUIREMENT_PACKAGES_PATH = "dist/packages";
+const ETH2_DEPOSIT_CLI_PATH = path.join("src", "vendors", ETH2_DEPOSIT_DIR_NAME);
+const SCRIPTS_PATH = path.join("src", "scripts");
 
-const ETH2DEPOSIT_PROXY_PATH =  SCRIPTS_PATH + "/eth2deposit_proxy.py";
+const REQUIREMENTS_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "requirements.txt");
+const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "eth2deposit", "key_handling", "key_derivation", "word_lists");
 
-const SFE_PATH = "dist/bin/eth2deposit_proxy";
-const DIST_WORD_LIST_PATH = cwd() + "/dist/word_lists";
+const REQUIREMENT_PACKAGES_PATH = path.join("dist", "packages");
+
+const ETH2DEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "eth2deposit_proxy.py");
+
+const SFE_PATH = path.join("dist", "bin", "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
+const DIST_WORD_LIST_PATH = path.join(cwd(), "dist", "word_lists");
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
+
+const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 
 const requireDepositPackages = (): boolean => {
 
@@ -27,7 +34,7 @@ const requireDepositPackages = (): boolean => {
       if (err) throw err;
     });
 
-    return executeCommandSync("python3 -m pip install -r " +
+    return executeCommandSync(PYTHON_EXE + " -m pip install -r " +
       REQUIREMENTS_PATH + " --target " + REQUIREMENT_PACKAGES_PATH) == 0;
   } else {
       return true;
@@ -49,19 +56,19 @@ const createMnemonic = (language: string): string => {
 
   if(singleFileExecutableExists()) {
     cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
-    console.log('Calling SFE for create mnemonic');
+    console.log('Calling SFE for create mnemonic with cmd = ' + cmd);
   } else {
     if(!requireDepositPackages()) {
       return '';
     }
   
-    const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
+    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print(':'.join(sys.path))\"");
   
     const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
   
     env.PYTHONPATH = expythonpath;
   
-    cmd = "python3 " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
+    cmd = PYTHON_EXE + " " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
   }
 
   try {
@@ -81,9 +88,17 @@ const createMnemonic = (language: string): string => {
 }
 
 const escapeArgument = (argument: string): string => {
-  if (argument === '') return '\'\'';
-  if (!/[^%+,-./:=@_0-9A-Za-z]/.test(argument)) return argument;
-  return '\'' + argument.replace(/'/g, '\'"\'') + '\'';
+  if (process.platform == "win32") {
+    // TODO: Escape argument for Windows properly
+    if (/ /.test(argument)) {
+      return "\"" + argument + "\"";
+    }
+    return argument;
+  } else {
+    if (argument === '') return '\'\'';
+    if (!/[^%+,-./:=@_0-9A-Za-z]/.test(argument)) return argument;
+    return '\'' + argument.replace(/'/g, '\'"\'') + '\'';
+  }
 }
 
 const generateKeys = (
@@ -118,13 +133,13 @@ const generateKeys = (
       return false;
     }
   
-    const pythonpath = executeCommandSync("python3 -c \"import sys;print(':'.join(sys.path))\"");
+    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print(':'.join(sys.path))\"");
 
     const expythonpath = REQUIREMENT_PACKAGES_PATH + ":" + ETH2_DEPOSIT_CLI_PATH + ":" + pythonpath;
     
     env.PYTHONPATH = expythonpath;
 
-    cmd = `python3 ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
   }
   
   try {

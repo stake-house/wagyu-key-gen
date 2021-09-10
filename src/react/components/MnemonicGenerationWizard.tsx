@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import { uname } from '../commands/BashUtils';
 import { createMnemonic } from '../commands/Eth2Deposit';
 import GenerateMnemonic from './MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from './MnemonicGenerationFlow/1-2-ShowMnemonic';
@@ -128,11 +127,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const uiCreateMnemonic = () => {
-    if (uname() == "Linux") {
-      props.setMnemonic(createMnemonic('english'));
-    } else {
-      props.setMnemonic("one two three four five six seven eight nine ten eleven twelve one two three four five six seven eight nine ten eleven twelve");
-    }
+    props.setMnemonic(createMnemonic('english'));
   }
 
   const content = () => {
