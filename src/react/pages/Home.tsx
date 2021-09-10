@@ -60,10 +60,6 @@ const Home: FC<HomeProps> = (props): ReactElement => {
 
   let history = useHistory();
 
-  const sendToDocs = () => {
-    shell.openExternal("https://github.com/stake-house/wagyu-key-gen");
-  }
-
   const sendToGithub = () => {
     shell.openExternal("https://github.com/stake-house/wagyu-key-gen");
   }
@@ -134,8 +130,6 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       <SubHeader>Your key generator for Ethereum 2.0</SubHeader>
 
       <Links>
-        <StyledLink display="inline" color="primary" onClick={sendToDocs} tabIndex={tabIndex(0)}>Docs</StyledLink>
-        &nbsp;|&nbsp;
         <StyledLink display="inline" color="primary" onClick={sendToGithub} tabIndex={tabIndex(0)}>Github</StyledLink>
         &nbsp;|&nbsp;
         <StyledLink display="inline" color="primary" onClick={sendToDiscord} tabIndex={tabIndex(0)}>Discord</StyledLink>

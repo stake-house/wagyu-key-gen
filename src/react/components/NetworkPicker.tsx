@@ -8,8 +8,8 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 380px;
-  width: 420px;
+  height: 320px;
+  width: 350px;
   background: rgba(27, 38, 44, 0.95);
   border-radius: 20px;
   align-items: center;
@@ -59,7 +59,6 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
           <FormControl focused>
             <RadioGroup aria-label="gender" name="gender1" value={props.network} onChange={networkChanged}>
               <FormControlLabel value={Network.PRATER} control={<Radio />} label={Network.PRATER} />
-              <FormControlLabel value={Network.PYRMONT} control={<Radio />} label={Network.PYRMONT} />
               <FormControlLabel value={Network.MAINNET} disabled control={<Radio />} label={Network.MAINNET} />
             </RadioGroup>
           </FormControl>
