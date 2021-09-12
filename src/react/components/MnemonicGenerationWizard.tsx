@@ -31,7 +31,9 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   useEffect(() => {
     console.log("step is: " + step);
 
-    if (step == 0) {
+    if (step == -1) {
+      props.onStepBack();
+    } else if (step == 0) {
       props.setMnemonic("");
     } else if (step == 1 && props.mnemonic == "") {
       console.log("creating mnemonic");
@@ -145,6 +147,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         onNext={nextClicked}
         backLabel={prevLabel()}
         nextLabel={nextLabel()}
+        disableBack={disableNext()}
         disableNext={disableNext()}
       />
     </Grid>
