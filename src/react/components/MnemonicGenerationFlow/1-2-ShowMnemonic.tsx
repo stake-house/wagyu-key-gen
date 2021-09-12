@@ -56,7 +56,7 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
       { props.mnemonic == "" &&
         <Grid container direction="column" spacing={5}>
           <Grid item xs={12}>
-            Generating your secret recovery phrase.  May take up to 15 seconds.
+            Generating your secret recovery phrase.  May take up to 30 seconds.
           </Grid>
           <Grid item container xs={12} justifyContent="center">
             <Loader />
