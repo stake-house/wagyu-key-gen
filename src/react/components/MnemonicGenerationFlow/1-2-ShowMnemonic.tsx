@@ -52,14 +52,19 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
   const copyText = copied ? 'Copied' : 'Copy';
 
   return (
-    <Grid container direction="column" spacing={3}>
+    <Grid container>
       { props.mnemonic == "" &&
-        <Grid item xs={12}>
-          <Loader />
+        <Grid container direction="column" spacing={5}>
+          <Grid item xs={12}>
+            Generating your secret recovery phrase.  May take up to 15 seconds.
+          </Grid>
+          <Grid item container xs={12} justifyContent="center">
+            <Loader />
+          </Grid>
         </Grid>
       }
       { props.mnemonic != "" &&
-        <Grid>
+        <Grid container direction="column" spacing={3}>
           <Grid item xs={12}>
             Below is your Secret Recovery Phrase.  Make sure you back it up - without it you will not be able to retrieve your funds.
           </Grid>
