@@ -104,10 +104,6 @@ const generateKeys = (
     eth1_withdrawal_address: string,
     folder: string,
   ): boolean => {
-  if(!requireDepositPackages()) {
-    return false;
-  }
-
   let cmd = "";
   let env = process.env;
 
