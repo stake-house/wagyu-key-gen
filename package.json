@@ -22,14 +22,13 @@
     "webpack-serve": "^4.0.0"
   },
   "scripts": {
-    "build": "yarn run buildcli && webpack --config webpack.react.config.js --config webpack.electron.config.js",
-    "build:watch": "yarn run buildcli && webpack --config webpack.react.config.js --config webpack.electron.config.js --watch",
+    "build": "webpack --config webpack.react.config.js --config webpack.electron.config.js",
+    "build:watch": "webpack --config webpack.react.config.js --config webpack.electron.config.js --watch",
     "buildcli": "src/scripts/bundle_proxy_linux.sh",
     "start": "electron ./build/electron/index.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
     "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development",
     "pack": "electron-builder --dir",
-    "bdist": "yarn run build && electron-builder",
     "dist": "electron-builder"
   },
   "dependencies": {
@@ -50,7 +49,7 @@
     "typeface-roboto": "^1.1.13"
   },
   "build": {
-    "appId": "com.electron.wagyukeygen",
+    "appId": "gg.wagyu.keygen",
     "productName": "WagyuKeyGen",
     "files": [
       "build/**/*",
