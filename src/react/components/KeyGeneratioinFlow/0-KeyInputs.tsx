@@ -45,7 +45,8 @@ const KeyInputs = (props: GenerateKeysProps) => {
 
   const handleKeyDown = (evt: React.KeyboardEvent<HTMLFormElement>) => {
     if (evt.key === 'Enter') {
-      props.onFinish();
+      // Commenting out due to white screen bug
+      // props.onFinish();
     }
   }
 
