@@ -25,12 +25,12 @@ const NetworkDiv = styled.div`
 
 const LandingHeader = styled(Typography)`
   font-size: 36px;
-  margin-top: 45px;
-  margin-bottom: 60px;
+  margin-top: 15px;
+  margin-bottom: 20px;
 `;
 
 const SubHeader = styled(Typography)`
-  margin-top: 100px;
+  margin-top: 20px;
 `;
 
 const Links = styled.div`
