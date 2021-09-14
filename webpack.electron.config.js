@@ -7,7 +7,7 @@ module.exports = {
   entry: './src/electron/index.ts',
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist/electron')
+    path: path.resolve(__dirname, 'build/electron')
   },
   module: {
     rules: [

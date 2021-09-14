@@ -6,6 +6,14 @@ const doesFileExist = (filename: string): boolean => {
   return result == 0;
 };
 
+const ls = (): string => {
+  return executeCommandSyncReturnStdout("ls").trim();
+}
+
+const pwd = (): string => {
+  return executeCommandSyncReturnStdout("pwd").trim();
+}
+
 //TODO: add error handling
 const readlink = (file: string): string => {
   return executeCommandSyncReturnStdout("readlink -f " + file).trim();
@@ -23,6 +31,8 @@ const uname = (): string => {
 
 export {
   doesFileExist,
+  ls,
+  pwd,
   readlink,
   uname,
   which

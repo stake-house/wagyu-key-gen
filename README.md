@@ -47,6 +47,9 @@ Then run the following:
 ## To run diagnostics
 To open dev tools when in Wagyu Key Gen use `Ctrl + shift + i`
 
+## Bundling
+We use [electron-builder](https://www.electron.build/) to create executable bundles for Wagyu Key Gen.  Run `yarn run dist` to create a bundle.
+
 ## Design
 Current designs: https://www.figma.com/file/jcF78fVjndvM2hOPvifl0N/Wagyu-Key?node-id=1%3A4
 
