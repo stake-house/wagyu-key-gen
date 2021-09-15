@@ -12,10 +12,10 @@ module.exports = {
   // the entry point is the top of the tree of modules.
   // webpack will bundle this file and everything it references.
   entry: './src/react/index.tsx',
-  // we specify we want to put the bundled result in the matching dist/ folder
+  // we specify we want to put the bundled result in the matching build/ folder
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist/react'),
+    path: path.resolve(__dirname, 'build/react'),
   },
   module: {
     // rules tell webpack how to handle certain types of files

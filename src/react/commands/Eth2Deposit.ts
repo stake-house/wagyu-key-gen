@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import { mkdir, existsSync, accessSync, constants } from 'fs';
 import { Network } from '../types'
 import { cwd } from 'process';
+import { doesFileExist } from "./BashUtils";
 
 import path from "path";
 import process from "process";
@@ -19,8 +20,14 @@ const REQUIREMENT_PACKAGES_PATH = path.join("dist", "packages");
 
 const ETH2DEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "eth2deposit_proxy.py");
 
-const SFE_PATH = path.join("dist", "bin", "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
-const DIST_WORD_LIST_PATH = path.join(cwd(), "dist", "word_lists");
+// Path used when testing locally unbundled, calling python SFE
+const SFE_PATH = path.join("build", "bin", "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
+const DIST_WORD_LIST_PATH = path.join(cwd(), "build", "word_lists");
+
+// Path used when run as an executable clickable bundle, calling python SFE
+const BUNDLED_SFE_PATH = path.join(process.resourcesPath, "..", "build", "bin",
+  "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
+const BUNDLED_DIST_WORD_LIST_PATH = path.join(process.resourcesPath, "..", "build", "word_lists");
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
@@ -42,52 +49,53 @@ const requireDepositPackages = (): boolean => {
   }
 }
 
-const singleFileExecutableExists = (): boolean => {
-  try {
-    accessSync(SFE_PATH, constants.F_OK);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
-const createMnemonic = (language: string): string => {
-  let cmd = "";
-  let env = process.env;
-
-  const escapedLanguage = escapeArgument(language);
-
-  if(singleFileExecutableExists()) {
-    cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
-    console.log('Calling SFE for create mnemonic');
-  } else {
-    if(!requireDepositPackages()) {
-      return '';
-    }
+const createMnemonic = (language: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(function() {
+      let cmd = "";
+      let env = process.env;
+    
+      const escapedLanguage = escapeArgument(language);
+    
+      if (doesFileExist(BUNDLED_SFE_PATH)) {
+        cmd = BUNDLED_SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + BUNDLED_DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
+        console.log('Calling bundled SFE for create mnemonic with cmd: ' + cmd);
+      } else if (doesFileExist(SFE_PATH)) {
+          cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
+          console.log('Calling unbundled SFE for create mnemonic with cmd: ' + cmd);
+      } else {
+        if (!requireDepositPackages()) {
+          reject("Failed to generate mnemonic, don't have the required packages.");
+        }
+      
+        const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+      
+        const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
+      
+        env.PYTHONPATH = expythonpath;
+      
+        cmd = PYTHON_EXE + " " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
+      }
+    
+      try {
+        const mnemonicResult = execSync(cmd, {env: env});
+        const mnemonicResultString = mnemonicResult.toString();
   
-    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
-  
-    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
-  
-    env.PYTHONPATH = expythonpath;
-  
-    cmd = PYTHON_EXE + " " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
-  }
-
-  try {
-    const result = JSON.parse(execSync(cmd, {env: env}).toString())
-    return result.mnemonic;
-  } 
-  catch (error) {
-    // TODO: more robust error handling
-    error.status;
-    error.message;
-    error.stderr;
-    error.stdout;
-    console.log(error.message);
-    return error.status;
-  }
-
+        const result = JSON.parse(mnemonicResultString);
+        resolve(result.mnemonic);
+      } 
+      catch (error) {
+        // TODO: more robust error handling
+        error.status;
+        error.message;
+        error.stderr;
+        error.stdout;
+        console.log(error.message);
+        
+        reject(error.message);
+      }
+    }, 1000)
+  });
 }
 
 const escapeArgument = (argument: string): string => {
@@ -113,10 +121,6 @@ const generateKeys = (
     eth1_withdrawal_address: string,
     folder: string,
   ): boolean => {
-  if(!requireDepositPackages()) {
-    return false;
-  }
-
   let cmd = "";
   let env = process.env;
 
@@ -128,7 +132,10 @@ const generateKeys = (
   const escapedPassword = escapeArgument(password);
   const escapedMnemonic = escapeArgument(mnemonic);
   
-  if(singleFileExecutableExists()) {
+  if (doesFileExist(BUNDLED_SFE_PATH)) {
+    cmd = `${BUNDLED_SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+    console.log('Calling bundled SFE for generate keys');
+  } else if (doesFileExist(SFE_PATH)) {
     cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
     console.log('Calling SFE for generate keys');
   } else {

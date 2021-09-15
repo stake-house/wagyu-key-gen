@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@material-ui/core';
-import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from 'react';
+import React, { FC, ReactElement, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
 import { createMnemonic } from '../commands/Eth2Deposit';
 import GenerateMnemonic from './MnemonicGenerationFlow/0-GenerateMnemonic';
@@ -27,6 +27,25 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(intitialStep);
   const [mnemonicValidationError, setMnemonicValidationError] = useState(false);
 
+  useEffect(() => {
+    console.log("step is: " + step);
+
+    if (step == -1) {
+      props.onStepBack();
+    } else if (step == 0) {
+      props.setMnemonic("");
+    } else if (step == 1 && props.mnemonic == "") {
+      console.log("creating mnemonic");
+      uiCreateMnemonic();
+    } else if (step == 2) {
+      props.setVerifyMnemonic("");
+      setMnemonicValidationError(false);
+    } else if (step == 4) {
+      console.log("verifying mnemonic");
+      verifyMnemonic();
+    }
+  }, [step])
+
   const prevLabel = () => {
     switch (step) {
       case 0:
@@ -41,31 +60,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const prevClicked = () => {
-    switch (step) {
-      case 0: {
-        props.onStepBack();
-        break;
-      }
-      case 1: {
-        props.setMnemonic("");
-        setStep(step - 1);
-        break;
-      }
-      case 2: {
-        setStep(step - 1);
-        break;
-      }
-      case 3: {
-        props.setVerifyMnemonic("");
-        setMnemonicValidationError(false)
-        setStep(step - 1);
-        break;
-      }
-      default: {
-        console.log("This should never happen.")
-        break;
-      }
-    }
+    setStep(step - 1);
   }
 
   const nextLabel = () => {
@@ -77,44 +72,16 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
       case 2:
         return "I'm sure";
       case 3:
-        return "Verify";
+        return "Check";
     }
   }
 
+  const disableNext = () => {
+    return step == 1 && props.mnemonic == "";
+  }
+
   const nextClicked = () => {
-    switch (step) {
-
-      // GenerateMnemonic
-      case 0: {
-        uiCreateMnemonic();
-        setStep(step + 1);
-        break;
-      }
-
-      // ShowMnemonic
-      case 1: {
-        setStep(step + 1);
-        break;
-      }
-
-      // I'm Sure
-      case 2: {
-        setStep(step + 1);
-        break;
-      }
-
-      // VerifyMnemonic
-      case 3: {
-        verifyMnemonic();
-        break;
-      }
-
-      default: {
-        console.log("This should never happen.")
-        break;
-      }
-
-    }
+    setStep(step + 1);
   }
 
   const verifyMnemonic = () => {
@@ -123,11 +90,19 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
       props.onStepForward();
     } else {
       setMnemonicValidationError(true);
+      setStep(step-1); // back to 3
     }
   }
 
   const uiCreateMnemonic = () => {
-    props.setMnemonic(createMnemonic('english'));
+    console.log("Generating mnemonic...");
+    createMnemonic('english')
+      .then((mnemonic) => {
+        props.setMnemonic(mnemonic);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   const content = () => {
@@ -171,6 +146,8 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         onNext={nextClicked}
         backLabel={prevLabel()}
         nextLabel={nextLabel()}
+        disableBack={disableNext()}
+        disableNext={disableNext()}
       />
     </Grid>
   );

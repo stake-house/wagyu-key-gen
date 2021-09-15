@@ -23,7 +23,7 @@ const GenerateMnemonic: FC<{}> = (): ReactElement => {
       <Grid item xs={1} />
       <Grid item xs={10}>
         <Typography variant="body1" align="left">
-          In this step, we'll be generating a Secret Recovery Phrase (traditionally referred to as a "mnemonic") and a set of validator keys for you. For more information, visit: <StyledLink display="inline" color="primary" onClick={sendToKeyInfo}>What are ETH 2.0 Keys?</StyledLink>
+          In this step, we'll generate a Secret Recovery Phrase (traditionally referred to as a "mnemonic") and a set of validator keys for you. For more information, visit: <StyledLink display="inline" color="primary" onClick={sendToKeyInfo}>What are ETH 2.0 Keys?</StyledLink>
           <br/><br/>
           It is <b>very</b> important to keep these safe and secure as you will need them to retrieve your funds later. Anybody with access to these will also be able to steal your funds! For tips on storage, see: <StyledLink display="inline" color="primary" onClick={sendToPassphraseProtection}>How to protect your seed phrase.</StyledLink>
           <br/><br/>

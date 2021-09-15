@@ -100,7 +100,9 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
 
   const handleKeyGeneration = () => {
     const eth1_withdrawal_address = "";
-      
+
+    console.log("Generating keys....");
+
     generateKeys(
       props.mnemonic,
       props.keyGenerationStartIndex!,
@@ -110,7 +112,6 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       eth1_withdrawal_address,
       props.folderPath
     );
-
   }
 
   const content = () => {

@@ -71,7 +71,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
       case 0:
         return "Next";
       case 1:
-        return "Verify";
+        return "Next";
     }
   }
 
