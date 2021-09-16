@@ -57,7 +57,7 @@
       "package.json"
     ],
     "extraFiles": [
-      "build/bin/eth2deposit_proxy",
+      "build/bin/*",
       "build/word_lists/*"
     ],
     "mac": {
@@ -65,6 +65,10 @@
     },
     "linux": {
       "target": "deb"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "static/icon.ico"
     }
   }
 }
