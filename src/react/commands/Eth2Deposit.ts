@@ -1,6 +1,6 @@
 import { executeCommandSync } from "./ExecuteCommand";
 import { execSync } from 'child_process';
-import { mkdir, existsSync, accessSync, constants } from 'fs';
+import { mkdir, existsSync } from 'fs';
 import { Network } from '../types'
 import { cwd } from 'process';
 import { doesFileExist } from "./BashUtils";
@@ -100,9 +100,9 @@ const createMnemonic = (language: string): Promise<string> => {
 
 const escapeArgument = (argument: string): string => {
   if (process.platform == "win32") {
-    // TODO: Escape argument for Windows properly
-    if (/ /.test(argument)) {
-      return "\"" + argument + "\"";
+    // TODO: Harden and test escaping argument for Windows
+    if (/ "/.test(argument)) {
+      return "\"" + argument.replace("\"", "\"\"\"") + "\"";
     }
     return argument;
   } else {

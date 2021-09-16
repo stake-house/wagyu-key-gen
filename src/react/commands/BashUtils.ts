@@ -1,18 +1,15 @@
 import { executeCommandSync, executeCommandSyncReturnStdout } from "./ExecuteCommand";
 
+import { accessSync, constants } from "fs";
+
 const doesFileExist = (filename: string): boolean => {
-  const cmd = "test -f " + filename;
-  const result = executeCommandSync(cmd);
-  return result == 0;
+  try {
+    accessSync(filename, constants.F_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
 };
-
-const ls = (): string => {
-  return executeCommandSyncReturnStdout("ls").trim();
-}
-
-const pwd = (): string => {
-  return executeCommandSyncReturnStdout("pwd").trim();
-}
 
 //TODO: add error handling
 const readlink = (file: string): string => {
@@ -31,8 +28,6 @@ const uname = (): string => {
 
 export {
   doesFileExist,
-  ls,
-  pwd,
   readlink,
   uname,
   which
