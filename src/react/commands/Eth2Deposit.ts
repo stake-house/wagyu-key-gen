@@ -101,8 +101,8 @@ const createMnemonic = (language: string): Promise<string> => {
 const escapeArgument = (argument: string): string => {
   if (process.platform == "win32") {
     // TODO: Harden and test escaping argument for Windows
-    if (/ "/.test(argument)) {
-      return "\"" + argument.replace("\"", "\"\"\"") + "\"";
+    if (/[ "]/.test(argument)) {
+      return '"' + argument.replace('"', '"""') + '"';
     }
     return argument;
   } else {
