@@ -4,8 +4,8 @@ import React from 'react';
 
 export const KeyIcon = forwardRef(
   (props: SVGAttributes<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
-    <svg width="252" height="252" viewBox="0 0 317 317" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-      <rect x="0.5" y="0.5" width="316" height="316" fill="url(#pattern0)"/>
+    <svg width="252" height="252" viewBox="0 0 252 252" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+      <rect x="0.5" y="0.5" width="251" height="251" fill="url(#pattern0)"/>
       <defs>
         <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
         <use xlinkHref="#image0" transform="translate(0.04 0.02) scale(0.0018 0.0018)"/>
