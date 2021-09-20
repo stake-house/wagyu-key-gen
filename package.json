@@ -25,6 +25,7 @@
     "build": "webpack --config webpack.react.config.js --config webpack.electron.config.js",
     "build:watch": "webpack --config webpack.react.config.js --config webpack.electron.config.js --watch",
     "buildcli": "src/scripts/bundle_proxy_linux.sh",
+    "buildcliwin": "src\\scripts\\bundle_proxy_win.bat",
     "start": "electron ./build/electron/index.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
     "dev:react": "NODE_ENV=development webpack-serve --config webpack.react.config.js --mode development",
@@ -56,7 +57,7 @@
       "package.json"
     ],
     "extraFiles": [
-      "build/bin/eth2deposit_proxy",
+      "build/bin/*",
       "build/word_lists/*"
     ],
     "mac": {
@@ -64,6 +65,10 @@
     },
     "linux": {
       "target": "deb"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "static/icon.ico"
     }
   }
 }

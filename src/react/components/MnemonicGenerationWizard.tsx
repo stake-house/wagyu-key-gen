@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
-import { uname } from '../commands/BashUtils';
 import { createMnemonic } from '../commands/Eth2Deposit';
 import GenerateMnemonic from './MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from './MnemonicGenerationFlow/1-2-ShowMnemonic';

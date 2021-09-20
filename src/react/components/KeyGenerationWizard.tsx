@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import { uname } from '../commands/BashUtils';
 import { generateKeys } from '../commands/Eth2Deposit';
 import SelectFolder from './KeyGeneratioinFlow/2-SelectFolder';
 import CreatingKeys from './KeyGeneratioinFlow/3-CreatingKeys';

@@ -50,7 +50,7 @@ To open dev tools when in Wagyu Key Gen use `Ctrl + shift + i`
 ## Bundling
 We use [electron-builder](https://www.electron.build/) to create executable bundles for Wagyu Key Gen.  Run the following to create a bundle:
  - `yarn run build`
- - `yarn run buildcli`
+ - `yarn run buildcli` (or `yarn run buildcliwin` on Windows)
  - `yarn run dist`
 
 ## Design
