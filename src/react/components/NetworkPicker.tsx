@@ -34,7 +34,7 @@ const Fieldset = styled.fieldset`
 `
 
 type NetworkPickerProps = {
-  handleCloseNetworkModal: () => void,
+  handleCloseNetworkModal: (event: object, reason: string) => void,
   setNetwork: Dispatch<SetStateAction<Network>>,
   network: Network,
 }
@@ -43,7 +43,7 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
 
   const closePicker = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    props.handleCloseNetworkModal();
+    props.handleCloseNetworkModal({}, 'submitClick');
   }
 
   const networkChanged = (selected: React.ChangeEvent<HTMLInputElement>) => {
