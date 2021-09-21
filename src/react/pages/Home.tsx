@@ -73,13 +73,15 @@ const Home: FC<HomeProps> = (props): ReactElement => {
     setNetworkModalWasOpened(true);
   }
 
-  const handleCloseNetworkModal = () => {
-    setShowNetworkModal(false);
+  const handleCloseNetworkModal = (event: object, reason: string) => {
+    if (reason !== 'backdropClick') {
+      setShowNetworkModal(false);
 
-    if (createMnemonicSelected) {
-      handleCreateNewMnemonic();
-    } else if (useExistingMnemonicSelected) {
-      handleUseExistingMnemonic();
+      if (createMnemonicSelected) {
+        handleCreateNewMnemonic();
+      } else if (useExistingMnemonicSelected) {
+        handleUseExistingMnemonic();
+      }
     }
   }
 
