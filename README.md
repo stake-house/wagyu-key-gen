@@ -52,6 +52,7 @@ We use [electron-builder](https://www.electron.build/) to create executable bund
  - `yarn run build`
  - `yarn run buildcli` (or `yarn run buildcliwin` on Windows)
  - `yarn run dist`
+
 Your assets will be in the `dist/` folder.
 
 ## Design
