@@ -1,11 +1,30 @@
 import { BrowserWindow, app, globalShortcut, ipcMain } from "electron";
+import { cwd } from 'process';
+import path from "path";
+
+import { accessSync, constants } from "fs";
+
+const doesFileExist = (filename: string): boolean => {
+  try {
+    accessSync(filename, constants.F_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
 
 app.on("ready", () => {
   // once electron has started up, create a window.
+  var iconPath = path.join("static", "icon.png");
+  const bundledIconPath = path.join(process.resourcesPath, "..", "static", "icon.png");
+  if (doesFileExist(bundledIconPath)) {
+    iconPath = bundledIconPath;
+  }
+
   const window = new BrowserWindow({
     width: 900,
     height: 720,
-    icon: 'src/images/ethstaker_icon_1.png',
+    icon: iconPath,
 
     webPreferences: {
       nodeIntegration: true,
