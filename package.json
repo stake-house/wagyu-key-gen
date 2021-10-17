@@ -58,13 +58,15 @@
     ],
     "extraFiles": [
       "build/bin/*",
-      "build/word_lists/*"
+      "build/word_lists/*",
+      "static/icon.png"
     ],
     "mac": {
       "category": "public.app-category.utilities"
     },
     "linux": {
-      "target": "deb"
+      "target": "AppImage",
+      "icon": "static/icon.png"
     },
     "win": {
       "target": "portable",
