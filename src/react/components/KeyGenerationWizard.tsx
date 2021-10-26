@@ -7,6 +7,8 @@ import CreatingKeys from './KeyGeneratioinFlow/3-CreatingKeys';
 import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
 import StepNavigation from './StepNavigation';
 import { Network } from '../types';
+import { doesDirectoryExist, isDirectoryWritable } from '../commands/BashUtils';
+import { errors } from '../constants';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -28,6 +30,7 @@ type Props = {
 const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [folderError, setFolderError] = useState(false);
+  const [folderErrorMsg, setFolderErrorMsg] = useState("");
   
   const prevLabel = () => {
     switch (step) {
@@ -43,6 +46,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       case 0: {
         props.setFolderPath("");
         setFolderError(false);
+        setFolderErrorMsg("");
         props.onStepBack();
         break;
       }
@@ -68,16 +72,38 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       case 0: {
         if (props.folderPath != "") {
           setFolderError(false);
+          setFolderErrorMsg("");
+
+          console.log("Testing for existing directory...");
+
+          if (!doesDirectoryExist(props.folderPath)) {
+            setFolderErrorMsg(errors.FOLDER_DOES_NOT_EXISTS);
+            setFolderError(true);
+            break;
+          }
+
+          console.log("Testing for write permission in directory...");
+
+          if (!isDirectoryWritable(props.folderPath)) {
+            setFolderErrorMsg(errors.FOLDER_IS_NOT_WRITABLE);
+            setFolderError(true);
+            break;
+          }
+
           setStep(step + 1);
 
           setTimeout(() => {
-            handleKeyGeneration();
-            // Move on to the last page when done
-            props.onStepForward();
-          }, 1000);
+            if (handleKeyGeneration()) {
+              // Move on to the last page when done
+              props.onStepForward();
+            } else {
+              setFolderError(true);
+            }
+          }, 1);
 
         } else {
           setFolderError(true);
+          setFolderErrorMsg(errors.FOLDER);
         }
 
         break;
@@ -98,12 +124,12 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
     }
   }
 
-  const handleKeyGeneration = () => {
+  const handleKeyGeneration = (): boolean => {
     const eth1_withdrawal_address = "";
 
     console.log("Generating keys....");
 
-    generateKeys(
+    return generateKeys(
       props.mnemonic,
       props.keyGenerationStartIndex!,
       props.numberOfKeys,
@@ -117,7 +143,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const content = () => {
     switch(step) {
       case 0: return (
-        <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} />
+        <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} setFolderErrorMsg={setFolderErrorMsg} folderErrorMsg={folderErrorMsg} />
       );
       case 1: return (
         <CreatingKeys />

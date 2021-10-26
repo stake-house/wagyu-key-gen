@@ -1,13 +1,14 @@
 import { Button, Grid, Typography } from '@material-ui/core';
 import { remote, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
-import { errors } from '../../constants';
 
 type SelectFolderProps = {
   setFolderPath: Dispatch<SetStateAction<string>>,
   folderPath: string,
   setFolderError: Dispatch<SetStateAction<boolean>>,
   folderError: boolean,
+  setFolderErrorMsg: Dispatch<SetStateAction<string>>,
+  folderErrorMsg: string,
 }
 
 const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
@@ -50,7 +51,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
       { props.folderError &&
         <Grid item xs={12}>
           <Typography color="error">
-            {errors.FOLDER}
+            {props.folderErrorMsg}
           </Typography>
         </Grid>
       }

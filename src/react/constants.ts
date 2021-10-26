@@ -8,6 +8,8 @@ export const errors = {
 	PASSWORD_MATCH: "Passwords don't match.",
 	STARTING_INDEX: "Please input starting index.",
 	FOLDER: "Please select a folder.",
+	FOLDER_DOES_NOT_EXISTS: "Folder does not exist. Select an existing folder.",
+	FOLDER_IS_NOT_WRITABLE: "Cannot write in this folder. Select a folder in which you have write permission.",
 };
 
 export const MNEMONIC_LENGTH = 24;
