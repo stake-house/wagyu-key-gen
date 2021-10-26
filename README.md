@@ -58,6 +58,10 @@ Your assets will be in the `dist/` folder.
 ## Design
 Current designs: https://www.figma.com/file/jcF78fVjndvM2hOPvifl0N/Wagyu-Key?node-id=1%3A4
 
+## Funding
+
+If you would like to help us with funding this project, you can donate with our [Gitcoin grant](https://gitcoin.co/grants/2112/stakehouse-wagyu-tooling-suite-easy-to-use-tools-) or you can send your funds directly to `wagyutools.eth`.
+
 ## Support
 Reach out to the EthStaker community:
  - on [discord](https://invite.gg/ethstaker)
