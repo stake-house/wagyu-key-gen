@@ -52,7 +52,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
     stepSequenceKey === StepSequenceKey.MnemonicGeneration ? 0 : null;
 
   const [mnemonic, setMnemonic] = useState("");
-  const [verifyMnemonic, setVerifyMnemonic] = useState("");
+  const [mnemonicToVerify, setMnemonicToVerify] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [keyGenerationStartIndex, setKeyGenerationStartIndex] = useState(initialKeyGenerationStartIndex);
   const [numberOfKeys, setNumberOfKeys] = useState(1);
@@ -104,7 +104,9 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
         );
       case StepKey.MnemonicGeneration:
         return (
-          <MnemonicGenerationWizard {...{ ...commonProps, mnemonic, setMnemonic, verifyMnemonic, setVerifyMnemonic }} />
+          <MnemonicGenerationWizard
+            {...{ ...commonProps, mnemonic, setMnemonic, mnemonicToVerify, setMnemonicToVerify }}
+            network={props.network} />
         );
       case StepKey.KeyConfiguration:
         return (

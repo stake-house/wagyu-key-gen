@@ -4,6 +4,7 @@ import { FileCopy } from '@material-ui/icons';
 import { clipboard } from 'electron';
 import React, { FC, ReactElement, Fragment, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { Network } from '../../types';
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -22,6 +23,7 @@ const Loader = styled.div`
 type ShowMnemonicProps = {
   showCopyWarning: boolean,
   mnemonic: string,
+  network: Network
 }
 
 const MnemonicDisplay = styled(Typography)`
@@ -75,13 +77,15 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
                 {props.mnemonic}
               </MnemonicDisplay>
             </Grid>
-            <Grid item xs={1} style={{alignSelf: "center"}}>
-              <Tooltip title={copyText} open={copyTooltipOpen} onClose={handleCopyTooltipClose} onOpen={handleCopyTooltipOpen}>
-                <IconButton aria-label="copy" color="primary" onClick={copyMnemonic} autoFocus>
-                  <FileCopy />
-                </IconButton>
-              </Tooltip>
-            </Grid>
+            { props.network != Network.MAINNET &&
+              <Grid item xs={1} style={{alignSelf: "center"}}>
+                <Tooltip title={copyText} open={copyTooltipOpen} onClose={handleCopyTooltipClose} onOpen={handleCopyTooltipOpen}>
+                  <IconButton aria-label="copy" color="primary" onClick={copyMnemonic} autoFocus>
+                    <FileCopy />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            }
           </Grid>
           { props.showCopyWarning &&
             <Grid item xs={11} style={{alignSelf: "center"}}>

@@ -2,6 +2,7 @@ import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
 import { createMnemonic } from '../commands/Eth2Deposit';
+import { Network } from '../types';
 import GenerateMnemonic from './MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from './MnemonicGenerationFlow/1-2-ShowMnemonic';
 import VerifyMnemonic from './MnemonicGenerationFlow/3-VerifyMnemonic';
@@ -15,15 +16,16 @@ const ContentGrid = styled(Grid)`
 type Props = {
   mnemonic: string,
   setMnemonic: Dispatch<SetStateAction<string>>,
-  verifyMnemonic: string,
-  setVerifyMnemonic: Dispatch<SetStateAction<string>>,
+  mnemonicToVerify: string,
+  setMnemonicToVerify: Dispatch<SetStateAction<string>>,
   onStepBack: () => void,
-  onStepForward: () => void
+  onStepForward: () => void,
+  network: Network
 }
 
 const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
-  // If verifyMnemonic has a value, then the user is moving backwards through the stepper
-  const intitialStep = props.verifyMnemonic ? 3 : 0;
+  // If mnemonicToVerify has a value, then the user is moving backwards through the stepper
+  const intitialStep = props.mnemonicToVerify ? 3 : 0;
   const [step, setStep] = useState(intitialStep);
   const [mnemonicValidationError, setMnemonicValidationError] = useState(false);
 
@@ -38,7 +40,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
       console.log("creating mnemonic");
       uiCreateMnemonic();
     } else if (step == 2) {
-      props.setVerifyMnemonic("");
+      props.setMnemonicToVerify("");
       setMnemonicValidationError(false);
     } else if (step == 4) {
       console.log("verifying mnemonic");
@@ -85,7 +87,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const verifyMnemonic = () => {
-    if (props.mnemonic.localeCompare(props.verifyMnemonic) == 0) {
+    if (props.mnemonic.localeCompare(props.mnemonicToVerify) == 0) {
       setMnemonicValidationError(false);
       props.onStepForward();
     } else {
@@ -111,14 +113,16 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         <GenerateMnemonic />
       );
       case 1: case 2: return (
-        <ShowMnemonic showCopyWarning={step === 2} mnemonic={props.mnemonic} />
+        <ShowMnemonic showCopyWarning={step === 2} mnemonic={props.mnemonic} network={props.network} />
       );
       case 3: return (
         <VerifyMnemonic
-          setVerifyMnemonic={props.setVerifyMnemonic}
-          verifyMnemonic={props.verifyMnemonic}
+          setMnemonicToVerify={props.setMnemonicToVerify}
+          mnemonicToVerify={props.mnemonicToVerify}
           error={mnemonicValidationError}
           onVerifyMnemonic={verifyMnemonic}
+          network={props.network}
+          mnemonic={props.mnemonic}
         />
       );
       default:
