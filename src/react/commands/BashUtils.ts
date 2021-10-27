@@ -1,6 +1,7 @@
 import { executeCommandSync, executeCommandSyncReturnStdout } from "./ExecuteCommand";
 
 import { accessSync, constants, statSync } from "fs";
+const tmp = require('tmp');
 
 const doesFileExist = (filename: string): boolean => {
   try {
@@ -19,11 +20,19 @@ const doesDirectoryExist = (directory: string): boolean => {
 }
 
 const isDirectoryWritable = (directory: string): boolean => {
+  let tempFile = null;
   try {
     accessSync(directory, constants.W_OK);
+
+    tempFile = tmp.fileSync({ keep: false, tmpdir: directory });
+
     return true;
   } catch (err) {
     return false;
+  } finally {
+    if (tempFile != null) {
+      tempFile.removeCallback();
+    }
   }
 }
 
