@@ -1,7 +1,7 @@
 import { executeCommandSync, executeCommandSyncReturnStdout } from "./ExecuteCommand";
 
 import { accessSync, constants, statSync } from "fs";
-const tmp = require('tmp');
+import { fileSync } from "tmp";
 
 const doesFileExist = (filename: string): boolean => {
   try {
@@ -24,7 +24,7 @@ const isDirectoryWritable = (directory: string): boolean => {
   try {
     accessSync(directory, constants.W_OK);
 
-    tempFile = tmp.fileSync({ keep: false, tmpdir: directory });
+    tempFile = fileSync({ keep: false, tmpdir: directory });
 
     return true;
   } catch (err) {
