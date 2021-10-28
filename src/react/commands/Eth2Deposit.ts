@@ -94,7 +94,7 @@ const createMnemonic = (language: string): Promise<string> => {
         
         reject(error.message);
       }
-    }, 1000)
+    }, 1)
   });
 }
 
