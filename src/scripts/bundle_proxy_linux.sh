@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [ -f ~/.bash_aliases ]; then
+    shopt -s expand_aliases
+    source ~/.bash_aliases
+fi
+
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 TARGETPACKAGESPATH=$SCRIPTPATH/../../dist/packages
