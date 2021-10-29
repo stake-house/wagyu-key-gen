@@ -1,5 +1,4 @@
 import { BrowserWindow, app, globalShortcut, ipcMain } from "electron";
-import { cwd } from 'process';
 import path from "path";
 
 import { accessSync, constants } from "fs";
@@ -21,10 +20,13 @@ app.on("ready", () => {
     iconPath = bundledIconPath;
   }
 
+  const title = `${app.getName()}`;
+
   const window = new BrowserWindow({
     width: 900,
     height: 720,
     icon: iconPath,
+    title: title,
 
     webPreferences: {
       nodeIntegration: true,

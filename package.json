@@ -1,5 +1,6 @@
 {
   "name": "wagyukeygen",
+  "productName": "Wagyu Key Gen",
   "version": "0.8.0",
   "description": "GUI key generation tool wrapping the deposit cli.",
   "main": "./build/electron/index.js",
@@ -52,7 +53,7 @@
   },
   "build": {
     "appId": "gg.wagyu.keygen",
-    "productName": "WagyuKeyGen",
+    "productName": "Wagyu Key Gen",
     "files": [
       "build/**/*",
       "package.json"
