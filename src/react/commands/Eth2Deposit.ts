@@ -131,12 +131,13 @@ const generateKeys = (
   
   const escapedPassword = escapeArgument(password);
   const escapedMnemonic = escapeArgument(mnemonic);
+  const escapedFolder = escapeArgument(folder);
   
   if (doesFileExist(BUNDLED_SFE_PATH)) {
-    cmd = `${BUNDLED_SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+    cmd = `${BUNDLED_SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
     console.log('Calling bundled SFE for generate keys');
   } else if (doesFileExist(SFE_PATH)) {
-    cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+    cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
     console.log('Calling SFE for generate keys');
   } else {
     if(!requireDepositPackages()) {
@@ -149,7 +150,7 @@ const generateKeys = (
     
     env.PYTHONPATH = expythonpath;
 
-    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
+    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
   }
   
   try {
