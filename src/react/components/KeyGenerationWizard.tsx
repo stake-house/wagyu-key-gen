@@ -92,14 +92,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
 
           setStep(step + 1);
 
-          setTimeout(() => {
-            if (handleKeyGeneration()) {
-              // Move on to the last page when done
-              props.onStepForward();
-            } else {
-              setFolderError(true);
-            }
-          }, 1);
+          handleKeyGeneration();
 
         } else {
           setFolderError(true);
@@ -124,20 +117,26 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
     }
   }
 
-  const handleKeyGeneration = (): boolean => {
+  const handleKeyGeneration = () => {
     const eth1_withdrawal_address = "";
 
     console.log("Generating keys....");
 
-    return generateKeys(
+    generateKeys(
       props.mnemonic,
       props.keyGenerationStartIndex!,
       props.numberOfKeys,
       props.network,
       props.password,
       eth1_withdrawal_address,
-      props.folderPath
-    );
+      props.folderPath).then(() => {
+        props.onStepForward();
+    }).catch((error) => {
+      console.log(error);
+      setFolderError(true);
+      setFolderErrorMsg(error);
+    })
+
   }
 
   const content = () => {
