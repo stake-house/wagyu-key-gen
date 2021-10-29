@@ -63,18 +63,15 @@ yarn dist
 ```
 
 ## Start Wagyu Key Gen
-Start by cloning this repo and entering the directory.
+Run the following commands in the repository directory:
 
-Then run the following:
-
- - `yarn install`
  - `yarn build`
    - `yarn build:watch` (will reload build on changes)
    - _In order to get them to show in the app press `ctrl+r` or `cmd+r` once the app is started._
  - `yarn start`
 
 ## To run diagnostics
-To open dev tools when in Wagyu Key Gen use `Ctrl + shift + i`
+To open dev tools when in Wagyu Key Gen use `Ctrl` + `Shift` + `I`
 
 ## Bundling
 We use [electron-builder](https://www.electron.build/) to create executable bundles for Wagyu Key Gen.  Run the following to create a bundle:
