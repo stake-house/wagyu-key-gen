@@ -47,10 +47,10 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
   }
 
   const createInputs = () => {
-    let arr = [];
+    let inputs = [];
 
     for (let i = 0; i < 24; i++) {
-      arr.push(
+      inputs.push(
         <Grid item xs={2}>
           <TextField
             id={"verify-mnemonic-" + i}
@@ -67,7 +67,7 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
 
     return(
       <Grid container item xs={10} spacing={2}>
-        { arr.map(input => input) }
+        { inputs }
       </Grid>
     );
   }
