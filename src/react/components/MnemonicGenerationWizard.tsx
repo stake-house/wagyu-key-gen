@@ -96,13 +96,12 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
 
   const uiCreateMnemonic = () => {
     console.log("Generating mnemonic...");
-    createMnemonic('english')
-      .then((mnemonic) => {
-        props.setMnemonic(mnemonic);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+
+    createMnemonic('english').then((mnemonic) => {
+      props.setMnemonic(mnemonic);
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   const content = () => {
