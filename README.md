@@ -62,6 +62,31 @@ yarn buildcli
 yarn dist
 ```
 
+### Windows 10
+- Download and install Node.js and npm from https://nodejs.org/en/download/ (Use LTS version and 64-bit .msi Installer).
+  - At the screen named *Tools for Native Modules*, make sure to check the option named *Automatically install the necessary tools.*. It will install chocolatey, Python 3 and VS build tools. Follow the instructions until the end.
+- Open a command prompt window as admin (Press `⊞ Win`+`R`, type `cmd`, hold `Ctrl` + `Shift` and press `↵ Enter`)
+  -  Execute this command to install git. Follow the instructions on screen.
+```console
+choco install git.install
+```
+- Open a normal command prompt window (Press `⊞ Win`+`R`, type `cmd` and press `↵ Enter`).
+  - Execute those commands to upgrade pip, install pyinstaller, Cython, install yarn, clone the repository and install the required packages.
+```console
+python -m pip install --upgrade --user pip
+python -m pip install --user pyinstaller
+python -m pip install --user Cython
+set PATH=%APPDATA%\python\Python310\Scripts;%PATH%
+
+npm install -g yarn
+
+git clone https://github.com/stake-house/wagyu-key-gen
+cd wagyu-key-gen
+
+yarn install
+yarn buildcliwin
+```
+
 ## Start Wagyu Key Gen
 Run the following commands in the repository directory:
 
