@@ -7,39 +7,33 @@ Wagyu Key Gen is a GUI application providing functionality to the [eth2.0-deposi
 Prior to running Wagyu Key Gen a few dependencies need to be installed. 
 
 ### Ubuntu 20.04 and later
-TBD, old instructions below
+Execute all those commands in your terminal to setup your dev environment.
 
-- Install yarn & npm
-    - `sudo apt update`
-    - `sudo apt remove cmdtest yarn`
-    - `sudo apt install npm`
-    - `sudo npm install -g yarn`
-- pip 
-    - `sudo apt install python3-pip`
-- Pycryptodome
-    - `pip install pycryptodome`
-- ETH utilis
-    - `pip install eth_utils`
-- pyecc
-    - `pip install py_ecc`
-- ssz
-    - `pip install ssz`
-- pyinstaller (to bundle python parts)
-    - `pip install pyinstaller`
+```
+sudo apt install -y curl
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 
-- On Windows, install Node.js, npm, yarn and Python 3
-    - Download and install Node.js and npm from https://nodejs.org/en/download/ (Use LTS version). It should also install Python 3 with chocolatey.
-    - `npm install -g yarn`
-- pip
-    - Download the get-pip.py script from https://bootstrap.pypa.io/get-pip.py
-    - `python get-pip.py`
+sudo apt install -y build-essential nodejs git python3-distutils python3-dev
 
-NOTE: Additionally, make sure you are running the latest version of Node.js with NPM. Wagyu Key Gen requires at least Node version 12.13.0. On Ubuntu/Debian, you can install a more recent version using [NodeSource](https://github.com/nodesource/distributions/blob/master/README.md).
+PATH="$HOME/.local/bin:$PATH"
+
+curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py
+pip3 install pyinstaller
+
+sudo npm install -g yarn
+
+git clone https://github.com/stake-house/wagyu-key-gen
+cd wagyu-key-gen
+
+yarn install
+yarn buildcli
+```
 
 ### Ubuntu 18.04
 Even if Ubuntu 18.04 is somewhat old, it is a great OS to build our releases on for the Linux target because it has an older GLIBC which makes it more compatible. More details [here](https://pyinstaller.readthedocs.io/en/stable/usage.html#making-gnu-linux-apps-forward-compatible).
 
-Execute all those commands in your terminal to build a distribution for release:
+Execute all those commands in your terminal to build a distribution for release.
 ```console
 sudo apt update && sudo apt -y upgrade
 
