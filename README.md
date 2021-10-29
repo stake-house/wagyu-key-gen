@@ -9,7 +9,7 @@ Prior to running Wagyu Key Gen a few dependencies need to be installed.
 ### Ubuntu 20.04 and later
 Execute all those commands in your terminal to setup your dev environment.
 
-```
+```console
 sudo apt install -y curl
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 
