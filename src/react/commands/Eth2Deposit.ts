@@ -141,7 +141,7 @@ const generateKeys = async (
     cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${folder} ${network.toLowerCase()} ${escapedPassword}`;
   }
   
-  const { stdout, stderr } = await execProm(cmd, {env: env});
+  await execProm(cmd, {env: env});
 }
 
 export {
