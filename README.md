@@ -6,6 +6,9 @@ Wagyu Key Gen is a GUI application providing functionality to the [eth2.0-deposi
 ## Environment Configuration & Dependencies
 Prior to running Wagyu Key Gen a few dependencies need to be installed. 
 
+### Ubuntu 20.04 and later
+TBD, old instructions below
+
 - Install yarn & npm
     - `sudo apt update`
     - `sudo apt remove cmdtest yarn`
@@ -32,6 +35,38 @@ Prior to running Wagyu Key Gen a few dependencies need to be installed.
     - `python get-pip.py`
 
 NOTE: Additionally, make sure you are running the latest version of Node.js with NPM. Wagyu Key Gen requires at least Node version 12.13.0. On Ubuntu/Debian, you can install a more recent version using [NodeSource](https://github.com/nodesource/distributions/blob/master/README.md).
+
+### Ubuntu 18.04
+Even if Ubuntu 18.04 is somewhat old, it is a great OS to build our releases on for the Linux target because it has an older GLIBC which makes it more compatible. More details [here](https://pyinstaller.readthedocs.io/en/stable/usage.html#making-gnu-linux-apps-forward-compatible).
+
+Execute all those commands in your terminal to build a distribution for release:
+```console
+sudo apt update && sudo apt -y upgrade
+
+sudo add-apt-repository -y ppa:deadsnakes/ppa
+sudo apt install -y curl
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+
+sudo apt install -y python3.7-dev zlib1g-dev build-essential nodejs git
+
+PATH="$HOME/.local/bin:$PATH"
+
+curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3.7 get-pip.py
+pip3 install pyinstaller
+alias python3=python3.7
+echo -e "\nalias python3=python3.7" >> ~/.bash_aliases
+
+sudo npm install -g yarn
+
+git clone https://github.com/stake-house/wagyu-key-gen
+cd wagyu-key-gen
+
+yarn install
+yarn build
+yarn buildcli
+yarn dist
+```
 
 ## Start Wagyu Key Gen
 Start by cloning this repo and entering the directory.
