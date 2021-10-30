@@ -4,34 +4,17 @@ import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 import { Network } from '../../types';
 
-const StyledLink = styled(Typography)`
-  cursor: pointer;
-  display: inline;
-`;
-
-const LoudText = styled(Typography)`
-  color: cyan;
-  display: inline;
-`;
-
 type KeysCreatedProps = {
   folderPath: string,
   network: Network
 }
 
-
-
+const LoudText = styled(Typography)`
+  color: cyan;
+  text-align: left;
+`;
 
 const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
-  const sendToPassphraseProtection = () => {
-    shell.openExternal("https://www.ledger.com/blog/how-to-protect-your-seed-phrase");
-  }
-
-  const sendToEthereumLaunchpad = () => {
-    shell.openExternal(
-      props.network == Network.MAINNET ? "https://launchpad.ethereum.org/en/" : "https://prater.launchpad.ethereum.org/en/"
-    );
-  }
 
   return (
     <Grid container>
@@ -46,19 +29,19 @@ const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
             <Typography variant="body1" align="left">
               There are two different files, here is a description of each:
             </Typography>
+            <LoudText>Keystore file(s) (ex. keystore-xxxxxxx.json)</LoudText>
             <Typography variant="body2" align="left">
-              - Keystore file(s) (ex. keystore-xxxxxxx.json): this file controls your ability to sign transactions.  It will be required to set up your validator.  Do not share with anyone.  It can be recreated from your secret recovery phrase if necessary.
+              This file controls your ability to sign transactions.  It will be required to set up your validator.  Do not share with anyone.  It can be recreated from your secret recovery phrase if necessary.
             </Typography>
+            <LoudText>Deposit data file(s) (ex. deposit_data-xxxxxx.json)</LoudText>
             <Typography variant="body2" align="left">
-              - Deposit data file(s) (ex. deposit_data-xxxxxx.json): this file represents public information about your validator.  It will be required to execute your deposit through the <StyledLink display="inline" color="primary" onClick={sendToEthereumLaunchpad}>Ethereum Launchpad</StyledLink>.  It can be recreated from your secret recovery phrase if necessary.
+              This file represents public information about your validator.  It will be required to execute your deposit through the Ethereum Launchpad.  It can be recreated from your secret recovery phrase if necessary.
             </Typography>
           </Box>
           <Box sx={{ m: 2 }}>
-            <Typography variant="body1" align="left">
-              Secret Recovery Phrase (24 words)
-            </Typography>
+            <LoudText>Secret Recovery Phrase (24 words)</LoudText>
             <Typography variant="body2" align="left">
-              This was the first thing you created.  You'll need this to withdraw your funds.  Keep multiple copies written down and stored in a safe places.  See: <StyledLink display="inline" color="primary" onClick={sendToPassphraseProtection}>How to protect your seed phrase.</StyledLink>
+              This was the first thing you created.  It is also known as a "mnemonic" or "seed phrase".  You'll need this to withdraw your funds.  Keep multiple copies written down and stored in a safe places.
             </Typography>
           </Box>
       </Grid>
