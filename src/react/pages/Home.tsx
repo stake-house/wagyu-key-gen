@@ -124,7 +124,10 @@ const Home: FC<HomeProps> = (props): ReactElement => {
         open={showNetworkModal}
         onClose={handleCloseNetworkModal}
       >
-        <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetwork={props.setNetwork} network={props.network}></NetworkPicker>
+        {/* Added <div> here per the following link to fix error https://stackoverflow.com/a/63521049/5949270 */}
+        <div>
+          <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetwork={props.setNetwork} network={props.network}></NetworkPicker>
+        </div>
       </Modal>
 
       <LandingHeader variant="h1">Welcome!</LandingHeader>
