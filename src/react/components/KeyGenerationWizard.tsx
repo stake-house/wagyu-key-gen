@@ -148,7 +148,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
         <CreatingKeys />
       );
       case 2: return (
-<       KeysCreated folderPath={props.folderPath} />
+        <KeysCreated folderPath={props.folderPath} network={props.network} />
       );
       default:
         return null;

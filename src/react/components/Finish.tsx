@@ -1,6 +1,7 @@
 import { Button, Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
+import { Network } from '../types';
 import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
 
 const ContentGrid = styled(Grid)`
@@ -13,6 +14,7 @@ type Props = {
   onStepForward: () => void,
   folderPath: string,
   setFolderPath: Dispatch<SetStateAction<string>>,
+  network: Network
 }
 
 const Finish: FC<Props> = (props): ReactElement => {
@@ -25,7 +27,7 @@ const Finish: FC<Props> = (props): ReactElement => {
       </Grid>
       <ContentGrid item container>
         <Grid item xs={12}>
-          <KeysCreated folderPath={props.folderPath} />
+          <KeysCreated folderPath={props.folderPath} network={props.network} />
         </Grid>
       </ContentGrid>
       {props.children}

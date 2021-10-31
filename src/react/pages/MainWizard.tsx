@@ -141,6 +141,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
               {...commonProps}
               folderPath={folderPath}
               setFolderPath={setFolderPath}
+              network={props.network}
             />
           )
       default:
