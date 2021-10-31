@@ -1,24 +1,75 @@
 import { Grid, TextField } from '@material-ui/core';
-import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
+import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import { errors } from '../../constants';
+import { Network } from '../../types';
 
 type VerifyMnemonicProps = {
-  verifyMnemonic: string,
-  setVerifyMnemonic: Dispatch<SetStateAction<string>>,
+  mnemonicToVerify: string,
+  setMnemonicToVerify: Dispatch<SetStateAction<string>>,
   error: boolean,
-  onVerifyMnemonic: () => void
+  onVerifyMnemonic: () => void,
+  network: Network,
+  mnemonic: string
 }
 
 const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
 
-  const updateInputMnemonic = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.setVerifyMnemonic(e.currentTarget.value);
+  const [mnemonicToVerifyArray, setMnemonicToVerifyArray] = useState(
+    props.mnemonicToVerify ? props.mnemonicToVerify.split(' ') : Array(24).fill(''));
+
+  const updateMnemonicToVerify = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.setMnemonicToVerify(e.currentTarget.value);
+  }
+
+  const updateMnemonicToVerifyWord = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Grab the new word value and strip all whitespace
+    const newValue = e.currentTarget.value.replace(/\s+/g, '');
+
+    // Grab the current array of words, and set the new word at the index
+    const currentMnemonicToVerifyArray = mnemonicToVerifyArray;
+    currentMnemonicToVerifyArray[index] = newValue;
+
+    // Update state based on the new word, and update the mnemonicToVerify string up a level
+    setMnemonicToVerifyArray(currentMnemonicToVerifyArray);
+    props.setMnemonicToVerify(currentMnemonicToVerifyArray.join(' '));
+
+    console.log("just updated: " + currentMnemonicToVerifyArray.join(' '));
+  }
+
+  const errorWithWordAtIndex = (index: number): boolean => {
+    return props.error &&  props.mnemonic.split(' ')[index] != mnemonicToVerifyArray[index];
   }
 
   const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.key === 'Enter') {
       props.onVerifyMnemonic();
     }
+  }
+
+  const createInputs = () => {
+    let inputs = [];
+
+    for (let i = 0; i < 24; i++) {
+      inputs.push(
+        <Grid item xs={2}>
+          <TextField
+            id={"verify-mnemonic-" + i}
+            key={"verify-mnemonic-" + i}
+            label={"Word " + (i+1)}
+            variant="outlined"
+            color="primary"
+            error={errorWithWordAtIndex(i)}
+            value={mnemonicToVerifyArray[i]}
+            onChange={updateMnemonicToVerifyWord(i)} />
+        </Grid>
+      );
+    }
+
+    return(
+      <Grid container item xs={10} spacing={2}>
+        { inputs }
+      </Grid>
+    );
   }
 
   return (
@@ -28,22 +79,28 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
       </Grid>
       <Grid item container xs={12}>
         <Grid item xs={1} />
-        <Grid item xs={10}>
-          <TextField
-            id="verify-mnemonic"
-            label="Confirm your Secret Recovery Phrase"
-            multiline
-            fullWidth
-            rows={4}
-            autoFocus
-            variant="outlined"
-            color="primary"
-            error={props.error}
-            helperText={ props.error ? errors.MNEMONICS_DONT_MATCH : ""}
-            value={props.verifyMnemonic}
-            onChange={updateInputMnemonic}
-            onKeyDown={handleKeyDown} />
-        </Grid>
+        { props.network != Network.MAINNET && (
+          <Grid item xs={10}>
+            <TextField
+              id="verify-mnemonic"
+              label="Confirm your Secret Recovery Phrase"
+              multiline
+              fullWidth
+              rows={4}
+              autoFocus
+              variant="outlined"
+              color="primary"
+              error={props.error}
+              helperText={ props.error ? errors.MNEMONICS_DONT_MATCH : ""}
+              value={props.mnemonicToVerify}
+              onChange={updateMnemonicToVerify}
+              onKeyDown={handleKeyDown} />
+          </Grid>
+        )}
+        { props.network == Network.MAINNET && (
+          createInputs()
+        )}
+        <Grid item xs={1} />
       </Grid>
     </Grid>
   );
