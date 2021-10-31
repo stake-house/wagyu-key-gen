@@ -41,7 +41,7 @@ const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
           <Box sx={{ m: 2 }}>
             <LoudText>Secret Recovery Phrase (24 words)</LoudText>
             <Typography variant="body2" align="left">
-              This was the first thing you created.  It is also known as a "mnemonic" or "seed phrase".  You'll need this to withdraw your funds.  Keep multiple copies written down and stored in a safe places.
+              This was the first thing you created.  It is also known as a "mnemonic" or "seed phrase".  You'll need this to withdraw your funds.  Keep multiple copies in different physical locations safe from theft, fire, water and other hazards. Keep it private.  There is no way to recover this.
             </Typography>
           </Box>
       </Grid>
