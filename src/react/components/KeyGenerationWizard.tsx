@@ -20,7 +20,7 @@ type Props = {
   onStepForward: () => void,
   network: Network,
   mnemonic: string,
-  keyGenerationStartIndex: number | null,
+  keyGenerationStartIndex: number,
   numberOfKeys: number,
   password: string,
   folderPath: string,
