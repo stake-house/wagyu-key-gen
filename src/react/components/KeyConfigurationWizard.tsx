@@ -100,7 +100,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
   const validateInputs = () => {
     let isError = false;
 
-    if (props.numberOfKeys < 1) {
+    if (props.numberOfKeys < 1 || props.numberOfKeys > 100000) {
       setNumberOfKeysError(true);
       isError = true;
     } else {

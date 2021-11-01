@@ -68,7 +68,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
               autoFocus
               value={props.numberOfKeys}
               onChange={updateNumberOfKeys}
-              InputProps={{ inputProps: { min: 1 } }}
+              InputProps={{ inputProps: { min: 1, max: 100000 } }}
               error={props.numberOfKeysError}
               helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
             />
