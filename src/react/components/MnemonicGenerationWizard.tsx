@@ -102,6 +102,8 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
     createMnemonic('english').then((mnemonic) => {
       props.setMnemonic(mnemonic);
     }).catch((error) => {
+      const errorMsg = ('stderr' in error) ? error.stderr : error.message;
+      // TODO: Display error message (errorMsg) in UI
       console.log(error);
     })
   }
