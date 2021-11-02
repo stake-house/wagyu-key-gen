@@ -134,7 +134,8 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
     }).catch((error) => {
       setStep(0);
       setFolderError(true);
-      setFolderErrorMsg(error.stderr);
+      const errorMsg = ('stderr' in error) ? error.stderr : error.message;
+      setFolderErrorMsg(errorMsg);
     })
 
   }
