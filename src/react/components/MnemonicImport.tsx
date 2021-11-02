@@ -1,6 +1,7 @@
 import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
+import { validateMnemonic } from '../commands/Eth2Deposit';
 import { errors, MNEMONIC_LENGTH } from "../constants";
 import StepNavigation from './StepNavigation';
 
@@ -18,6 +19,7 @@ type Props = {
 
 const MnemonicImport: FC<Props> = (props): ReactElement => {
   const [mnemonicError, setMnemonicError] = useState(false);
+  const [mnemonicErrorMsg, setMnemonicErrorMsg] = useState("");
 
   const updateInputMnemonic = (e: React.ChangeEvent<HTMLInputElement>) => {
     props.setMnemonic(e.target.value);
@@ -26,13 +28,24 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
   const disableImport = !props.mnemonic;
 
   const onImport = () => {
+    setMnemonicError(false);
+    setMnemonicErrorMsg('');
+
     const mnemonicArray = props.mnemonic.split(" ");
 
     if (mnemonicArray.length != MNEMONIC_LENGTH) {
       setMnemonicError(true);
+      setMnemonicErrorMsg(errors.MNEMONIC_FORMAT);
     } else {
-      setMnemonicError(false);
-      props.onStepForward();
+
+      validateMnemonic(props.mnemonic).then(() => {
+        props.onStepForward();
+      }).catch((error) => {
+        const errorMsg = ('stderr' in error) ? error.stderr : error.message;
+        setMnemonicError(true);
+        setMnemonicErrorMsg(errorMsg);
+      })
+      
     }
   }
 
@@ -61,7 +74,7 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
             color="primary"
             autoFocus
             error={mnemonicError}
-            helperText={ mnemonicError ? errors.MNEMONIC_FORMAT : ""}
+            helperText={mnemonicErrorMsg}
             value={props.mnemonic}
             onChange={updateInputMnemonic}
             onKeyDown={handleKeyDown}/>
