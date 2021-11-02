@@ -1,9 +1,11 @@
 import os
 import argparse
 import json
+import sys
 
 from eth2deposit.key_handling.key_derivation.mnemonic import (
     get_mnemonic,
+    verify_mnemonic
 )
 
 from eth_utils import is_hex_address, to_normalized_address
@@ -24,6 +26,12 @@ from eth2deposit.settings import (
     get_chain_setting,
 )
 
+def validate_mnemonic(mnemonic: str, word_lists_path: str) -> str:
+    if verify_mnemonic(mnemonic, word_lists_path):
+        return mnemonic
+    else:
+        raise ValidationError('That is not a valid mnemonic, please check for typos.')
+
 def create_mnemonic(word_list, language='english'):
     return get_mnemonic(language=language, words_path=word_list)
 
@@ -36,7 +44,7 @@ def generate_keys(args):
 
         eth1_withdrawal_address = to_normalized_address(eth1_withdrawal_address)
 
-    mnemonic = args.mnemonic
+    mnemonic = validate_mnemonic(args.mnemonic, args.wordlist)
     mnemonic_password = ''
     amounts = [MAX_DEPOSIT_AMOUNT] * args.count
     folder = args.folder
@@ -86,6 +94,7 @@ def main():
     create_parser.set_defaults(func=parse_create_mnemonic)
 
     generate_parser = subparsers.add_parser("generate_keys")
+    generate_parser.add_argument("wordlist", help="Path to word list directory", type=str)
     generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
     generate_parser.add_argument("index", help="Validator start index", type=int)
     generate_parser.add_argument("count", help="Validator count", type=int)
@@ -99,7 +108,11 @@ def main():
     if not args or 'func' not in args:
         main_parser.parse_args(['-h'])
     else:
-        args.func(args)
+        try:
+            args.func(args)
+        except (ValidationError, ValueError) as exc:
+            print(str(exc), file=sys.stderr)
+            sys.exit(1)
 
 if __name__ == "__main__":
     main()
