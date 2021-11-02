@@ -1,4 +1,4 @@
-import { Tooltip, IconButton, Grid, Typography, CircularProgress } from '@material-ui/core';
+import { Tooltip, IconButton, Grid, Typography, CircularProgress, TextField } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { FileCopy } from '@material-ui/icons';
 import { clipboard } from 'electron';
@@ -20,18 +20,17 @@ const Loader = styled.div`
   animation: ${spin} 2s linear infinite;
 `;
 
+const LoudText = styled(Typography)`
+  color: cyan;
+  text-align: left;
+  display: inline;
+`;
+
 type ShowMnemonicProps = {
   showCopyWarning: boolean,
   mnemonic: string,
   network: Network
 }
-
-const MnemonicDisplay = styled(Typography)`
-  font-size: 1.5rem;
-  color: white;
-  border: 1px solid gray;
-  padding: 1rem;
-`
 
 const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
   const [copyTooltipOpen, setCopyTooltipOpen] = useState(false);
@@ -51,6 +50,28 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
     setCopied(true);
   };
 
+  const createMnemonicDisplay = () => {
+    return(
+      <Grid container item xs={10} spacing={2}>
+        {
+          props.mnemonic.split(' ').map((word, i) => {
+            return (
+              <Grid item xs={2}>
+                <TextField
+                  disabled
+                  id={"verify-mnemonic-" + i}
+                  key={"verify-mnemonic-" + i}
+                  label={"Word " + (i+1)}
+                  variant="outlined"
+                  value={word} />
+              </Grid>
+            );
+          })
+        }
+      </Grid>
+    );
+  }
+
   const copyText = copied ? 'Copied' : 'Copy';
 
   return (
@@ -67,16 +88,18 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
       }
       { props.mnemonic != "" &&
         <Grid container direction="column" spacing={3}>
+
           <Grid item xs={12}>
-            Below is your Secret Recovery Phrase.  Make sure you back it up - without it you will not be able to retrieve your funds.
+            { !props.showCopyWarning &&
+                <Typography>Below is your Secret Recovery Phrase.  Make sure you back it up - without it you will not be able to retrieve your funds.</Typography>
+            }
+            { props.showCopyWarning && 
+                <LoudText>Make sure you back it up - without it you will not be able to retrieve your funds.  You will be prompted for it next.</LoudText>
+            }
           </Grid>
           <Grid item container xs={12}>
             <Grid item xs={1} />
-            <Grid item xs={10}>
-              <MnemonicDisplay id="mnemonic-display">
-                {props.mnemonic}
-              </MnemonicDisplay>
-            </Grid>
+            { createMnemonicDisplay() }
             { props.network != Network.MAINNET &&
               <Grid item xs={1} style={{alignSelf: "center"}}>
                 <Tooltip title={copyText} open={copyTooltipOpen} onClose={handleCopyTooltipClose} onOpen={handleCopyTooltipOpen}>
@@ -87,13 +110,6 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
               </Grid>
             }
           </Grid>
-          { props.showCopyWarning &&
-            <Grid item xs={11} style={{alignSelf: "center"}}>
-              <Alert severity="warning">
-                Make sure you have written down your Secret Recovery Phrase *offline*, you will be prompted for it next.
-              </Alert>
-            </Grid>
-          }
         </Grid>
       }
     </Grid>

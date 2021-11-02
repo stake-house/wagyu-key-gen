@@ -23,8 +23,8 @@ app.on("ready", () => {
   const title = `${app.getName()}`;
 
   const window = new BrowserWindow({
-    width: 900,
-    height: 720,
+    width: 950,
+    height: 750,
     icon: iconPath,
     title: title,
 
