@@ -28,6 +28,8 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   const intitialStep = props.mnemonicToVerify ? 3 : 0;
   const [step, setStep] = useState(intitialStep);
   const [mnemonicValidationError, setMnemonicValidationError] = useState(false);
+  const [generateError, setGenerateError] = useState(false);
+  const [generateErrorMsg, setGenerateErrorMsg] = useState("");
 
   useEffect(() => {
     console.log("step is: " + step);
@@ -99,19 +101,23 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   const uiCreateMnemonic = () => {
     console.log("Generating mnemonic...");
 
+    setGenerateError(false);
+    setGenerateErrorMsg("");
+
     createMnemonic('english').then((mnemonic) => {
       props.setMnemonic(mnemonic);
     }).catch((error) => {
+      setStep(0);
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
-      // TODO: Display error message (errorMsg) in UI
-      console.log(error);
+      setGenerateError(true);
+      setGenerateErrorMsg(errorMsg);
     })
   }
 
   const content = () => {
     switch(step) {
       case 0: return (
-        <GenerateMnemonic />
+        <GenerateMnemonic setGenerateError={setGenerateError} generateError={generateError} setGenerateErrorMsg={setGenerateErrorMsg} generateErrorMsg={generateErrorMsg} />
       );
       case 1: case 2: return (
         <ShowMnemonic showCopyWarning={step === 2} mnemonic={props.mnemonic} network={props.network} />
