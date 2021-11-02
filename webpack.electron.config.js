@@ -1,6 +1,13 @@
 'use strict';
 
 const path = require('path');
+const webpack = require('webpack');
+
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
+const gitRevisionPlugin = new GitRevisionPlugin({
+  branch: true,
+  commithashCommand: 'rev-list --max-count=1 --no-merges --abbrev-commit HEAD',
+});
 
 module.exports = {
   mode: 'development',
@@ -14,6 +21,15 @@ module.exports = {
       { test: /\.tsx?$/, loader: 'ts-loader' }
     ]
   },
+  plugins: [
+    gitRevisionPlugin,
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(gitRevisionPlugin.version()),
+      COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+      BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
+      LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+    })
+  ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
   },

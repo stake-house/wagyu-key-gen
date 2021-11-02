@@ -3,6 +3,9 @@ import path from "path";
 
 import { accessSync, constants } from "fs";
 
+declare var VERSION: string;
+declare var COMMITHASH: string;
+
 const doesFileExist = (filename: string): boolean => {
   try {
     accessSync(filename, constants.F_OK);
@@ -20,7 +23,7 @@ app.on("ready", () => {
     iconPath = bundledIconPath;
   }
 
-  const title = `${app.getName()}`;
+  const title = `${app.getName()} ${VERSION}-${COMMITHASH}`;
 
   const window = new BrowserWindow({
     width: 900,
