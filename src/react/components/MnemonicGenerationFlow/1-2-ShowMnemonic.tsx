@@ -100,15 +100,13 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
           <Grid item container xs={12}>
             <Grid item xs={1} />
             { createMnemonicDisplay() }
-            { props.network != Network.MAINNET &&
-              <Grid item xs={1} style={{alignSelf: "center"}}>
-                <Tooltip title={copyText} open={copyTooltipOpen} onClose={handleCopyTooltipClose} onOpen={handleCopyTooltipOpen}>
-                  <IconButton aria-label="copy" color="primary" onClick={copyMnemonic} autoFocus>
-                    <FileCopy />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            }
+            <Grid item xs={1} style={{alignSelf: "center"}}>
+              <Tooltip title={copyText} open={copyTooltipOpen} onClose={handleCopyTooltipClose} onOpen={handleCopyTooltipOpen}>
+                <IconButton aria-label="copy" color="primary" onClick={copyMnemonic} autoFocus>
+                  <FileCopy />
+                </IconButton>
+              </Tooltip>
+            </Grid>
           </Grid>
         </Grid>
       }
