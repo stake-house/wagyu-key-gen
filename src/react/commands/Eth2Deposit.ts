@@ -1,4 +1,3 @@
-import { executeCommandSync } from "./ExecuteCommand";
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { mkdir, existsSync } from 'fs';
@@ -38,18 +37,17 @@ const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
 
-const requireDepositPackages = (): boolean => {
+const requireDepositPackages = async (): Promise<boolean> => {
 
   if (!existsSync(REQUIREMENT_PACKAGES_PATH)) {
     mkdir(REQUIREMENT_PACKAGES_PATH, { recursive: true }, (err) => {
       if (err) throw err;
     });
 
-    return executeCommandSync(PYTHON_EXE + " -m pip install -r " +
-      REQUIREMENTS_PATH + " --target " + REQUIREMENT_PACKAGES_PATH) == 0;
-  } else {
-      return true;
+    await execProm(PYTHON_EXE + " -m pip install -r " + REQUIREMENTS_PATH + " --target " +
+      REQUIREMENT_PACKAGES_PATH);
   }
+  return true
 }
 
 const createMnemonic = async (language: string): Promise<string> => {
@@ -66,11 +64,12 @@ const createMnemonic = async (language: string): Promise<string> => {
       cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
       console.log('Calling unbundled SFE for create mnemonic with cmd: ' + cmd);
   } else {
-    if (!requireDepositPackages()) {
+    if (!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
   
-    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+    const { stdout, stderr } = await execProm(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+    const pythonpath = stdout.toString();
   
     const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
   
@@ -129,11 +128,12 @@ const generateKeys = async (
     cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
     console.log('Calling SFE for generate keys');
   } else {
-    if(!requireDepositPackages()) {
+    if(!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
   
-    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+    const { stdout, stderr } = await execProm(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+    const pythonpath = stdout.toString();
 
     const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
     
