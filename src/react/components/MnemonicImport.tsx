@@ -5,6 +5,7 @@ import { validateMnemonic } from '../commands/Eth2Deposit';
 import ValidatingMnemonic from './MnemonicImportFlow/1-ValidatingMnemonic';
 import { errors, MNEMONIC_LENGTH } from "../constants";
 import StepNavigation from './StepNavigation';
+import VersionFooter from "./VersionFooter";
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -109,6 +110,7 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
         disableBack={step === 1}
         disableNext={disableImport || step === 1}
       />
+      <VersionFooter />
     </Grid>
   )
 }

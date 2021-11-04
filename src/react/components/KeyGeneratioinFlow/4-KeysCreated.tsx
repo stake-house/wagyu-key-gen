@@ -3,6 +3,7 @@ import { shell } from 'electron';
 import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 import { Network } from '../../types';
+import VersionFooter from '../VersionFooter';
 
 type KeysCreatedProps = {
   folderPath: string,
@@ -46,6 +47,7 @@ const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
           </Box>
       </Grid>
       <Grid item xs={1} />
+      <VersionFooter />
     </Grid>
   );
 }

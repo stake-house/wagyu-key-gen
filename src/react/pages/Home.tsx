@@ -8,6 +8,7 @@ import { KeyIcon } from "../components/icons/KeyIcon";
 import { NetworkPicker } from "../components/NetworkPicker";
 import { tooltips } from "../constants";
 import { Network, StepSequenceKey } from '../types'
+import VersionFooter from "../components/VersionFooter";
 
 const StyledMuiContainer = styled(Container)`
   display: flex;
@@ -154,6 +155,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
           </Tooltip>
         </Grid>
       </OptionsGrid>
+      <VersionFooter />
     </StyledMuiContainer>
   );
 };

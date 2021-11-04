@@ -9,6 +9,7 @@ import StepNavigation from './StepNavigation';
 import { Network } from '../types';
 import { doesDirectoryExist, isDirectoryWritable } from '../commands/BashUtils';
 import { errors } from '../constants';
+import VersionFooter from './VersionFooter';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -178,6 +179,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
         hideBack={step === 1}
         hideNext={step === 1}
       />
+      <VersionFooter />
     </Grid>
   );
 }

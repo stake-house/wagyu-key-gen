@@ -4,6 +4,13 @@
 // pull in the 'path' module from node
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
+const gitRevisionPlugin = new GitRevisionPlugin({
+  branch: true,
+  commithashCommand: 'rev-list --max-count=1 --no-merges --abbrev-commit HEAD',
+});
 
 // export the configuration as an object
 module.exports = {
@@ -46,6 +53,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/react/index.html',
     }),
+    gitRevisionPlugin,
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(gitRevisionPlugin.version()),
+      COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+      BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
+      LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+    })
   ],
   target: 'electron-renderer'
 };

@@ -7,6 +7,7 @@ import GenerateMnemonic from './MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from './MnemonicGenerationFlow/1-2-ShowMnemonic';
 import VerifyMnemonic from './MnemonicGenerationFlow/3-VerifyMnemonic';
 import StepNavigation from './StepNavigation';
+import VersionFooter from './VersionFooter';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -160,6 +161,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
         disableBack={disableNext()}
         disableNext={disableNext()}
       />
+      <VersionFooter />
     </Grid>
   );
 }
