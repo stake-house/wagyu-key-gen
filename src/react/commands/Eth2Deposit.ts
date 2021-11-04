@@ -165,7 +165,8 @@ const validateMnemonic = async (
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
 
-    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+    const { stdout, stderr } = await execProm(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+    const pythonpath = stdout.toString();
 
     const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
     
