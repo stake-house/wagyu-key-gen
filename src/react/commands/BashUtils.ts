@@ -1,6 +1,6 @@
 // BashUtils.ts
 /**
- * This BashUtils module provides different file and OS utility functions. Those fonctions should
+ * This BashUtils module provides different file and OS utility functions. Those functions should
  * work across all our supported operating systems including Linux, macOS and Windows.
  * 
  * @module
