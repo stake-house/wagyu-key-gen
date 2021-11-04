@@ -54,7 +54,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
         <Typography variant="body1">
-          Nice!  Your Secret Recovery Phrase matches. Now let's collect some info about the keys to create:
+          Nice!  Your Secret Recovery Phrase is verified. Now let's collect some info about the keys to create:
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -68,7 +68,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
               autoFocus
               value={props.numberOfKeys}
               onChange={updateNumberOfKeys}
-              InputProps={{ inputProps: { min: 1, max: 100000 } }}
+              InputProps={{ inputProps: { min: 1, max: 1000 } }}
               error={props.numberOfKeysError}
               helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
             />

@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement } from 'react';
 import styled, { keyframes } from 'styled-components';
 
@@ -22,13 +22,18 @@ const Loader = styled.div`
 const CreatingKeys: FC<CreatingKeysProps> = (props): ReactElement => {
   return (
     <Grid container direction="column" spacing={3}>
-      <Grid item xs={12}>
+      <Grid item>
         <Typography variant="body1">
           Creating keys....
         </Typography>
       </Grid>
       <Grid item container xs={12} justifyContent="center">
         <Loader />
+      </Grid>
+      <Grid item container xs={12} justifyContent="center">
+        <Typography variant="body1">
+          The duration of this process depends on how many keys you are generating and how performant your computer is.  Generating one key takes about 30 seconds.  Generating 100 keys takes about 5 minutes.
+        </Typography>
       </Grid>
     </Grid>
   );
