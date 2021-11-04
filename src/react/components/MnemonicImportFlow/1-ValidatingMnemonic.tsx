@@ -24,7 +24,7 @@ const ValidatingMnemonic: FC<ValidatingMnemonicProps> = (props): ReactElement =>
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
         <Typography variant="body1">
-          Validating mnemonic...
+          Validating secret recovery phrase...
         </Typography>
       </Grid>
       <Grid item container xs={12} justifyContent="center">
