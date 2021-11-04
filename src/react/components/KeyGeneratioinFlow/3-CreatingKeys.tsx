@@ -21,20 +21,19 @@ const Loader = styled.div`
 
 const CreatingKeys: FC<CreatingKeysProps> = (props): ReactElement => {
   return (
-    <Grid container direction="column" spacing={3}>
-      <Grid item>
-        <Typography variant="body1">
-          Creating keys....
-        </Typography>
+    <Grid container>
+      <Grid item xs={1} />
+      <Grid container item direction="column" spacing={3} xs={10}>
+        <Grid item container xs={12}>
+          <Typography variant="body1" align="left">
+            The duration of this process depends on how many keys you are generating and the performance of your computer.  Generating one key takes about 30 seconds.  Generating 100 keys may take about 10 minutes.
+          </Typography>
+        </Grid>
+        <Grid item container xs={12} justifyContent="center">
+          <Loader />
+        </Grid>
       </Grid>
-      <Grid item container xs={12} justifyContent="center">
-        <Loader />
-      </Grid>
-      <Grid item container xs={12} justifyContent="center">
-        <Typography variant="body1">
-          The duration of this process depends on how many keys you are generating and how performant your computer is.  Generating one key takes about 30 seconds.  Generating 100 keys takes about 5 minutes.
-        </Typography>
-      </Grid>
+      <Grid item xs={1} />
     </Grid>
   );
 }
