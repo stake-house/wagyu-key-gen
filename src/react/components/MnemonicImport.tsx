@@ -106,9 +106,8 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
         onNext={onImport}
         backLabel="Back"
         nextLabel="Import"
-        disableNext={disableImport}
-        hideBack={step === 1}
-        hideNext={step === 1}
+        disableBack={step === 1}
+        disableNext={disableImport || step === 1}
       />
     </Grid>
   )
