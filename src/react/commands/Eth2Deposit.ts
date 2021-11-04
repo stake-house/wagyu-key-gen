@@ -33,6 +33,7 @@ const BUNDLED_DIST_WORD_LIST_PATH = path.join(process.resourcesPath, "..", "buil
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
+const VALIDATE_MNEMONIC_SUBCOMMAND = "validate_mnemonic";
 
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
@@ -58,10 +59,10 @@ const createMnemonic = async (language: string): Promise<string> => {
   const escapedLanguage = escapeArgument(language);
 
   if (doesFileExist(BUNDLED_SFE_PATH)) {
-    cmd = BUNDLED_SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + BUNDLED_DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
+    cmd = BUNDLED_SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + escapeArgument(BUNDLED_DIST_WORD_LIST_PATH) + " --language " + escapedLanguage;
     console.log('Calling bundled SFE for create mnemonic with cmd: ' + cmd);
   } else if (doesFileExist(SFE_PATH)) {
-      cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + DIST_WORD_LIST_PATH + " --language " + escapedLanguage;
+      cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + escapeArgument(DIST_WORD_LIST_PATH) + " --language " + escapedLanguage;
       console.log('Calling unbundled SFE for create mnemonic with cmd: ' + cmd);
   } else {
     if (!await requireDepositPackages()) {
@@ -75,7 +76,7 @@ const createMnemonic = async (language: string): Promise<string> => {
   
     env.PYTHONPATH = expythonpath;
   
-    cmd = PYTHON_EXE + " " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + WORD_LIST_PATH + " --language " + escapedLanguage;
+    cmd = PYTHON_EXE + " " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + escapeArgument(WORD_LIST_PATH) + " --language " + escapedLanguage;
   }
 
   const { stdout, stderr } = await execProm(cmd, {env: env});
@@ -122,10 +123,10 @@ const generateKeys = async (
   const escapedFolder = escapeArgument(folder);
   
   if (doesFileExist(BUNDLED_SFE_PATH)) {
-    cmd = `${BUNDLED_SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
+    cmd = `${BUNDLED_SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapeArgument(BUNDLED_DIST_WORD_LIST_PATH)} ${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
     console.log('Calling bundled SFE for generate keys');
   } else if (doesFileExist(SFE_PATH)) {
-    cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
+    cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapeArgument(DIST_WORD_LIST_PATH)} ${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
     console.log('Calling SFE for generate keys');
   } else {
     if(!await requireDepositPackages()) {
@@ -139,13 +140,45 @@ const generateKeys = async (
     
     env.PYTHONPATH = expythonpath;
 
-    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
+    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapeArgument(WORD_LIST_PATH)} ${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
   }
   
   await execProm(cmd, {env: env});
 }
 
+const validateMnemonic = async (
+  mnemonic: string,
+): Promise<void> => {
+  let cmd = "";
+  let env = process.env;
+
+  const escapedMnemonic = escapeArgument(mnemonic);
+
+  if (doesFileExist(BUNDLED_SFE_PATH)) {
+    cmd = `${BUNDLED_SFE_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(BUNDLED_DIST_WORD_LIST_PATH)} ${escapedMnemonic}`;
+    console.log('Calling bundled SFE for generate keys');
+  } else if (doesFileExist(SFE_PATH)) {
+    cmd = `${SFE_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(DIST_WORD_LIST_PATH)} ${escapedMnemonic}`;
+    console.log('Calling SFE for generate keys');
+  } else {
+    if(!requireDepositPackages()) {
+      throw new Error("Failed to generate mnemonic, don't have the required packages.");
+    }
+
+    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+
+    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
+    
+    env.PYTHONPATH = expythonpath;
+
+    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(WORD_LIST_PATH)} ${escapedMnemonic}`;
+  }
+
+  await execProm(cmd, {env: env});
+}
+
 export {
   createMnemonic,
-  generateKeys
+  generateKeys,
+  validateMnemonic
 };
