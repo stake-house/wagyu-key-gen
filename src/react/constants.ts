@@ -3,7 +3,7 @@ import { StepKey } from './types';
 export const errors = {
 	MNEMONIC_FORMAT: "Invalid format. Your Secret Recovery Phrase should be a 24 word list.",
 	MNEMONICS_DONT_MATCH: "The Secret Recovery Phrase you entered does not match what was given to you. Please try again.",
-	NUMBER_OF_KEYS: "Please input a number between 1 and 100,000.",
+	NUMBER_OF_KEYS: "Please input a number between 1 and 1000.",
 	PASSWORD_STRENGTH: "Password must be at least 8 characters.",
 	PASSWORD_MATCH: "Passwords don't match.",
 	STARTING_INDEX: "Please input starting index.",
