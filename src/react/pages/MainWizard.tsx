@@ -48,13 +48,11 @@ type WizardProps = {
 const Wizard: FC<WizardProps> = (props): ReactElement => {
   const { stepSequenceKey } = useParams<RouteParams>();
   const history = useHistory();
-  const initialKeyGenerationStartIndex =
-    stepSequenceKey === StepSequenceKey.MnemonicGeneration ? 0 : null;
 
   const [mnemonic, setMnemonic] = useState("");
   const [mnemonicToVerify, setMnemonicToVerify] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [keyGenerationStartIndex, setKeyGenerationStartIndex] = useState(initialKeyGenerationStartIndex);
+  const [keyGenerationStartIndex, setKeyGenerationStartIndex] = useState(0);
   const [numberOfKeys, setNumberOfKeys] = useState(1);
   const [password, setPassword] = useState("");
   const [folderPath, setFolderPath] = useState("");
@@ -113,9 +111,9 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
           <KeyConfigurationWizard
             {...commonProps}
             keyGenerationStartIndex={keyGenerationStartIndex}
-            initialKeyGenerationStartIndex={initialKeyGenerationStartIndex}
+            initialKeyGenerationStartIndex={0}
             setKeyGenerationStartIndex={setKeyGenerationStartIndex}
-            showKeyGenerationStartIndexInput={initialKeyGenerationStartIndex == null}
+            showKeyGenerationStartIndexInput={stepSequenceKey === StepSequenceKey.MnemonicImport}
             numberOfKeys={numberOfKeys}
             setNumberOfKeys={setNumberOfKeys}
             password={password}

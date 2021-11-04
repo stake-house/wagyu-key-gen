@@ -6,8 +6,8 @@ import { errors, tooltips } from '../../constants';
 type GenerateKeysProps = {
   numberOfKeys: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
-  index: number | null,
-  setIndex: Dispatch<SetStateAction<number | null>>,
+  index: number,
+  setIndex: Dispatch<SetStateAction<number>>,
   showIndexInput: boolean,
   password: string,
   setPassword: Dispatch<SetStateAction<string>>,

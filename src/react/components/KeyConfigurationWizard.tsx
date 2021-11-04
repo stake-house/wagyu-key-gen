@@ -13,9 +13,9 @@ const ContentGrid = styled(Grid)`
 type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
-  keyGenerationStartIndex: number | null,
-  initialKeyGenerationStartIndex: number | null,
-  setKeyGenerationStartIndex: Dispatch<SetStateAction<number | null>>,
+  keyGenerationStartIndex: number,
+  initialKeyGenerationStartIndex: number,
+  setKeyGenerationStartIndex: Dispatch<SetStateAction<number>>,
   showKeyGenerationStartIndexInput: boolean,
   numberOfKeys: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
@@ -114,7 +114,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
       setPasswordStrengthError(false);
     }
     
-    if (props.keyGenerationStartIndex == null || props.keyGenerationStartIndex < 0) {
+    if (props.keyGenerationStartIndex < 0) {
       setStartingIndexError(true);
       isError = true;
     } else {
