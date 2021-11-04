@@ -83,6 +83,9 @@ def parse_create_mnemonic(args):
 def parse_generate_keys(args):
     generate_keys(args)
 
+def parse_validate_mnemonic(args):
+    validate_mnemonic(args.mnemonic, args.wordlist)
+
 def main():
     main_parser = argparse.ArgumentParser()
 
@@ -103,6 +106,11 @@ def main():
     generate_parser.add_argument("password", help="Password for the keystore files", type=str)
     generate_parser.add_argument("--eth1_withdrawal_address", help="Optional eth1 withdrawal address", type=str)
     generate_parser.set_defaults(func=parse_generate_keys)
+
+    validate_parser = subparsers.add_parser("validate_mnemonic")
+    validate_parser.add_argument("wordlist", help="Path to word list directory", type=str)
+    validate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
+    validate_parser.set_defaults(func=parse_validate_mnemonic)
 
     args = main_parser.parse_args()
     if not args or 'func' not in args:

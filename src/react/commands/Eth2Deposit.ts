@@ -34,6 +34,7 @@ const BUNDLED_DIST_WORD_LIST_PATH = path.join(process.resourcesPath, "..", "buil
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
+const VALIDATE_MNEMONIC_SUBCOMMAND = "validate_mnemonic";
 
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
@@ -145,7 +146,39 @@ const generateKeys = async (
   await execProm(cmd, {env: env});
 }
 
+const validateMnemonic = async (
+  mnemonic: string,
+): Promise<void> => {
+  let cmd = "";
+  let env = process.env;
+
+  const escapedMnemonic = escapeArgument(mnemonic);
+
+  if (doesFileExist(BUNDLED_SFE_PATH)) {
+    cmd = `${BUNDLED_SFE_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(BUNDLED_DIST_WORD_LIST_PATH)} ${escapedMnemonic}`;
+    console.log('Calling bundled SFE for generate keys');
+  } else if (doesFileExist(SFE_PATH)) {
+    cmd = `${SFE_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(DIST_WORD_LIST_PATH)} ${escapedMnemonic}`;
+    console.log('Calling SFE for generate keys');
+  } else {
+    if(!requireDepositPackages()) {
+      throw new Error("Failed to generate mnemonic, don't have the required packages.");
+    }
+
+    const pythonpath = executeCommandSync(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
+
+    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
+    
+    env.PYTHONPATH = expythonpath;
+
+    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(WORD_LIST_PATH)} ${escapedMnemonic}`;
+  }
+
+  await execProm(cmd, {env: env});
+}
+
 export {
   createMnemonic,
-  generateKeys
+  generateKeys,
+  validateMnemonic
 };
