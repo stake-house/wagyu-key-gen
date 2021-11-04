@@ -1,5 +1,3 @@
-import { executeCommandSync, executeCommandSyncReturnStdout } from "./ExecuteCommand";
-
 import { accessSync, constants, statSync } from "fs";
 import { fileSync } from "tmp";
 
@@ -36,26 +34,8 @@ const isDirectoryWritable = (directory: string): boolean => {
   }
 }
 
-//TODO: add error handling
-const readlink = (file: string): string => {
-  return executeCommandSyncReturnStdout("readlink -f " + file).trim();
-}
-
-const which = (tool: string): boolean => {
-  const cmd = "which " + tool;
-  const result = executeCommandSync(cmd);
-  return result == 0;
-}
-
-const uname = (): string => {
-  return executeCommandSyncReturnStdout("uname").trim();
-}
-
 export {
   doesFileExist,
   doesDirectoryExist,
-  isDirectoryWritable,
-  readlink,
-  uname,
-  which
+  isDirectoryWritable
 };
