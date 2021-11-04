@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Bash script to bundle the eth2deposit_proxy application and the associated required files on
+# Linux and macOS.
+
 if [ -f ~/.bash_aliases ]; then
     shopt -s expand_aliases
     source ~/.bash_aliases
