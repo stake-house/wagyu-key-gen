@@ -70,8 +70,8 @@ const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
  * Install the required Python packages needed to call the eth2deposit_proxy application using the
  * Python 3 version installed on the current machine.
  * 
- * @returns Returns Promise<boolean> that includes a true value if the required Python packages are
- *          present or have been installed correctly.
+ * @returns Returns a Promise<boolean> that includes a true value if the required Python packages
+ *          are present or have been installed correctly.
  */
 const requireDepositPackages = async (): Promise<boolean> => {
 
