@@ -130,11 +130,12 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       props.password,
       eth1_withdrawal_address,
       props.folderPath).then(() => {
-        props.onStepForward();
+      props.onStepForward();
     }).catch((error) => {
-      console.log(error);
+      setStep(0);
       setFolderError(true);
-      setFolderErrorMsg(error);
+      const errorMsg = ('stderr' in error) ? error.stderr : error.message;
+      setFolderErrorMsg(errorMsg);
     })
 
   }

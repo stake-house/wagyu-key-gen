@@ -1,7 +1,14 @@
 import { Box, Grid, Typography } from '@material-ui/core';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import { shell } from "electron";
 import styled from "styled-components";
+
+type GenerateMnemonicProps = {
+  setGenerateError: Dispatch<SetStateAction<boolean>>,
+  generateError: boolean,
+  setGenerateErrorMsg: Dispatch<SetStateAction<string>>,
+  generateErrorMsg: string,
+}
 
 const StyledLink = styled(Typography)`
   cursor: pointer;
@@ -13,7 +20,7 @@ const LoudText = styled(Typography)`
   display: inline;
 `;
 
-const GenerateMnemonic: FC<{}> = (): ReactElement => {
+const GenerateMnemonic: FC<GenerateMnemonicProps> = (props): ReactElement => {
 
   const sendToKeyInfo = () => {
     shell.openExternal("https://kb.beaconcha.in/ethereum-2-keys");
@@ -42,6 +49,13 @@ const GenerateMnemonic: FC<{}> = (): ReactElement => {
             We recommend running Wagyu Key Gen from an offline machine. One way to do this is to move the application to a USB stick, plug it in to an offline machine, and run it from there.
           </Typography>
         </Box>
+        { props.generateError &&
+          <Box sx={{ m: 2 }}>
+            <Typography variant="body1" align="left" gutterBottom color="error">
+              {props.generateErrorMsg}
+            </Typography>
+          </Box>
+        }
       </Grid>
       <Grid item xs={1} />
     </Grid>
