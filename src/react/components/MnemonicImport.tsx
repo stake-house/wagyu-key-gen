@@ -2,6 +2,7 @@ import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { validateMnemonic } from '../commands/Eth2Deposit';
+import ValidatingMnemonic from './MnemonicImportFlow/1-ValidatingMnemonic';
 import { errors, MNEMONIC_LENGTH } from "../constants";
 import StepNavigation from './StepNavigation';
 
@@ -18,6 +19,7 @@ type Props = {
 }
 
 const MnemonicImport: FC<Props> = (props): ReactElement => {
+  const [step, setStep] = useState(0);
   const [mnemonicError, setMnemonicError] = useState(false);
   const [mnemonicErrorMsg, setMnemonicErrorMsg] = useState("");
 
@@ -38,9 +40,12 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
       setMnemonicErrorMsg(errors.MNEMONIC_FORMAT);
     } else {
 
+      setStep(step + 1);
+
       validateMnemonic(props.mnemonic).then(() => {
         props.onStepForward();
       }).catch((error) => {
+        setStep(0);
         const errorMsg = ('stderr' in error) ? error.stderr : error.message;
         setMnemonicError(true);
         setMnemonicErrorMsg(errorMsg);
@@ -55,16 +60,10 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
     }
   }
 
-  return (
-    <Grid container direction="column" spacing={2}>
-      <Grid item>
-        <Typography variant="h1">
-          Import Secret Recovery Phrase
-        </Typography>
-      </Grid>
-      <ContentGrid item container justifyContent="center">
-        <Grid item xs={10}>
-          <TextField
+  const content = () => {
+    switch(step) {
+      case 0: return (
+        <TextField
             id="mnemonic-input"
             label="Type your Secret Recovery Phrase here"
             multiline
@@ -78,6 +77,26 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
             value={props.mnemonic}
             onChange={updateInputMnemonic}
             onKeyDown={handleKeyDown}/>
+      );
+      case 1: return (
+        <ValidatingMnemonic
+        />
+      );
+      default:
+        return null;
+    }
+  }
+
+  return (
+    <Grid container direction="column" spacing={2}>
+      <Grid item>
+        <Typography variant="h1">
+          Import Secret Recovery Phrase
+        </Typography>
+      </Grid>
+      <ContentGrid item container justifyContent="center">
+        <Grid item xs={10}>
+          {content()}
         </Grid>
       </ContentGrid>
       {/* props.children is the stepper */}
@@ -88,6 +107,8 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
         backLabel="Back"
         nextLabel="Import"
         disableNext={disableImport}
+        hideBack={step === 1}
+        hideNext={step === 1}
       />
     </Grid>
   )
