@@ -161,7 +161,7 @@ const validateMnemonic = async (
     cmd = `${SFE_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(DIST_WORD_LIST_PATH)} ${escapedMnemonic}`;
     console.log('Calling SFE for generate keys');
   } else {
-    if(!requireDepositPackages()) {
+    if(!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
 
