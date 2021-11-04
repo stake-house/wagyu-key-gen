@@ -1,3 +1,10 @@
+"""The eth2deposit_proxy application.
+
+This application is used as a proxy between our electron application and the eth2-deposit-cli
+internals. It exposes some eth2-deposit-cli functions as easy to use commands that can be called
+on the CLI.
+"""
+
 import os
 import argparse
 import json
@@ -27,15 +34,46 @@ from eth2deposit.settings import (
 )
 
 def validate_mnemonic(mnemonic: str, word_lists_path: str) -> str:
+    """Validate a mnemonic using the eth2-deposit-cli logic and returns the mnemonic.
+
+    Keyword arguments:
+    mnemonic -- the mnemonic to validate
+    word_lists_path -- path to the word lists directory
+    """
+
     if verify_mnemonic(mnemonic, word_lists_path):
         return mnemonic
     else:
         raise ValidationError('That is not a valid mnemonic, please check for typos.')
 
 def create_mnemonic(word_list, language='english'):
+    """Returns a new random mnemonic.
+
+    Keyword arguments:
+    word_lists -- path to the word lists directory
+    language -- the language for the mnemonic words, possible values are 'chinese_simplified',
+                'chinese_traditional', 'czech', 'english', 'italian', 'korean', 'portuguese' or
+                'spanish' (default 'english')
+    """
     return get_mnemonic(language=language, words_path=word_list)
 
 def generate_keys(args):
+    """Generate validator keys.
+
+    Keyword arguments:
+    args -- contains the CLI arguments pass to the application, it should have those properties:
+            - wordlist: path to the word lists directory
+            - mnemonic: mnemonic to be used as the seed for generating the keys
+            - index: index of the first validator's keys you wish to generate
+            - count: number of signing keys you want to generate
+            - folder: folder path for the resulting keystore(s) and deposit(s) files
+            - network: network setting for the signing domain, possible values are 'mainnet',
+                       'prater' or 'pyrmont'
+            - password: password that will protect the resulting keystore(s)
+            - eth1_withdrawal_address: (Optional) eth1 address that will be used to create the
+                                       withdrawal credentials
+    """
+    
     eth1_withdrawal_address = None
     if args.eth1_withdrawal_address:
         eth1_withdrawal_address = args.eth1_withdrawal_address
@@ -70,6 +108,8 @@ def generate_keys(args):
         raise ValidationError("Failed to verify the deposit data JSON files.")
 
 def parse_create_mnemonic(args):
+    """Parse CLI arguments to call the create_mnemonic function.
+    """
     mnemonic = None
     if args.language:
         mnemonic = create_mnemonic(args.wordlist, language=args.language)
@@ -84,9 +124,13 @@ def parse_generate_keys(args):
     generate_keys(args)
 
 def parse_validate_mnemonic(args):
+    """Parse CLI arguments to call the validate_mnemonic function.
+    """
     validate_mnemonic(args.mnemonic, args.wordlist)
 
 def main():
+    """The application starting point.
+    """
     main_parser = argparse.ArgumentParser()
 
     subparsers = main_parser.add_subparsers(title="subcommands")
