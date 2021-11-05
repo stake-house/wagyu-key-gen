@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core';
-import { remote, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
+import { OpenDialogOptions, OpenDialogReturnValue, ipcRenderer } from 'electron';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 
 type SelectFolderProps = {
@@ -19,7 +19,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
       properties: ['openDirectory']
     };
 
-    remote.dialog.showOpenDialog(options)
+    ipcRenderer.invoke('showOpenDialog', options)
       .then((value: OpenDialogReturnValue) => {
         if (value !== undefined && value.filePaths.length > 0) {
           props.setFolderPath(value.filePaths[0]);

@@ -1,7 +1,8 @@
-import { BrowserWindow, app, globalShortcut, ipcMain } from "electron";
+import { BrowserWindow, app, globalShortcut, ipcMain, dialog } from "electron";
 import path from "path";
 
 import { accessSync, constants } from "fs";
+import { OpenDialogOptions } from "electron/common";
 
 declare var VERSION: string;
 declare var COMMITHASH: string;
@@ -36,8 +37,7 @@ app.on("ready", () => {
 
       // TODO: is it a problem to disable this?
       // https://www.electronjs.org/docs/tutorial/context-isolation#security-considerations
-      contextIsolation: false,
-      enableRemoteModule: true,
+      contextIsolation: false
     }
   });
 
@@ -52,6 +52,10 @@ app.on("ready", () => {
   ipcMain.on('close', (evt, arg) => {
     app.quit()
   })
+
+  ipcMain.handle('showOpenDialog', async (event, options) => {
+    return await dialog.showOpenDialog(<OpenDialogOptions> options);
+  });
 
   // load a website to display
   window.loadURL(`file://${__dirname}/../react/index.html`);
