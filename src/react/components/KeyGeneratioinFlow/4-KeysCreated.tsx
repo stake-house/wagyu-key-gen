@@ -1,5 +1,4 @@
 import { Box, Grid, Typography } from '@material-ui/core';
-import { shell } from 'electron';
 import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 import { Network } from '../../types';
