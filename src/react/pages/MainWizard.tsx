@@ -11,6 +11,7 @@ import KeyGenerationWizard from "../components/KeyGenerationWizard";
 import Finish from '../components/Finish';
 import { stepLabels } from '../constants';
 import { Network, StepSequenceKey } from '../types';
+import VersionFooter from '../components/VersionFooter';
 
 const stepSequenceMap: Record<string, StepKey[]> = {
   mnemonicimport: [
@@ -160,6 +161,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
       <Grid item container>
         {stepComponentSwitch()}
       </Grid>
+      <VersionFooter />
     </MainGrid>
   );
 }

@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import KeyInputs from './KeyGeneratioinFlow/0-KeyInputs';
 import VerifyKeysPassword from './KeyGeneratioinFlow/1-VerifyKeysPassword';
 import StepNavigation from './StepNavigation';
-import VersionFooter from './VersionFooter';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -184,7 +183,6 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
         backLabel={prevLabel()}
         nextLabel={nextLabel()}
       />
-      <VersionFooter />
     </Grid>
   );
 }
