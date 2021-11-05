@@ -17,7 +17,7 @@
  * @module
  */
 
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { mkdir, existsSync } from 'fs';
 import { Network } from '../types'
@@ -28,9 +28,9 @@ import path from "path";
 import process from "process";
 
 /**
- * A promise version of the exec function from fs to call the eth2deposit_proxy application.
+ * A promise version of the execFile function from fs for CLI calls.
  */
-const execProm = promisify(exec);
+const execFileProm = promisify(execFile);
 
 const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-1.2.0";
 
@@ -41,7 +41,8 @@ const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-1.2.0";
 const ETH2_DEPOSIT_CLI_PATH = path.join("src", "vendors", ETH2_DEPOSIT_DIR_NAME);
 const SCRIPTS_PATH = path.join("src", "scripts");
 const REQUIREMENTS_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "requirements.txt");
-const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "eth2deposit", "key_handling", "key_derivation", "word_lists");
+const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "eth2deposit", "key_handling",
+  "key_derivation", "word_lists");
 const REQUIREMENT_PACKAGES_PATH = path.join("dist", "packages");
 const ETH2DEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "eth2deposit_proxy.py");
 
@@ -80,10 +81,29 @@ const requireDepositPackages = async (): Promise<boolean> => {
       if (err) throw err;
     });
 
-    await execProm(PYTHON_EXE + " -m pip install -r " + REQUIREMENTS_PATH + " --target " +
-      REQUIREMENT_PACKAGES_PATH);
+    const executable = PYTHON_EXE;
+    const args = ["-m", "pip", "install", "-r", REQUIREMENTS_PATH, "--target",
+      "REQUIREMENT_PACKAGES_PATH"];
+
+    await execFileProm(executable, args);
   }
   return true
+}
+
+/**
+ * Obtains the Python paths from the current available python executable in the environment.
+ * 
+ * @returns Returns a Promise<string> that includes the Python paths seperated by the system path
+ *          delimiter.
+ */
+const getPythonPath = async (): Promise<string> => {
+  const executable = PYTHON_EXE;
+  const args = ["-c", `import sys;print('${PATH_DELIM}'.join(sys.path))`];
+
+  const { stdout, stderr } = await execFileProm(executable, args);
+  const pythonpath = stdout.toString();
+
+  return `${REQUIREMENT_PACKAGES_PATH}${PATH_DELIM}${ETH2_DEPOSIT_CLI_PATH}${PATH_DELIM}${pythonpath}`;
 }
 
 /**
@@ -98,60 +118,33 @@ const requireDepositPackages = async (): Promise<boolean> => {
  */
 const createMnemonic = async (language: string): Promise<string> => {
 
-  let cmd = "";
+  let executable:string = "";
+  let args:string[] = [];
   let env = process.env;
 
-  const escapedLanguage = escapeArgument(language);
-
   if (doesFileExist(BUNDLED_SFE_PATH)) {
-    cmd = BUNDLED_SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + escapeArgument(BUNDLED_DIST_WORD_LIST_PATH) + " --language " + escapedLanguage;
-    console.log('Calling bundled SFE for create mnemonic with cmd: ' + cmd);
+    executable = BUNDLED_SFE_PATH;
+    args = [CREATE_MNEMONIC_SUBCOMMAND, BUNDLED_DIST_WORD_LIST_PATH, "--language", language];
   } else if (doesFileExist(SFE_PATH)) {
-      cmd = SFE_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + escapeArgument(DIST_WORD_LIST_PATH) + " --language " + escapedLanguage;
-      console.log('Calling unbundled SFE for create mnemonic with cmd: ' + cmd);
+    executable = SFE_PATH;
+    args = [CREATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, "--language", language]
   } else {
     if (!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
+    env.PYTHONPATH = await getPythonPath();
   
-    const { stdout, stderr } = await execProm(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
-    const pythonpath = stdout.toString();
-  
-    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
-  
-    env.PYTHONPATH = expythonpath;
-  
-    cmd = PYTHON_EXE + " " + ETH2DEPOSIT_PROXY_PATH + " " + CREATE_MNEMONIC_SUBCOMMAND + " " + escapeArgument(WORD_LIST_PATH) + " --language " + escapedLanguage;
+    executable = PYTHON_EXE;
+    args = [ETH2DEPOSIT_PROXY_PATH, CREATE_MNEMONIC_SUBCOMMAND, WORD_LIST_PATH, "--language",
+      language];
   }
 
-  const { stdout, stderr } = await execProm(cmd, {env: env});
+  const { stdout, stderr } = await execFileProm(executable, args, {env: env});
   const mnemonicResultString = stdout.toString();
 
   const result = JSON.parse(mnemonicResultString);
   return result.mnemonic;
   
-}
-
-/**
- * Escape an argument to be used with a CLI call. Replace characters that are potentially breaking
- * the call or put quotes around them.
- * 
- * @param argument The argument to escape.
- * 
- * @returns An escaped argument string that can be safely used in a CLI call.
- */
-const escapeArgument = (argument: string): string => {
-  if (process.platform == "win32") {
-    // TODO: Harden and test escaping argument for Windows
-    if (/[ "]/.test(argument)) {
-      return '"' + argument.replace('"', '"""') + '"';
-    }
-    return argument;
-  } else {
-    if (argument === '') return '\'\'';
-    if (!/[^%+,-./:=@_0-9A-Za-z]/.test(argument)) return argument;
-    return '\'' + argument.replace(/'/g, '\'"\'') + '\'';
-  }
 }
 
 /**
@@ -181,40 +174,46 @@ const generateKeys = async (
     eth1_withdrawal_address: string,
     folder: string,
   ): Promise<void> => {
-  let cmd = "";
-  let env = process.env;
-
-  let withdrawalAddress: string = "";
-  if (eth1_withdrawal_address != "") {
-    withdrawalAddress = `--eth1_withdrawal_address ${eth1_withdrawal_address}`;
-  }
   
-  const escapedPassword = escapeArgument(password);
-  const escapedMnemonic = escapeArgument(mnemonic);
-  const escapedFolder = escapeArgument(folder);
+  let executable:string = "";
+  let args:string[] = [];
+  let env = process.env;
   
   if (doesFileExist(BUNDLED_SFE_PATH)) {
-    cmd = `${BUNDLED_SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapeArgument(BUNDLED_DIST_WORD_LIST_PATH)} ${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
-    console.log('Calling bundled SFE for generate keys');
+    executable = BUNDLED_SFE_PATH;
+    args = [GENERATE_KEYS_SUBCOMMAND];
+    if ( eth1_withdrawal_address != "" ) {
+      args = args.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
+    }
+    
+    args = args.concat([BUNDLED_DIST_WORD_LIST_PATH, mnemonic, index.toString(), count.toString(),
+      folder, network.toLowerCase(), password]);
   } else if (doesFileExist(SFE_PATH)) {
-    cmd = `${SFE_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapeArgument(DIST_WORD_LIST_PATH)} ${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
-    console.log('Calling SFE for generate keys');
+    executable = SFE_PATH;
+    args = [GENERATE_KEYS_SUBCOMMAND];
+    if ( eth1_withdrawal_address != "" ) {
+      args = args.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
+    }
+    
+    args = args.concat([DIST_WORD_LIST_PATH, mnemonic, index.toString(), count.toString(), folder,
+      network.toLowerCase(), password]);
   } else {
     if(!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
-  
-    const { stdout, stderr } = await execProm(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
-    const pythonpath = stdout.toString();
+    env.PYTHONPATH = await getPythonPath();
 
-    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
-    
-    env.PYTHONPATH = expythonpath;
+    executable = PYTHON_EXE;
+    args = [ETH2DEPOSIT_PROXY_PATH, GENERATE_KEYS_SUBCOMMAND];
+    if ( eth1_withdrawal_address != "" ) {
+      args = args.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
+    }
 
-    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${GENERATE_KEYS_SUBCOMMAND} ${withdrawalAddress}${escapeArgument(WORD_LIST_PATH)} ${escapedMnemonic} ${index} ${count} ${escapedFolder} ${network.toLowerCase()} ${escapedPassword}`;
+    args = args.concat([WORD_LIST_PATH, mnemonic, index.toString(), count.toString(), folder,
+      network.toLowerCase(), password]);
   }
   
-  await execProm(cmd, {env: env});
+  await execFileProm(executable, args, {env: env});
 }
 
 /**
@@ -228,33 +227,29 @@ const generateKeys = async (
 const validateMnemonic = async (
   mnemonic: string,
 ): Promise<void> => {
-  let cmd = "";
+
+  let executable:string = "";
+  let args:string[] = [];
   let env = process.env;
 
-  const escapedMnemonic = escapeArgument(mnemonic);
-
   if (doesFileExist(BUNDLED_SFE_PATH)) {
-    cmd = `${BUNDLED_SFE_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(BUNDLED_DIST_WORD_LIST_PATH)} ${escapedMnemonic}`;
-    console.log('Calling bundled SFE for generate keys');
+    executable = BUNDLED_SFE_PATH;
+    args = [VALIDATE_MNEMONIC_SUBCOMMAND, BUNDLED_DIST_WORD_LIST_PATH, mnemonic];
   } else if (doesFileExist(SFE_PATH)) {
-    cmd = `${SFE_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(DIST_WORD_LIST_PATH)} ${escapedMnemonic}`;
-    console.log('Calling SFE for generate keys');
+    executable = SFE_PATH;
+    args = [VALIDATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, mnemonic];
   } else {
     if(!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
 
-    const { stdout, stderr } = await execProm(PYTHON_EXE + " -c \"import sys;print('" + PATH_DELIM + "'.join(sys.path))\"");
-    const pythonpath = stdout.toString();
+    env.PYTHONPATH = await getPythonPath();
 
-    const expythonpath = REQUIREMENT_PACKAGES_PATH + PATH_DELIM + ETH2_DEPOSIT_CLI_PATH + PATH_DELIM + pythonpath;
-    
-    env.PYTHONPATH = expythonpath;
-
-    cmd = `${PYTHON_EXE} ${ETH2DEPOSIT_PROXY_PATH} ${VALIDATE_MNEMONIC_SUBCOMMAND} ${escapeArgument(WORD_LIST_PATH)} ${escapedMnemonic}`;
+    executable = PYTHON_EXE;
+    args = [ETH2DEPOSIT_PROXY_PATH, VALIDATE_MNEMONIC_SUBCOMMAND, WORD_LIST_PATH, mnemonic];
   }
 
-  await execProm(cmd, {env: env});
+  await execFileProm(executable, args, {env: env});
 }
 
 export {
