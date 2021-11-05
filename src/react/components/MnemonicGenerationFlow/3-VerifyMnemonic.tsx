@@ -51,10 +51,10 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
 
     for (let i = 0; i < 24; i++) {
       inputs.push(
-        <Grid item xs={2}>
+        <Grid item xs={2} key={"verify-mnemonic-grid-key-" + i}>
           <TextField
-            id={"verify-mnemonic-" + i}
-            key={"verify-mnemonic-" + i}
+            id={"verify-mnemonic-textfield-id-" + i}
+            key={"verify-mnemonic-textfield-key-" + i}
             label={"Word " + (i+1)}
             variant="outlined"
             color="primary"

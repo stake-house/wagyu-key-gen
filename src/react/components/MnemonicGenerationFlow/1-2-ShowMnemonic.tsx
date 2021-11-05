@@ -56,11 +56,11 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
         {
           props.mnemonic.split(' ').map((word, i) => {
             return (
-              <Grid item xs={2}>
+              <Grid item xs={2} key={"mnemonic-grid-key-" + i}>
                 <TextField
                   disabled
-                  id={"verify-mnemonic-" + i}
-                  key={"verify-mnemonic-" + i}
+                  id={"mnemonic-textfield-id-" + i}
+                  key={"mnemonic-textfield-key-" + i}
                   label={"Word " + (i+1)}
                   variant="outlined"
                   value={word} />
