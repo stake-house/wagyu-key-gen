@@ -45,7 +45,7 @@ app.on("ready", () => {
   window.setMenuBarVisibility(false);
 
 	globalShortcut.register('CommandOrControl+R', function() {
-		console.log('CommandOrControl+R is pressed')
+		console.log('CommandOrControl+R was pressed, refreshing the React app within Electron.')
 		window.reload()
 	})
 
