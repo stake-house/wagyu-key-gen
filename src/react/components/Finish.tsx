@@ -13,10 +13,18 @@ type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
   folderPath: string,
-  setFolderPath: Dispatch<SetStateAction<string>>,
   network: Network
 }
 
+/**
+ * This is the final page displaying information about the keys
+ * 
+ * @param props.onStepBack the function to execute when the user steps back
+ * @param props.onStepForward the function to execute when the user steps forward
+ * @param props.folderPath the folder path where the keys are located, for display purposes
+ * @param props.network the network the app is running for
+ * @returns the react element to render
+ */
 const Finish: FC<Props> = (props): ReactElement => {
   return (
     <Grid container direction="column" spacing={2}>

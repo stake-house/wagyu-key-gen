@@ -13,8 +13,13 @@ const LoudText = styled(Typography)`
   text-align: left;
 `;
 
+/**
+ * The final page displaying key location and information about them.
+ * 
+ * @param props self documenting paramenters passed in
+ * @returns the react element to render
+ */
 const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
-
   return (
     <Grid container>
       <Grid item xs={1} />

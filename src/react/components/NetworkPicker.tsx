@@ -1,5 +1,5 @@
-import { BackgroundLight, ButtonHover, Yellow } from '../colors';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Button } from '@material-ui/core';
+import { BackgroundLight, } from '../colors';
+import { FormControl, FormControlLabel, Radio, RadioGroup, Button } from '@material-ui/core';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { Network } from '../types';
@@ -29,16 +29,20 @@ const Submit = styled(Button)`
   margin-top: 35px;
 `;
 
-const Fieldset = styled.fieldset`
-  border: none;
-`
-
 type NetworkPickerProps = {
   handleCloseNetworkModal: (event: object, reason: string) => void,
   setNetwork: Dispatch<SetStateAction<Network>>,
   network: Network,
 }
 
+/**
+ * This is the network picker modal component where the user selects the desired network.
+ * 
+ * @param props.handleCloseNetworkModal function to handle closing the network modal
+ * @param props.setNetwork update the selected network
+ * @param props.network the selected network
+ * @returns the network picker element to render
+ */
 export const NetworkPicker = (props: NetworkPickerProps) => {
 
   const closePicker = (evt: React.FormEvent<HTMLFormElement>) => {
@@ -53,7 +57,6 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
   return (
     <Container>
       <Header>Network</Header>
-      {/* TODO: come up with a better way to pass selection back */}
       <form onSubmit={closePicker} style={{textAlign: 'center'}}>
         <div>
           <FormControl focused>

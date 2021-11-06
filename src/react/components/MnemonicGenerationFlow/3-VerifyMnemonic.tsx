@@ -12,6 +12,13 @@ type VerifyMnemonicProps = {
   mnemonic: string
 }
 
+/**
+ * This page prompts the user to input the mnemonic and then checks it against what the actual mnemonic is
+ * to make sure the user copied it down correctly.
+ * 
+ * @param props self documenting parameters passed in
+ * @returns react element to render
+ */
 const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
 
   const [mnemonicToVerifyArray, setMnemonicToVerifyArray] = useState(

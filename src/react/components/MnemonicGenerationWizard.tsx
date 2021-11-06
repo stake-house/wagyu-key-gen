@@ -23,6 +23,19 @@ type Props = {
   network: Network
 }
 
+/**
+ * This is the wizard the user will navigate to generate their mnemonic.
+ * It uses the notion of a 'step' to render specific pages within the flow.
+ * 
+ * @param props.mnemonic the mnemonic
+ * @param props.setMnemonic function to update the mnemonic
+ * @param props.mnemonicToVerify the user input mnemonic to check against the actual mnemonic
+ * @param props.setMnemonicToVerify function to update the user input mnemonic
+ * @param props.onStepBack functionality for when the user steps back
+ * @param props.onStepForward functionality for when the user steps forward
+ * @param props.network the network the app is running for
+ * @returns the react element to render
+ */
 const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   // If mnemonicToVerify has a value, then the user is moving backwards through the stepper
   const intitialStep = props.mnemonicToVerify ? 3 : 0;

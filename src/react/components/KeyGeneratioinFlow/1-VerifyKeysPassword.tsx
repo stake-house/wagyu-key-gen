@@ -20,6 +20,11 @@ type VerifyKeysPasswordProps = {
   onFinish: () => void
 }
 
+/**
+ * The page that prompts the user to reinput their keys password 
+ * @param props self documenting parameters passed in
+ * @returns react element to render
+ */
 const VerifyKeysPassword: FC<VerifyKeysPasswordProps> = (props): ReactElement => {
 
   const updateVerifyPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
