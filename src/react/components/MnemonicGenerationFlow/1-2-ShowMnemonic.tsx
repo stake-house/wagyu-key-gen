@@ -1,4 +1,4 @@
-import { Tooltip, IconButton, Grid, Typography, CircularProgress, TextField } from '@material-ui/core';
+import { Tooltip, IconButton, Grid, Typography, CircularProgress, TextField, withStyles } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { FileCopy } from '@material-ui/icons';
 import { clipboard } from 'electron';
@@ -25,6 +25,15 @@ const LoudText = styled(Typography)`
   text-align: left;
   display: inline;
 `;
+
+const WhiteDisabledTextField = withStyles({
+  root: {
+    marginRight: 8,
+    "& .MuiInputBase-root.Mui-disabled": {
+      color: "white"
+    }
+  }
+})(TextField);
 
 type ShowMnemonicProps = {
   showCopyWarning: boolean,
@@ -57,7 +66,7 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
           props.mnemonic.split(' ').map((word, i) => {
             return (
               <Grid item xs={2} key={"mnemonic-grid-key-" + i}>
-                <TextField
+                <WhiteDisabledTextField
                   disabled
                   id={"mnemonic-textfield-id-" + i}
                   key={"mnemonic-textfield-key-" + i}
