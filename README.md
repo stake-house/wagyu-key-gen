@@ -145,7 +145,7 @@ If you would like to help us with funding this project, you can donate with our 
 
 ## Support
 Reach out to the EthStaker community:
- - on [discord](https://invite.gg/ethstaker)
+ - on [discord](https://discord.io/ethstaker)
  - on [reddit](https://www.reddit.com/r/ethstaker/)
 
 ## License
