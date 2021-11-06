@@ -1,7 +1,10 @@
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Typography, Link } from '@material-ui/core';
 import React, { FC, ReactElement } from 'react';
+import { shell } from "electron";
 import styled from 'styled-components';
 import { Network } from '../../types';
+
+import { findFirstFile } from "../../commands/BashUtils";
 
 type KeysCreatedProps = {
   folderPath: string,
@@ -20,13 +23,25 @@ const LoudText = styled(Typography)`
  * @returns the react element to render
  */
 const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
+
+  const openKeyLocation = () => {
+    findFirstFile(props.folderPath, "keystore")
+      .then((keystoreFile) => {
+        let fileToLocate = props.folderPath;
+        if (keystoreFile != "") {
+          fileToLocate = keystoreFile;
+        }
+        shell.showItemInFolder(fileToLocate);
+    });
+  }
+
   return (
     <Grid container>
       <Grid item xs={1} />
       <Grid item xs={10}>
           <Box sx={{ m: 2 }}>
             <Typography variant="body1" align="left">
-              Your keys have been created here: '{props.folderPath}'
+              Your keys have been created here: <Link display="inline" component="button" onClick={openKeyLocation}>{props.folderPath}</Link>
             </Typography>
           </Box>
           <Box sx={{ m: 2 }}>
