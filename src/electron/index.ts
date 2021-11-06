@@ -1,7 +1,6 @@
 // index.ts
 /**
  * This typescript file contains the Electron app which renders the React app.
- * 
  */
 
 import { BrowserWindow, app, globalShortcut, ipcMain, dialog } from "electron";

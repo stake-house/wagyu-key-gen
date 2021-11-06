@@ -21,6 +21,7 @@ const Loader = styled.div`
 
 /**
  * This is the page that renders while we are validating the imported secret recovery phrase.
+ * 
  * @returns the react element to render
  */
 const ValidatingMnemonic: FC<ValidatingMnemonicProps> = (): ReactElement => {

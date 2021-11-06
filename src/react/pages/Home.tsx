@@ -57,6 +57,7 @@ type HomeProps = {
  * Home page and entry point of the app.  This page displays general information
  * and options for a user to create a new secret recovery phrase or use an 
  * existing one.
+ * 
  * @param props passed in data for the component to use
  * @returns the react element to render
  */

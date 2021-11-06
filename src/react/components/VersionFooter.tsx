@@ -19,6 +19,7 @@ const Container = styled.div`
 
 /**
  * This component is a footer used to display the version and commit hash.
+ * 
  * @returns the footer component containing the version and commit hash
  */
 const VersionFooter = () => {

@@ -15,7 +15,6 @@ type Props = {
   onStepForward: () => void,
   keyGenerationStartIndex: number,
   initialKeyGenerationStartIndex: number,
-
   setKeyGenerationStartIndex: Dispatch<SetStateAction<number>>,
   showKeyGenerationStartIndexInput: boolean,
   numberOfKeys: number,
