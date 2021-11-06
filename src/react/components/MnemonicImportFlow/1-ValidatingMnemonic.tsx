@@ -19,7 +19,11 @@ const Loader = styled.div`
   animation: ${spin} 2s linear infinite;
 `;
 
-const ValidatingMnemonic: FC<ValidatingMnemonicProps> = (props): ReactElement => {
+/**
+ * This is the page that renders while we are validating the imported secret recovery phrase.
+ * @returns the react element to render
+ */
+const ValidatingMnemonic: FC<ValidatingMnemonicProps> = (): ReactElement => {
   return (
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>

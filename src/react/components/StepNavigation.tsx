@@ -12,6 +12,19 @@ type Props = {
   nextLabel?: string,
 }
 
+/**
+ * This contains the navigation components (back, next) that the user uses to navigate through the process
+ * 
+ * @param props.onPrev the function to execute when the user hits previous
+ * @param props.onNext the function to execute when the user hits next
+ * @param props.disableBack whether or not to disable the back button
+ * @param props.disableNext whether or not to disable the next button
+ * @param props.hideBack whether or not to hide the back button
+ * @param props.hideNext whether or not to hide the next button
+ * @param props.backLabel the label for the back button
+ * @param props.nextLabel the label for the next button
+ * @returns react component to render
+ */
 const StepNavigation: FC<Props> = (props): ReactElement => {
   return (
     <Grid item container justifyContent="space-between">

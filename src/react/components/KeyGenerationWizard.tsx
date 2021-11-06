@@ -27,6 +27,21 @@ type Props = {
   setFolderPath: Dispatch<SetStateAction<string>>,
 }
 
+/**
+ * This is the wizard the user will navigate to generate their keys.
+ * It uses the notion of a 'step' to render specific pages within the flow.
+ * 
+ * @param props.onStepBack function to execute when stepping back
+ * @param props.onStepForward function to execute when stepping forward
+ * @param props.network network the app is running for
+ * @param props.mnemonic the mnemonic
+ * @param props.keyGenerationStartIndex the index at which to start generating keys for the user
+ * @param props.numberOfKeys the total number of keys to generate for the user
+ * @param props.password the password to use to protect the keys for the user
+ * @param props.folderPath the path at which to store the keys
+ * @param props.setFolderPath funciton to update the path
+ * @returns the react element to render
+ */
 const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [folderError, setFolderError] = useState(false);

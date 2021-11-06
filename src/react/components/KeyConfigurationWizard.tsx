@@ -15,6 +15,7 @@ type Props = {
   onStepForward: () => void,
   keyGenerationStartIndex: number,
   initialKeyGenerationStartIndex: number,
+
   setKeyGenerationStartIndex: Dispatch<SetStateAction<number>>,
   showKeyGenerationStartIndexInput: boolean,
   numberOfKeys: number,
@@ -23,6 +24,23 @@ type Props = {
   setPassword: Dispatch<SetStateAction<string>>
 }
 
+/**
+ * This is the wizard the user will navigate to configure their keys.
+ * It uses the notion of a 'step' to render specific pages within the flow.
+ * 
+ * @param props.onStepBack function to execute when stepping back
+ * @param props.onStepForward function to execute when stepping forward
+ * @param props.keyGenerationStartIndex the index at which to start generating keys for the user
+ * @param props.initialKeyGenerationStartIndex the default value for starting index
+ * @param props.setKeyGenerationStartIndex function to set the starting index
+ * @param props.showKeyGenerationStartIndexInput toggle to control whether we will prompt the user for starting index.
+ *    Prompting the user for starting index is only required when importing a mnemonic.
+ * @param props.numberOfKeys the total number of keys to generate for the user
+ * @param props.setNumberOfKeys function to set the number of keys to generate
+ * @param props.password the password to use to protect the keys for the user
+ * @param props.setPassword function to set the password
+ * @returns the react element to render
+ */
 const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [verifyPassword, setVerifyPassword] = useState("");

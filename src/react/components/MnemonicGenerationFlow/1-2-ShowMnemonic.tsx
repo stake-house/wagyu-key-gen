@@ -32,6 +32,12 @@ type ShowMnemonicProps = {
   network: Network
 }
 
+/**
+ * This page displays the mnemonic to the user and prompts them to write it down.
+ * 
+ * @param props the data passed in, self documenting
+ * @returns the react element to render.
+ */
 const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
   const [copyTooltipOpen, setCopyTooltipOpen] = useState(false);
   const [copied, setCopied] = useState(false);

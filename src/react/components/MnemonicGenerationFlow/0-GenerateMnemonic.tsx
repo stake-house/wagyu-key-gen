@@ -14,6 +14,12 @@ const LoudText = styled.span`
   color: cyan;
 `;
 
+/**
+ * This page initiates the mnemonic generation flow.  It displays info and creates the mnemonic.
+ * 
+ * @param props the data and functions passed in, they are self documenting
+ * @returns 
+ */
 const GenerateMnemonic: FC<GenerateMnemonicProps> = (props): ReactElement => {
 
   const sendToKeyInfo = () => {

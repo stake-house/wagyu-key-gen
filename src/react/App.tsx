@@ -14,6 +14,11 @@ const Container = styled.main`
   min-height: 100vh;
 `;
 
+/**
+ * The React app top level including theme and routing.
+ * 
+ * @returns the react element containing the app
+ */
 const App: FC = (): ReactElement => {
   const [network, setNetwork] = useState<Network>(Network.PRATER);
 

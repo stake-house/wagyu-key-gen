@@ -19,7 +19,12 @@ const Loader = styled.div`
   animation: ${spin} 2s linear infinite;
 `;
 
-const CreatingKeys: FC<CreatingKeysProps> = (props): ReactElement => {
+/**
+ * The waiting screen while keys are being created.
+ * 
+ * @returns react element to render
+ */
+const CreatingKeys: FC<CreatingKeysProps> = (): ReactElement => {
   return (
     <Grid container>
       <Grid item xs={1} />

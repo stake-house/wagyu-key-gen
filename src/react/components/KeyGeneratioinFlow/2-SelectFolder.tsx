@@ -11,6 +11,12 @@ type SelectFolderProps = {
   folderErrorMsg: string,
 }
 
+/**
+ * The page which prompts the user to choose a folder to save keys in
+ * 
+ * @param props self documenting parameters passed in
+ * @returns react element to render
+ */
 const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
   const chooseFolder = () => {
     props.setFolderError(false);
