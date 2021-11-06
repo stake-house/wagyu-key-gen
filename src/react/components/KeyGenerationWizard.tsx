@@ -46,6 +46,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [folderError, setFolderError] = useState(false);
   const [folderErrorMsg, setFolderErrorMsg] = useState("");
+  const [modalDisplay, setModalDisplay] = useState(false);
   
   const prevLabel = () => {
     switch (step) {
@@ -152,7 +153,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const content = () => {
     switch(step) {
       case 0: return (
-        <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} setFolderErrorMsg={setFolderErrorMsg} folderErrorMsg={folderErrorMsg} />
+        <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} setFolderErrorMsg={setFolderErrorMsg} folderErrorMsg={folderErrorMsg} modalDisplay={modalDisplay} setModalDisplay={setModalDisplay} />
       );
       case 1: return (
         <CreatingKeys />
@@ -183,7 +184,8 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
         onNext={nextClicked}
         backLabel={prevLabel()}
         nextLabel={nextLabel()}
-        disableNext={!props.folderPath}
+        disableBack={modalDisplay}
+        disableNext={!props.folderPath || modalDisplay}
         hideBack={step === 1}
         hideNext={step === 1}
       />
