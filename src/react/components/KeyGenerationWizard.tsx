@@ -51,7 +51,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
       default: {
-        console.log("This should never happen.")
+        console.log("Key generation step is greater than 0 and prev was clicked. This should never happen.")
         break;
       }
     }
@@ -74,15 +74,11 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
           setFolderError(false);
           setFolderErrorMsg("");
 
-          console.log("Testing for existing directory...");
-
           if (!doesDirectoryExist(props.folderPath)) {
             setFolderErrorMsg(errors.FOLDER_DOES_NOT_EXISTS);
             setFolderError(true);
             break;
           }
-
-          console.log("Testing for write permission in directory...");
 
           if (!isDirectoryWritable(props.folderPath)) {
             setFolderErrorMsg(errors.FOLDER_IS_NOT_WRITABLE);
@@ -110,7 +106,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       }
 
       default: {
-        console.log("This should never happen.")
+        console.log("Key generation step is greater than 1 and next was clicked. This should never happen.")
         break;
       }
 
@@ -119,8 +115,6 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
 
   const handleKeyGeneration = () => {
     const eth1_withdrawal_address = "";
-
-    console.log("Generating keys....");
 
     generateKeys(
       props.mnemonic,

@@ -60,7 +60,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
       default: {
-        console.log("This should never happen.")
+        console.log("Key configuration step is greater than 1 when prev was clicked.  This should never happen.");
         break;
       }
     }
@@ -91,7 +91,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
       }
 
       default: {
-        console.log("This should never happen.")
+        console.log("Key configuration step is greater than 1 when next was clicked.  This should never happen.");
         break;
       }
     }
