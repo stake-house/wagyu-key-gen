@@ -87,6 +87,36 @@ yarn install
 yarn buildcliwin
 ```
 
+### macOS 10.15.1 and later
+Execute all those commands in your terminal to setup your dev environment.  You may be prompted to install "command line developer tools" at some point and please do it.
+
+```console
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/wagyu/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+git --version
+
+// If git is not found, run the following
+brew install git
+
+python3 --version
+pip3 --version
+
+// If either python3 or pip3 are not found, run the following
+brew install python3
+
+brew install node
+pip3 install pyinstaller
+npm install -g yarn
+
+git clone https://github.com/stake-house/wagyu-key-gen
+cd wagyu-key-gen
+
+yarn install
+yarn buildcli
+```
+
 ## Start Wagyu Key Gen
 Run the following commands in the repository directory:
 
