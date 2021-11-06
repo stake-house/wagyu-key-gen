@@ -28,6 +28,12 @@ const StyledTextField = styled(TextField)`
   width: 300px;
 `
 
+/**
+ * This page gathers data about the keys to generate for the user
+ * 
+ * @param props self documenting parameters passed in
+ * @returns 
+ */
 const KeyInputs = (props: GenerateKeysProps) => {
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
@@ -43,13 +49,6 @@ const KeyInputs = (props: GenerateKeysProps) => {
     props.setPassword(e.target.value);
   }
 
-  const handleKeyDown = (evt: React.KeyboardEvent<HTMLFormElement>) => {
-    if (evt.key === 'Enter') {
-      // Commenting out due to white screen bug
-      // props.onFinish();
-    }
-  }
-
   return (
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
@@ -58,7 +57,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Form onKeyDown={handleKeyDown}>
+        <Form>
           <Tooltip title={tooltips.NUMBER_OF_KEYS}>
             <StyledTextField
               id="number-of-keys"

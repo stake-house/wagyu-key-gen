@@ -18,6 +18,12 @@ type Props = {
   onStepForward: () => void
 }
 
+/**
+ * This is the Mnemonic Import flow
+ * 
+ * @param props data and functions passed in for usage, the names are self documenting
+ * @returns mnemonic import components to render
+ */
 const MnemonicImport: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [mnemonicError, setMnemonicError] = useState(false);

@@ -46,6 +46,14 @@ type WizardProps = {
   network: Network
 }
 
+/**
+ * This is the main wizard through which each piece of functionality for the app runs.
+ * 
+ * This wizard manages the global stepper showing the user where they are in the process.
+ * 
+ * @param props passed in data for the component to use
+ * @returns the react element to render
+ */
 const Wizard: FC<WizardProps> = (props): ReactElement => {
   const { stepSequenceKey } = useParams<RouteParams>();
   const history = useHistory();
@@ -77,6 +85,9 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
     }
   }
 
+  /**
+   * This is the UI stepper component rendering where the user is in the process
+   */
   const stepper = (
     <Grid item>
       <StyledStepper activeStep={activeStepIndex} alternativeLabel>
@@ -95,6 +106,10 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
     children: stepper
   };
 
+  /**
+   * This switch returns the correct react components based on the active step.
+   * @returns the component to render
+   */
   const stepComponentSwitch = (): ReactElement => {
     switch(activeStepKey) {
       case StepKey.MnemonicImport:
@@ -139,7 +154,6 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             <Finish
               {...commonProps}
               folderPath={folderPath}
-              setFolderPath={setFolderPath}
               network={props.network}
             />
           )

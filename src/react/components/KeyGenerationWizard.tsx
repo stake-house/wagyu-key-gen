@@ -27,10 +27,26 @@ type Props = {
   setFolderPath: Dispatch<SetStateAction<string>>,
 }
 
+/**
+ * This is the wizard the user will navigate to generate their keys.
+ * It uses the notion of a 'step' to render specific pages within the flow.
+ * 
+ * @param props.onStepBack function to execute when stepping back
+ * @param props.onStepForward function to execute when stepping forward
+ * @param props.network network the app is running for
+ * @param props.mnemonic the mnemonic
+ * @param props.keyGenerationStartIndex the index at which to start generating keys for the user
+ * @param props.numberOfKeys the total number of keys to generate for the user
+ * @param props.password the password to use to protect the keys for the user
+ * @param props.folderPath the path at which to store the keys
+ * @param props.setFolderPath funciton to update the path
+ * @returns the react element to render
+ */
 const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [folderError, setFolderError] = useState(false);
   const [folderErrorMsg, setFolderErrorMsg] = useState("");
+  const [modalDisplay, setModalDisplay] = useState(false);
   
   const prevLabel = () => {
     switch (step) {
@@ -51,7 +67,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
       default: {
-        console.log("This should never happen.")
+        console.log("Key generation step is greater than 0 and prev was clicked. This should never happen.")
         break;
       }
     }
@@ -74,15 +90,11 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
           setFolderError(false);
           setFolderErrorMsg("");
 
-          console.log("Testing for existing directory...");
-
           if (!doesDirectoryExist(props.folderPath)) {
             setFolderErrorMsg(errors.FOLDER_DOES_NOT_EXISTS);
             setFolderError(true);
             break;
           }
-
-          console.log("Testing for write permission in directory...");
 
           if (!isDirectoryWritable(props.folderPath)) {
             setFolderErrorMsg(errors.FOLDER_IS_NOT_WRITABLE);
@@ -110,7 +122,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       }
 
       default: {
-        console.log("This should never happen.")
+        console.log("Key generation step is greater than 1 and next was clicked. This should never happen.")
         break;
       }
 
@@ -119,8 +131,6 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
 
   const handleKeyGeneration = () => {
     const eth1_withdrawal_address = "";
-
-    console.log("Generating keys....");
 
     generateKeys(
       props.mnemonic,
@@ -143,7 +153,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const content = () => {
     switch(step) {
       case 0: return (
-        <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} setFolderErrorMsg={setFolderErrorMsg} folderErrorMsg={folderErrorMsg} />
+        <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} setFolderErrorMsg={setFolderErrorMsg} folderErrorMsg={folderErrorMsg} modalDisplay={modalDisplay} setModalDisplay={setModalDisplay} />
       );
       case 1: return (
         <CreatingKeys />
@@ -174,7 +184,8 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
         onNext={nextClicked}
         backLabel={prevLabel()}
         nextLabel={nextLabel()}
-        disableNext={!props.folderPath}
+        disableBack={modalDisplay}
+        disableNext={!props.folderPath || modalDisplay}
         hideBack={step === 1}
         hideNext={step === 1}
       />
