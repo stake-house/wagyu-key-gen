@@ -9,6 +9,8 @@ type SelectFolderProps = {
   folderError: boolean,
   setFolderErrorMsg: Dispatch<SetStateAction<string>>,
   folderErrorMsg: string,
+  setModalDisplay: Dispatch<SetStateAction<boolean>>,
+  modalDisplay: boolean,
 }
 
 const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
@@ -19,6 +21,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
       properties: ['openDirectory']
     };
 
+    props.setModalDisplay(true);
     ipcRenderer.invoke('showOpenDialog', options)
       .then((value: OpenDialogReturnValue) => {
         if (value !== undefined && value.filePaths.length > 0) {
@@ -26,6 +29,9 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
         } else {
           props.setFolderError(true);
         }
+      })
+      .finally(() => {
+        props.setModalDisplay(false);
       });
   }
 
@@ -37,7 +43,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Button variant="contained" component="label" onClick={chooseFolder} tabIndex={1}>
+        <Button variant="contained" component="label" onClick={chooseFolder} tabIndex={1} disabled={props.modalDisplay}>
           Browse
         </Button>
       </Grid>

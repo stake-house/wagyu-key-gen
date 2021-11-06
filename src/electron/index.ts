@@ -57,7 +57,7 @@ app.on("ready", () => {
    * Provides the renderer a way to call the dialog.showOpenDialog function using IPC.
    */
   ipcMain.handle('showOpenDialog', async (event, options) => {
-    return await dialog.showOpenDialog(window, <OpenDialogOptions> options);
+    return await dialog.showOpenDialog(<OpenDialogOptions> options);
   });
 
   // load a website to display
