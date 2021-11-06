@@ -45,20 +45,16 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   const [generateErrorMsg, setGenerateErrorMsg] = useState("");
 
   useEffect(() => {
-    console.log("step is: " + step);
-
     if (step == -1) {
       props.onStepBack();
     } else if (step == 0) {
       props.setMnemonic("");
     } else if (step == 1 && props.mnemonic == "") {
-      console.log("creating mnemonic");
       uiCreateMnemonic();
     } else if (step == 2) {
       props.setMnemonicToVerify("");
       setMnemonicValidationError(false);
     } else if (step == 4) {
-      console.log("verifying mnemonic");
       verifyMnemonic();
     }
   }, [step])
@@ -112,8 +108,6 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const uiCreateMnemonic = () => {
-    console.log("Generating mnemonic...");
-
     setGenerateError(false);
     setGenerateErrorMsg("");
 

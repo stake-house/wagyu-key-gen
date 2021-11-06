@@ -39,8 +39,6 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
     // Update state based on the new word, and update the mnemonicToVerify string up a level
     setMnemonicToVerifyArray(currentMnemonicToVerifyArray);
     props.setMnemonicToVerify(currentMnemonicToVerifyArray.join(' '));
-
-    console.log("just updated: " + currentMnemonicToVerifyArray.join(' '));
   }
 
   const errorWithWordAtIndex = (index: number): boolean => {

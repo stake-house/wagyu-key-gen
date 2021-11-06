@@ -59,8 +59,8 @@ app.on("ready", () => {
    * This feature is used for development and will be disabled before production deployment.
    */
 	globalShortcut.register('CommandOrControl+R', function() {
-		console.log('CommandOrControl+R is pressed');
-		window.reload();
+		console.log('CommandOrControl+R was pressed, refreshing the React app within Electron.')
+		window.reload()
 	})
 
   /**
