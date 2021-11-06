@@ -54,7 +54,7 @@ app.on("ready", () => {
   })
 
   ipcMain.handle('showOpenDialog', async (event, options) => {
-    return await dialog.showOpenDialog(<OpenDialogOptions> options);
+    return await dialog.showOpenDialog(window, <OpenDialogOptions> options);
   });
 
   // load a website to display
