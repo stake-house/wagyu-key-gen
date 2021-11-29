@@ -1,6 +1,5 @@
 import { useHistory } from "react-router-dom";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
-import { shell } from "electron";
 import styled from "styled-components";
 import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';
@@ -70,11 +69,11 @@ const Home: FC<HomeProps> = (props): ReactElement => {
   let history = useHistory();
 
   const sendToGithub = () => {
-    shell.openExternal("https://github.com/stake-house/wagyu-key-gen");
+    window.electronAPI.shellOpenExternal("https://github.com/stake-house/wagyu-key-gen");
   }
 
   const sendToDiscord = () => {
-    shell.openExternal("https://discord.io/ethstaker");
+    window.electronAPI.shellOpenExternal("https://discord.io/ethstaker");
   }
 
   const handleOpenNetworkModal = () => {

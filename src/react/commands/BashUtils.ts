@@ -5,13 +5,7 @@
  * 
  * @module
  */
-
-import { accessSync, constants, statSync, readdir, Dirent } from "fs";
-import { fileSync } from "tmp";
-import { promisify } from "util";
-import path from "path";
-
-const readdirProm = promisify(readdir);
+const readdirProm = window.utilAPI.promisify(window.fsAPI.readdir);
 
 /**
  * Check for the existence of a file or a directory on the filesystem.
@@ -22,7 +16,7 @@ const readdirProm = promisify(readdir);
  */
 const doesFileExist = (filename: string): boolean => {
   try {
-    accessSync(filename, constants.F_OK);
+    window.fsAPI.accessSync(filename, window.fsAPI.constantsFOK);
     return true;
   } catch (err) {
     return false;
@@ -38,7 +32,7 @@ const doesFileExist = (filename: string): boolean => {
  */
 const doesDirectoryExist = (directory: string): boolean => {
   if (doesFileExist(directory)) {
-    return statSync(directory).isDirectory();
+    return window.fsAPI.statSync(directory).isDirectory();
   }
   return false;
 }
@@ -54,13 +48,13 @@ const doesDirectoryExist = (directory: string): boolean => {
 const isDirectoryWritable = (directory: string): boolean => {
   let tempFile = null;
   try {
-    accessSync(directory, constants.W_OK);
+    window.fsAPI.accessSync(directory, window.fsAPI.constantsWOK);
 
     /**
     * On Windows, checking for W_OK on a directory is not enough to tell if we can write a file in
     * it. We need to actually write a temporary file to check.
     */
-    tempFile = fileSync({ keep: false, tmpdir: directory });
+    tempFile = window.tmpAPI.fileSync({ keep: false, tmpdir: directory });
 
     return true;
   } catch (err) {
@@ -86,7 +80,7 @@ const findFirstFile = async (directory: string, startsWith: string): Promise<str
 
   for (const entry of entries) {
     if (entry.isFile() && entry.name.startsWith(startsWith)) {
-      return path.join(directory, entry.name);
+      return window.pathAPI.join(directory, entry.name);
     }
   }
 

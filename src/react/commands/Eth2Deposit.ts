@@ -17,20 +17,13 @@
  * @module
  */
 
-import { execFile } from 'child_process';
-import { promisify } from 'util';
-import { mkdir, existsSync } from 'fs';
 import { Network } from '../types'
-import { cwd } from 'process';
 import { doesFileExist } from "./BashUtils";
-
-import path from "path";
-import process from "process";
 
 /**
  * A promise version of the execFile function from fs for CLI calls.
  */
-const execFileProm = promisify(execFile);
+const execFileProm = window.utilAPI.promisify(window.childProcessAPI.execFile);
 
 const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-1.2.0";
 
@@ -38,34 +31,36 @@ const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-1.2.0";
  * Paths needed to call the eth2deposit_proxy application using the Python 3 version installed on
  * the current machine.
  */
-const ETH2_DEPOSIT_CLI_PATH = path.join("src", "vendors", ETH2_DEPOSIT_DIR_NAME);
-const SCRIPTS_PATH = path.join("src", "scripts");
-const REQUIREMENTS_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "requirements.txt");
-const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "eth2deposit", "key_handling",
+const ETH2_DEPOSIT_CLI_PATH = window.pathAPI.join("src", "vendors", ETH2_DEPOSIT_DIR_NAME);
+const SCRIPTS_PATH = window.pathAPI.join("src", "scripts");
+const REQUIREMENTS_PATH = window.pathAPI.join(ETH2_DEPOSIT_CLI_PATH, "requirements.txt");
+const WORD_LIST_PATH = window.pathAPI.join(ETH2_DEPOSIT_CLI_PATH, "eth2deposit", "key_handling",
   "key_derivation", "word_lists");
-const REQUIREMENT_PACKAGES_PATH = path.join("dist", "packages");
-const ETH2DEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "eth2deposit_proxy.py");
+const REQUIREMENT_PACKAGES_PATH = window.pathAPI.join("dist", "packages");
+const ETH2DEPOSIT_PROXY_PATH = window.pathAPI.join(SCRIPTS_PATH, "eth2deposit_proxy.py");
 
 /**
  * Paths needed to call the eth2deposit_proxy application using a single file application (SFE)
  * bundled with pyinstaller.
  */
-const SFE_PATH = path.join("build", "bin", "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
-const DIST_WORD_LIST_PATH = path.join(cwd(), "build", "word_lists");
+const SFE_PATH = window.pathAPI.join("build", "bin", "eth2deposit_proxy" +
+  (window.processAPI.platform() == "win32" ? ".exe" : ""));
+const DIST_WORD_LIST_PATH = window.pathAPI.join(window.processAPI.cwd(), "build", "word_lists");
 
 /**
  * Paths needed to call the eth2deposit_proxy application from a bundled application.
  */
-const BUNDLED_SFE_PATH = path.join(process.resourcesPath, "..", "build", "bin",
-  "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
-const BUNDLED_DIST_WORD_LIST_PATH = path.join(process.resourcesPath, "..", "build", "word_lists");
+const BUNDLED_SFE_PATH = window.pathAPI.join(window.processAPI.resourcesPath(), "..", "build",
+  "bin", "eth2deposit_proxy" + (window.processAPI.platform() == "win32" ? ".exe" : ""));
+const BUNDLED_DIST_WORD_LIST_PATH = window.pathAPI.join(window.processAPI.resourcesPath(), "..",
+  "build", "word_lists");
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 const VALIDATE_MNEMONIC_SUBCOMMAND = "validate_mnemonic";
 
-const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
-const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
+const PYTHON_EXE = (window.processAPI.platform() == "win32" ? "python" : "python3");
+const PATH_DELIM = (window.processAPI.platform() == "win32" ? ";" : ":");
 
 /**
  * Install the required Python packages needed to call the eth2deposit_proxy application using the
@@ -76,8 +71,8 @@ const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
  */
 const requireDepositPackages = async (): Promise<boolean> => {
 
-  if (!existsSync(REQUIREMENT_PACKAGES_PATH)) {
-    mkdir(REQUIREMENT_PACKAGES_PATH, { recursive: true }, (err) => {
+  if (!window.fsAPI.existsSync(REQUIREMENT_PACKAGES_PATH)) {
+    window.fsAPI.mkdir(REQUIREMENT_PACKAGES_PATH, { recursive: true }, (err) => {
       if (err) throw err;
     });
 
@@ -120,7 +115,7 @@ const createMnemonic = async (language: string): Promise<string> => {
 
   let executable:string = "";
   let args:string[] = [];
-  let env = process.env;
+  let env = Object(window.processAPI.env());
 
   if (doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
@@ -144,7 +139,6 @@ const createMnemonic = async (language: string): Promise<string> => {
 
   const result = JSON.parse(mnemonicResultString);
   return result.mnemonic;
-  
 }
 
 /**
@@ -177,7 +171,7 @@ const generateKeys = async (
   
   let executable:string = "";
   let args:string[] = [];
-  let env = process.env;
+  let env = Object(window.processAPI.env());
   
   if (doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
@@ -230,7 +224,7 @@ const validateMnemonic = async (
 
   let executable:string = "";
   let args:string[] = [];
-  let env = process.env;
+  let env = Object(window.processAPI.env());
 
   if (doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
@@ -242,7 +236,6 @@ const validateMnemonic = async (
     if(!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
-
     env.PYTHONPATH = await getPythonPath();
 
     executable = PYTHON_EXE;

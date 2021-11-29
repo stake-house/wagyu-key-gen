@@ -1,6 +1,5 @@
 import { Box, Grid, Typography, Link } from '@material-ui/core';
 import React, { FC, ReactElement } from 'react';
-import { shell } from "electron";
 import styled from 'styled-components';
 import { Network } from '../../types';
 
@@ -31,7 +30,7 @@ const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
         if (keystoreFile != "") {
           fileToLocate = keystoreFile;
         }
-        shell.showItemInFolder(fileToLocate);
+        window.electronAPI.shellShowItemInFolder(fileToLocate);
     });
   }
 

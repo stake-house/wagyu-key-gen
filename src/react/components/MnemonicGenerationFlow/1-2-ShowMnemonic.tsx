@@ -1,7 +1,6 @@
 import { Tooltip, IconButton, Grid, Typography, CircularProgress, TextField, withStyles } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { FileCopy } from '@material-ui/icons';
-import { clipboard } from 'electron';
 import React, { FC, ReactElement, Fragment, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Network } from '../../types';
@@ -61,7 +60,7 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
   };
 
   const copyMnemonic = () => {
-    clipboard.writeText(props.mnemonic);
+    window.electronAPI.clipboardWriteText(props.mnemonic);
     setCopied(true);
   };
 
