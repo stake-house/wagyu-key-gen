@@ -21,15 +21,6 @@ const LoudText = styled.span`
  * @returns 
  */
 const GenerateMnemonic: FC<GenerateMnemonicProps> = (props): ReactElement => {
-
-  const sendToKeyInfo = () => {
-    shell.openExternal("https://kb.beaconcha.in/ethereum-2-keys");
-  }
-
-  const sendToPassphraseProtection = () => {
-    shell.openExternal("https://www.ledger.com/blog/how-to-protect-your-seed-phrase");
-  }
-
   return (
     <Grid container>
       <Grid item xs={1} />
