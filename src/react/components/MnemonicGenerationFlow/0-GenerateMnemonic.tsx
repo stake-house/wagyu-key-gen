@@ -1,6 +1,5 @@
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import { Box, Grid, Link, Typography } from '@material-ui/core';
-import { shell } from "electron";
 import styled from 'styled-components';
 
 type GenerateMnemonicProps = {

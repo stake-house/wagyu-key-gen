@@ -6,10 +6,14 @@
  * @module
  */
 
-import { accessSync, constants, statSync, readdir, Dirent } from "fs";
-import { fileSync } from "tmp";
-import { promisify } from "util";
+import { promisify } from 'util';
+
+import { constants, readdir } from 'fs';
+import { access, stat } from 'fs/promises';
+
 import path from "path";
+
+import { fileSync } from "tmp";
 
 const readdirProm = promisify(readdir);
 
@@ -18,11 +22,11 @@ const readdirProm = promisify(readdir);
  * 
  * @param filename The path to the file or directory.
  * 
- * @returns Returns true if the file or directory exists. Returns false if not.
+ * @returns Returns a Promise<boolean> that includes a true value if file or directory exists.
  */
-const doesFileExist = (filename: string): boolean => {
+const doesFileExist = async (filename: string): Promise<boolean> => {
   try {
-    accessSync(filename, constants.F_OK);
+    await access(filename, constants.F_OK);
     return true;
   } catch (err) {
     return false;
@@ -34,11 +38,11 @@ const doesFileExist = (filename: string): boolean => {
  * 
  * @param directory The path to the directory.
  * 
- * @returns Returns true if the directory exists. Returns false if not.
+ * @returns Returns a Promise<boolean> that includes a true value if the directory exists.
  */
-const doesDirectoryExist = (directory: string): boolean => {
-  if (doesFileExist(directory)) {
-    return statSync(directory).isDirectory();
+const doesDirectoryExist = async (directory: string): Promise<boolean> => {
+  if (await doesFileExist(directory)) {
+    return (await stat(directory)).isDirectory();
   }
   return false;
 }
@@ -51,10 +55,10 @@ const doesDirectoryExist = (directory: string): boolean => {
  * @returns Returns true if the directory is writable and if a file can be written in the
  *          directory. Returns false if not.
  */
-const isDirectoryWritable = (directory: string): boolean => {
+const isDirectoryWritable = async (directory: string): Promise<boolean> => {
   let tempFile = null;
   try {
-    accessSync(directory, constants.W_OK);
+    await access(directory, constants.W_OK);
 
     /**
     * On Windows, checking for W_OK on a directory is not enough to tell if we can write a file in

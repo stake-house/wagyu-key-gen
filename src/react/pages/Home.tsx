@@ -1,6 +1,5 @@
 import { useHistory } from "react-router-dom";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
-import { shell } from "electron";
 import styled from "styled-components";
 import { Container, Divider, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';

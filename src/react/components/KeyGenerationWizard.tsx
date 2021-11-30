@@ -1,13 +1,11 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import { generateKeys } from '../commands/Eth2Deposit';
 import SelectFolder from './KeyGeneratioinFlow/2-SelectFolder';
 import CreatingKeys from './KeyGeneratioinFlow/3-CreatingKeys';
 import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
 import StepNavigation from './StepNavigation';
 import { Network } from '../types';
-import { doesDirectoryExist, isDirectoryWritable } from '../commands/BashUtils';
 import { errors } from '../constants';
 
 const ContentGrid = styled(Grid)`
@@ -90,21 +88,25 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
           setFolderError(false);
           setFolderErrorMsg("");
 
-          if (!doesDirectoryExist(props.folderPath)) {
-            setFolderErrorMsg(errors.FOLDER_DOES_NOT_EXISTS);
-            setFolderError(true);
-            break;
-          }
+          window.bashUtils.doesDirectoryExist(props.folderPath)
+            .then((exists) => {
+              if (!exists) {
+                setFolderErrorMsg(errors.FOLDER_DOES_NOT_EXISTS);
+                setFolderError(true);
+              } else {
 
-          if (!isDirectoryWritable(props.folderPath)) {
-            setFolderErrorMsg(errors.FOLDER_IS_NOT_WRITABLE);
-            setFolderError(true);
-            break;
-          }
-
-          setStep(step + 1);
-
-          handleKeyGeneration();
+                window.bashUtils.isDirectoryWritable(props.folderPath)
+                  .then((writable) => {
+                    if (!writable) {
+                      setFolderErrorMsg(errors.FOLDER_IS_NOT_WRITABLE);
+                      setFolderError(true);
+                    } else {
+                      setStep(step + 1);
+                      handleKeyGeneration();
+                    }
+                  });
+              }
+            });
 
         } else {
           setFolderError(true);
@@ -132,7 +134,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const handleKeyGeneration = () => {
     const eth1_withdrawal_address = "";
 
-    generateKeys(
+    window.eth2Deposit.generateKeys(
       props.mnemonic,
       props.keyGenerationStartIndex!,
       props.numberOfKeys,

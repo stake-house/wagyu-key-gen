@@ -1,5 +1,4 @@
 import React, { FC, ReactElement, useState } from 'react';
-import { ipcRenderer } from 'electron';
 import { useParams, useHistory } from "react-router-dom";
 import { Stepper, Step, StepLabel, Grid, Typography } from '@material-ui/core';
 import styled from 'styled-components';
@@ -71,7 +70,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   
   const onStepForward = () => {
     if (activeStepIndex === stepSequence.length - 1) {
-      ipcRenderer.send("close");
+      window.electronAPI.ipcRendererSendClose();
       return;
     }
     setActiveStepIndex(activeStepIndex + 1);

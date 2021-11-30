@@ -44,8 +44,9 @@ app.on("ready", () => {
     title: title,
 
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -53,6 +54,13 @@ app.on("ready", () => {
    * Hide the default menu bar that comes with the browser window
    */
   window.setMenuBarVisibility(false);
+
+  /**
+   * Set the Permission Request Handler to deny all permissions requests
+   */
+  window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+    return callback(false);
+  });
 
   /**
    * Allow for refreshing of the React app within Electron without reopening.

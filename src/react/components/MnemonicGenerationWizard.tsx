@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
-import { createMnemonic } from '../commands/Eth2Deposit';
 import { Network } from '../types';
 import GenerateMnemonic from './MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from './MnemonicGenerationFlow/1-2-ShowMnemonic';
@@ -111,7 +110,7 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
     setGenerateError(false);
     setGenerateErrorMsg("");
 
-    createMnemonic('english').then((mnemonic) => {
+    window.eth2Deposit.createMnemonic('english').then((mnemonic) => {
       props.setMnemonic(mnemonic);
     }).catch((error) => {
       setStep(0);

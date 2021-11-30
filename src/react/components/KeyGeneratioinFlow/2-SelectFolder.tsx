@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core';
-import { OpenDialogOptions, OpenDialogReturnValue, ipcRenderer } from 'electron';
+import { OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 
 type SelectFolderProps = {
@@ -28,7 +28,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
     };
 
     props.setModalDisplay(true);
-    ipcRenderer.invoke('showOpenDialog', options)
+    window.electronAPI.invokeShowOpenDialog(options)
       .then((value: OpenDialogReturnValue) => {
         if (value !== undefined && value.filePaths.length > 0) {
           props.setFolderPath(value.filePaths[0]);
