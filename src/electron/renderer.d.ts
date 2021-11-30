@@ -31,58 +31,23 @@ export interface IElectronAPI {
   invokeShowOpenDialog: (options: OpenDialogOptions) => Promise<OpenDialogReturnValue>
 }
 
-export interface IFsAPI {
-  accessSync: (path: PathLike, mode?: number | undefined) => void,
-  statSync: (path: string | Buffer | URL, options?) => Stats,
-  readdir: (path: PathLike, options: {
-    encoding?: BufferEncoding | null;
-    withFileTypes?: true | undefined;
-    } | BufferEncoding | undefined | null,
-    callback: (err: NodeJS.ErrnoException | null, files: Dirent[]) => void) => void,
-  constantsFOK: number,
-  constantsWOK: number,
-  mkdir: (path: PathLike, options: MakeDirectoryOptions & {
-    recursive: true;
-    }, callback: (err: NodeJS.ErrnoException | null, path?: string | undefined) => void) => void,
-  existsSync: (path: PathLike) => boolean
+export interface IEth2DepositAPI {
+  createMnemonic: (language: string) => Promise<string>,
+  generateKeys: (mnemonic: string, index: number, count: number, network: string,
+    password: string, eth1_withdrawal_address: string, folder: string) => Promise<void>,
+  validateMnemonic: (mnemonic: string) => Promise<void>
 }
 
-export interface IPathAPI {
-  join: (...paths: string[]) => string
-}
-
-export interface IUtilAPI {
-  promisify: (original: Function) => Function
-}
-
-export interface IUtilAPI {
-  promisify: (original: Function) => Function
-}
-
-export interface IChildProcessAPI {
-  execFile: (file: string, args: string[], options: Object,
-    callback: (error: Error, stdout: string | Buffer, stderr: string | Buffer) => void) => ChildProcess
-}
-
-export interface IProcessAPI {
-  cwd: () => string,
-  platform: () => string,
-  resourcesPath: () => string,
-  env: () => Object
-}
-
-export interface ITmpAPI {
-  fileSync: (options: FileOptions) => FileResult
+export interface IBashUtilsAPI {
+  doesDirectoryExist: (directory: string) => Promise<boolean>,
+  isDirectoryWritable: (directory: string) => Promise<boolean>,
+  findFirstFile: (directory: string, startsWith: string) => Promise<string>
 }
 
 declare global {
   interface Window {
     electronAPI: IElectronAPI,
-    fsAPI: IFsAPI
-    pathAPI: IPathAPI,
-    utilAPI: IUtilAPI,
-    childProcessAPI: IChildProcessAPI,
-    processAPI: IProcessAPI,
-    tmpAPI: ITmpAPI
+    eth2Deposit: IEth2DepositAPI,
+    bashUtils: IBashUtilsAPI
   }
 }

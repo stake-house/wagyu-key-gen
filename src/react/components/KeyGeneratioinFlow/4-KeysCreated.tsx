@@ -3,8 +3,6 @@ import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 import { Network } from '../../types';
 
-import { findFirstFile } from "../../commands/BashUtils";
-
 type KeysCreatedProps = {
   folderPath: string,
   network: Network
@@ -24,7 +22,7 @@ const LoudText = styled(Typography)`
 const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
 
   const openKeyLocation = () => {
-    findFirstFile(props.folderPath, "keystore")
+    window.bashUtils.findFirstFile(props.folderPath, "keystore")
       .then((keystoreFile) => {
         let fileToLocate = props.folderPath;
         if (keystoreFile != "") {
