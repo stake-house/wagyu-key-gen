@@ -55,6 +55,13 @@ app.on("ready", () => {
   window.setMenuBarVisibility(false);
 
   /**
+   * Set the Permission Request Handler to deny all permissions requests
+   */
+  window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+    return callback(false);
+  });
+
+  /**
    * Allow for refreshing of the React app within Electron without reopening.
    * This feature is used for development and will be disabled before production deployment.
    */
