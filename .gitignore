@@ -1,6 +1,12 @@
 node_modules/
 dist/
-.yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # For pyinstaller
 build/

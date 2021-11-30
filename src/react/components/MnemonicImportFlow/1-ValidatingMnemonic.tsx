@@ -26,7 +26,7 @@ const Loader = styled.div`
  */
 const ValidatingMnemonic: FC<ValidatingMnemonicProps> = (): ReactElement => {
   return (
-    <Grid container direction="column" spacing={3}>
+    <Grid container spacing={3}>
       <Grid item xs={12}>
         <Typography variant="body1">
           Validating secret recovery phrase...

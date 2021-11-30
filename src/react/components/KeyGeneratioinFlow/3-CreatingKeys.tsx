@@ -28,7 +28,7 @@ const CreatingKeys: FC<CreatingKeysProps> = (): ReactElement => {
   return (
     <Grid container>
       <Grid item xs={1} />
-      <Grid container item direction="column" spacing={3} xs={10}>
+      <Grid container item spacing={3} xs={10}>
         <Grid item container xs={12}>
           <Typography variant="body1" align="left">
             The duration of this process depends on how many keys you are generating and the performance of your computer.  Generating one key takes about 30 seconds.  Generating 100 keys may take about 10 minutes.

@@ -92,7 +92,7 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
   return (
     <Grid container>
       { props.mnemonic == "" &&
-        <Grid container direction="column" spacing={5}>
+        <Grid container spacing={5}>
           <Grid item xs={12}>
             Generating your secret recovery phrase.  May take up to 30 seconds.
           </Grid>
@@ -102,7 +102,7 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
         </Grid>
       }
       { props.mnemonic != "" &&
-        <Grid container direction="column" spacing={3}>
+        <Grid container spacing={3}>
 
           <Grid item xs={12}>
             { !props.showCopyWarning &&
