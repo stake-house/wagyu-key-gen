@@ -1,6 +1,5 @@
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import { Box, Grid, Link, Typography } from '@material-ui/core';
-import { shell } from "electron";
 import styled from 'styled-components';
 
 type GenerateMnemonicProps = {
@@ -23,11 +22,11 @@ const LoudText = styled.span`
 const GenerateMnemonic: FC<GenerateMnemonicProps> = (props): ReactElement => {
 
   const sendToKeyInfo = () => {
-    shell.openExternal("https://kb.beaconcha.in/ethereum-2-keys");
+    window.electronAPI.shellOpenExternal("https://kb.beaconcha.in/ethereum-2-keys");
   }
 
   const sendToPassphraseProtection = () => {
-    shell.openExternal("https://www.ledger.com/blog/how-to-protect-your-seed-phrase");
+    window.electronAPI.shellOpenExternal("https://www.ledger.com/blog/how-to-protect-your-seed-phrase");
   }
 
   return (

@@ -1,7 +1,6 @@
 import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
-import { validateMnemonic } from '../commands/Eth2Deposit';
 import ValidatingMnemonic from './MnemonicImportFlow/1-ValidatingMnemonic';
 import { errors, MNEMONIC_LENGTH } from "../constants";
 import StepNavigation from './StepNavigation';
@@ -48,7 +47,7 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
 
       setStep(step + 1);
 
-      validateMnemonic(props.mnemonic).then(() => {
+      window.eth2Deposit.validateMnemonic(props.mnemonic).then(() => {
         props.onStepForward();
       }).catch((error) => {
         setStep(0);

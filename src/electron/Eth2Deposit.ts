@@ -19,13 +19,14 @@
 
 import { execFile } from 'child_process';
 import { promisify } from 'util';
-import { mkdir, existsSync } from 'fs';
-import { Network } from '../types'
+import { constants } from 'fs';
+import { access, mkdir } from 'fs/promises';
 import { cwd } from 'process';
-import { doesFileExist } from "./BashUtils";
 
 import path from "path";
 import process from "process";
+
+import { doesFileExist } from './BashUtils';
 
 /**
  * A promise version of the execFile function from fs for CLI calls.
@@ -50,15 +51,17 @@ const ETH2DEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "eth2deposit_proxy.py");
  * Paths needed to call the eth2deposit_proxy application using a single file application (SFE)
  * bundled with pyinstaller.
  */
-const SFE_PATH = path.join("build", "bin", "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
+const SFE_PATH = path.join("build", "bin", "eth2deposit_proxy" +
+  (process.platform == "win32" ? ".exe" : ""));
 const DIST_WORD_LIST_PATH = path.join(cwd(), "build", "word_lists");
 
 /**
  * Paths needed to call the eth2deposit_proxy application from a bundled application.
  */
-const BUNDLED_SFE_PATH = path.join(process.resourcesPath, "..", "build", "bin",
-  "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
-const BUNDLED_DIST_WORD_LIST_PATH = path.join(process.resourcesPath, "..", "build", "word_lists");
+const BUNDLED_SFE_PATH = path.join(process.resourcesPath, "..", "build",
+  "bin", "eth2deposit_proxy" + (process.platform == "win32" ? ".exe" : ""));
+const BUNDLED_DIST_WORD_LIST_PATH = path.join(process.resourcesPath, "..",
+  "build", "word_lists");
 
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
@@ -76,10 +79,10 @@ const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
  */
 const requireDepositPackages = async (): Promise<boolean> => {
 
-  if (!existsSync(REQUIREMENT_PACKAGES_PATH)) {
-    mkdir(REQUIREMENT_PACKAGES_PATH, { recursive: true }, (err) => {
-      if (err) throw err;
-    });
+  try {
+    await access(REQUIREMENT_PACKAGES_PATH, constants.F_OK);
+  } catch {
+    await mkdir(REQUIREMENT_PACKAGES_PATH, { recursive: true });
 
     const executable = PYTHON_EXE;
     const args = ["-m", "pip", "install", "-r", REQUIREMENTS_PATH, "--target",
@@ -87,6 +90,7 @@ const requireDepositPackages = async (): Promise<boolean> => {
 
     await execFileProm(executable, args);
   }
+
   return true
 }
 
@@ -122,10 +126,10 @@ const createMnemonic = async (language: string): Promise<string> => {
   let args:string[] = [];
   let env = process.env;
 
-  if (doesFileExist(BUNDLED_SFE_PATH)) {
+  if (await doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
     args = [CREATE_MNEMONIC_SUBCOMMAND, BUNDLED_DIST_WORD_LIST_PATH, "--language", language];
-  } else if (doesFileExist(SFE_PATH)) {
+  } else if (await doesFileExist(SFE_PATH)) {
     executable = SFE_PATH;
     args = [CREATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, "--language", language]
   } else {
@@ -144,7 +148,6 @@ const createMnemonic = async (language: string): Promise<string> => {
 
   const result = JSON.parse(mnemonicResultString);
   return result.mnemonic;
-  
 }
 
 /**
@@ -169,7 +172,7 @@ const generateKeys = async (
     mnemonic: string,
     index: number,
     count: number,
-    network: Network,
+    network: string,
     password: string,
     eth1_withdrawal_address: string,
     folder: string,
@@ -179,7 +182,7 @@ const generateKeys = async (
   let args:string[] = [];
   let env = process.env;
   
-  if (doesFileExist(BUNDLED_SFE_PATH)) {
+  if (await doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
     args = [GENERATE_KEYS_SUBCOMMAND];
     if ( eth1_withdrawal_address != "" ) {
@@ -188,7 +191,7 @@ const generateKeys = async (
     
     args = args.concat([BUNDLED_DIST_WORD_LIST_PATH, mnemonic, index.toString(), count.toString(),
       folder, network.toLowerCase(), password]);
-  } else if (doesFileExist(SFE_PATH)) {
+  } else if (await doesFileExist(SFE_PATH)) {
     executable = SFE_PATH;
     args = [GENERATE_KEYS_SUBCOMMAND];
     if ( eth1_withdrawal_address != "" ) {
@@ -232,17 +235,16 @@ const validateMnemonic = async (
   let args:string[] = [];
   let env = process.env;
 
-  if (doesFileExist(BUNDLED_SFE_PATH)) {
+  if (await doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
     args = [VALIDATE_MNEMONIC_SUBCOMMAND, BUNDLED_DIST_WORD_LIST_PATH, mnemonic];
-  } else if (doesFileExist(SFE_PATH)) {
+  } else if (await doesFileExist(SFE_PATH)) {
     executable = SFE_PATH;
     args = [VALIDATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, mnemonic];
   } else {
     if(!await requireDepositPackages()) {
       throw new Error("Failed to generate mnemonic, don't have the required packages.");
     }
-
     env.PYTHONPATH = await getPythonPath();
 
     executable = PYTHON_EXE;

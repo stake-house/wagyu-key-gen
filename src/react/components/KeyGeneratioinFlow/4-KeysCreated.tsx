@@ -1,10 +1,7 @@
 import { Box, Grid, Typography, Link } from '@material-ui/core';
 import React, { FC, ReactElement } from 'react';
-import { shell } from "electron";
 import styled from 'styled-components';
 import { Network } from '../../types';
-
-import { findFirstFile } from "../../commands/BashUtils";
 
 type KeysCreatedProps = {
   folderPath: string,
@@ -25,13 +22,13 @@ const LoudText = styled(Typography)`
 const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
 
   const openKeyLocation = () => {
-    findFirstFile(props.folderPath, "keystore")
+    window.bashUtils.findFirstFile(props.folderPath, "keystore")
       .then((keystoreFile) => {
         let fileToLocate = props.folderPath;
         if (keystoreFile != "") {
           fileToLocate = keystoreFile;
         }
-        shell.showItemInFolder(fileToLocate);
+        window.electronAPI.shellShowItemInFolder(fileToLocate);
     });
   }
 
