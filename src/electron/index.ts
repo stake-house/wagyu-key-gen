@@ -3,7 +3,7 @@
  * This typescript file contains the Electron app which renders the React app.
  */
 
-import { BrowserWindow, app, globalShortcut, ipcMain, dialog } from "electron";
+import { BrowserWindow, app, globalShortcut, ipcMain, dialog, clipboard } from "electron";
 import path from "path";
 
 import { accessSync, constants } from "fs";
@@ -84,3 +84,11 @@ app.on("ready", () => {
    */
   window.loadURL(`file://${__dirname}/../react/index.html`);
 });
+
+app.on('will-quit', () => {
+  /**
+   * Clear clipboard on quit to avoid access to any mnemonic or password that was copied during
+   * application use.
+   */
+  clipboard.clear();
+})

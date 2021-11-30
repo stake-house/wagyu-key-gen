@@ -1,7 +1,7 @@
 import { useHistory } from "react-router-dom";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
-import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
+import { Container, Divider, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';
 import { KeyIcon } from "../components/icons/KeyIcon";
 import { NetworkPicker } from "../components/NetworkPicker";
@@ -34,16 +34,15 @@ const SubHeader = styled(Typography)`
 `;
 
 const Links = styled.div`
-  margin-top: 20px;
+  margin-top: 35px;
 `;
 
-const StyledLink = styled(Typography)`
-  cursor: pointer;
-  display: inline;
+const InfoLabel = styled.span`
+  color: gray;
 `;
 
 const OptionsGrid = styled(Grid)`
-  margin-top: 50px;
+  margin-top: 35px;
   align-items: center;
 `;
 
@@ -67,14 +66,6 @@ const Home: FC<HomeProps> = (props): ReactElement => {
   const [useExistingMnemonicSelected, setUseExistingMnemonicSelected] = useState(false);
 
   let history = useHistory();
-
-  const sendToGithub = () => {
-    window.electronAPI.shellOpenExternal("https://github.com/stake-house/wagyu-key-gen");
-  }
-
-  const sendToDiscord = () => {
-    window.electronAPI.shellOpenExternal("https://discord.io/ethstaker");
-  }
 
   const handleOpenNetworkModal = () => {
     setShowNetworkModal(true);
@@ -143,9 +134,9 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       <SubHeader>Your key generator for Ethereum 2.0</SubHeader>
 
       <Links>
-        <StyledLink display="inline" color="primary" onClick={sendToGithub} tabIndex={tabIndex(0)}>Github</StyledLink>
-        &nbsp;|&nbsp;
-        <StyledLink display="inline" color="primary" onClick={sendToDiscord} tabIndex={tabIndex(0)}>Discord</StyledLink>
+        <InfoLabel>Github:</InfoLabel> https://github.com/stake-house/wagyu-key-gen
+        <br />
+        <InfoLabel>Support:</InfoLabel> https://discord.io/ethstaker
       </Links>
 
       <OptionsGrid container spacing={2} direction="column">
