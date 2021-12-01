@@ -13,6 +13,11 @@ const LoudText = styled(Typography)`
   text-align: left;
 `;
 
+const QuietText = styled(Typography)`
+  color: gray;
+  text-align: left;
+`;
+
 /**
  * The final page displaying key location and information about them.
  * 
@@ -59,6 +64,9 @@ const KeysCreated: FC<KeysCreatedProps> = (props): ReactElement => {
             <Typography variant="body2" align="left">
               This was the first thing you created.  It is also known as a "mnemonic" or "seed phrase".  You'll need this to withdraw your funds.  Keep multiple copies in different physical locations safe from theft, fire, water and other hazards. Keep it private.  There is no way to recover this.
             </Typography>
+            <QuietText>
+              Note: Your clipboard will be cleared upon closing this application.
+            </QuietText>
           </Box>
       </Grid>
       <Grid item xs={1} />
