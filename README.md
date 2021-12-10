@@ -3,6 +3,8 @@ Wagyu Key Gen is a GUI application providing functionality to the [eth2.0-deposi
 
 ### Download wagyu at [https://wagyu.gg](https://wagyu.gg)
 
+### Wagyu Audit by HashCloak [Wagyu Key Gen Audit Report](https://github.com/stake-house/wagyu-key-gen/files/7693548/Wagyu.Key.Gen.Audit.Report.pdf)
+
 ## Environment Configuration & Dependencies
 Prior to running Wagyu Key Gen a few dependencies need to be installed. 
 
