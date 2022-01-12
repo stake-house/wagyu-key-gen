@@ -1,5 +1,5 @@
-import { Grid, TextField, Tooltip, Typography } from '@material-ui/core';
-import React, { Dispatch, SetStateAction } from 'react';
+import { Button, Fade, FormControlLabel, Grid, Switch, TextField, Tooltip, Typography } from '@material-ui/core';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from "styled-components";
 import { errors, tooltips } from '../../constants';
 
@@ -17,15 +17,9 @@ type GenerateKeysProps = {
   onFinish: () => void
 }
 
-const Form = styled.form`
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-`
-
 const StyledTextField = styled(TextField)`
   margin: 12px 0;
-  width: 300px;
+  width: 260px;
 `
 
 /**
@@ -35,6 +29,12 @@ const StyledTextField = styled(TextField)`
  * @returns 
  */
 const KeyInputs = (props: GenerateKeysProps) => {
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const handleToggleShowAdvanced = () => {
+    setShowAdvanced(!showAdvanced);
+  }
+
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
     props.setNumberOfKeys(num);
@@ -49,6 +49,10 @@ const KeyInputs = (props: GenerateKeysProps) => {
     props.setPassword(e.target.value);
   }
 
+  const updateEth1WithdrawAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.setPassword(e.target.value);
+  }
+
   return (
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
@@ -56,15 +60,14 @@ const KeyInputs = (props: GenerateKeysProps) => {
           Nice!  Your Secret Recovery Phrase is verified. Now let's collect some info about the keys to create:
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <Form>
+      <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={3} xs={12}>
+        <Grid item>
           <Tooltip title={tooltips.NUMBER_OF_KEYS}>
             <StyledTextField
               id="number-of-keys"
               label="Number of New Keys"
               variant="outlined"
               type="number"
-              autoFocus
               value={props.numberOfKeys}
               onChange={updateNumberOfKeys}
               InputProps={{ inputProps: { min: 1, max: 1000 } }}
@@ -72,7 +75,9 @@ const KeyInputs = (props: GenerateKeysProps) => {
               helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
             />
           </Tooltip>
-          { props.showIndexInput &&
+        </Grid>
+        { props.showIndexInput &&
+          <Grid item>
             <Tooltip title={tooltips.STARTING_INDEX}>
               <StyledTextField
                 id="index"
@@ -86,7 +91,9 @@ const KeyInputs = (props: GenerateKeysProps) => {
                 helperText={props.startingIndexError ? errors.STARTING_INDEX : ""}
               />
             </Tooltip>
-          }
+          </Grid>
+        }
+        <Grid item>
           <Tooltip title={tooltips.PASSWORD}>
             <StyledTextField
               id="password"
@@ -99,8 +106,33 @@ const KeyInputs = (props: GenerateKeysProps) => {
               helperText={props.passwordStrengthError ? errors.PASSWORD_STRENGTH : ""}
             />
           </Tooltip>
-        </Form>
+        </Grid>
       </Grid>
+      <Grid item>
+        <FormControlLabel
+          control={<Switch checked={showAdvanced} onChange={handleToggleShowAdvanced} color="default" size="small" />}
+          label="Show Advanced Inputs"
+        />
+      </Grid>
+      <Grid item>
+          <Fade in={showAdvanced} >
+            <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={3} xs={12}>
+              <Grid item>
+                <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
+                  <StyledTextField
+                    id="eth1-withdraw-address"
+                    label="(opt) Eth1 Withdraw Address"
+                    variant="outlined"
+                    value={props.password}
+                    onChange={updatePassword}
+                    error={props.numberOfKeysError}
+                    helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
+                  />
+                </Tooltip>
+              </Grid>
+            </Grid>
+          </Fade>
+        </Grid>
     </Grid>
   );
 }
