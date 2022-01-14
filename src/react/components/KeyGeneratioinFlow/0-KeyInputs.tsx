@@ -6,20 +6,30 @@ import { errors, tooltips } from '../../constants';
 type GenerateKeysProps = {
   numberOfKeys: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
+  withdrawalAddress: string,
+  setWithdrawalAddress: Dispatch<SetStateAction<string>>,
   index: number,
   setIndex: Dispatch<SetStateAction<number>>,
   showIndexInput: boolean,
   password: string,
   setPassword: Dispatch<SetStateAction<string>>,
+  withdrawalAddressFormatError: boolean,
   numberOfKeysError: boolean,
   passwordStrengthError: boolean,
   startingIndexError: boolean,
+  showAdvanced: boolean,
+  setShowAdvanced: Dispatch<SetStateAction<boolean>>,
   onFinish: () => void
 }
 
 const StyledTextField = styled(TextField)`
   margin: 12px 0;
   width: 260px;
+`
+
+const AddressTextField = styled(TextField)`
+  margin: 12px 0;
+  width: 440px;
 `
 
 /**
@@ -29,10 +39,9 @@ const StyledTextField = styled(TextField)`
  * @returns 
  */
 const KeyInputs = (props: GenerateKeysProps) => {
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
+  
   const handleToggleShowAdvanced = () => {
-    setShowAdvanced(!showAdvanced);
+    props.setShowAdvanced(!props.showAdvanced);
   }
 
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +59,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
   }
 
   const updateEth1WithdrawAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.setPassword(e.target.value);
+    props.setWithdrawalAddress(e.target.value.trim());
   }
 
   return (
@@ -110,25 +119,28 @@ const KeyInputs = (props: GenerateKeysProps) => {
       </Grid>
       <Grid item>
         <FormControlLabel
-          control={<Switch checked={showAdvanced} onChange={handleToggleShowAdvanced} color="default" size="small" />}
+          control={<Switch checked={props.showAdvanced} onChange={handleToggleShowAdvanced} color="default" size="small" />}
           label="Show Advanced Inputs"
         />
       </Grid>
       <Grid item>
-          <Fade in={showAdvanced} >
+          <Fade in={props.showAdvanced} >
             <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={3} xs={12}>
               <Grid item>
                 <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
-                  <StyledTextField
+                  <AddressTextField
                     id="eth1-withdraw-address"
-                    label="(opt) Eth1 Withdraw Address"
+                    label="Ethereum Withdrawal Address (Optional)"
                     variant="outlined"
-                    value={props.password}
-                    onChange={updatePassword}
-                    error={props.numberOfKeysError}
-                    helperText={ props.numberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
+                    value={props.withdrawalAddress}
+                    onChange={updateEth1WithdrawAddress}
+                    error={props.withdrawalAddressFormatError}
+                    helperText={ props.withdrawalAddressFormatError ? errors.ADDRESS_FORMAT_ERROR : ""}
                   />
                 </Tooltip>
+                <Typography variant="body1">
+                  Please ensure that you have control over this address.
+                </Typography>
               </Grid>
             </Grid>
           </Fade>

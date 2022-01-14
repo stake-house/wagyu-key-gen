@@ -62,8 +62,10 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [keyGenerationStartIndex, setKeyGenerationStartIndex] = useState(0);
   const [numberOfKeys, setNumberOfKeys] = useState(1);
+  const [withdrawalAddress, setWithdrawalAddress] = useState("");
   const [password, setPassword] = useState("");
   const [folderPath, setFolderPath] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const stepSequence = stepSequenceMap[stepSequenceKey];
   const activeStepKey = stepSequence[activeStepIndex];
@@ -131,8 +133,12 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             showKeyGenerationStartIndexInput={stepSequenceKey === StepSequenceKey.MnemonicImport}
             numberOfKeys={numberOfKeys}
             setNumberOfKeys={setNumberOfKeys}
+            withdrawalAddress={withdrawalAddress}
+            setWithdrawalAddress={setWithdrawalAddress}
             password={password}
             setPassword={setPassword}
+            showAdvanced={showAdvanced}
+            setShowAdvanced={setShowAdvanced}
           />
         );
         case StepKey.KeyGeneration:
@@ -143,6 +149,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
               network={props.network}
               keyGenerationStartIndex={keyGenerationStartIndex}
               numberOfKeys={numberOfKeys}
+              withdrawalAddress={withdrawalAddress}
               password={password}
               folderPath={folderPath}
               setFolderPath={setFolderPath}

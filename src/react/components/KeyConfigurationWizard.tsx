@@ -19,8 +19,12 @@ type Props = {
   showKeyGenerationStartIndexInput: boolean,
   numberOfKeys: number,
   setNumberOfKeys: Dispatch<SetStateAction<number>>,
+  withdrawalAddress: string,
+  setWithdrawalAddress: Dispatch<SetStateAction<string>>,
   password: string,
-  setPassword: Dispatch<SetStateAction<string>>
+  setPassword: Dispatch<SetStateAction<string>>,
+  showAdvanced: boolean,
+  setShowAdvanced: Dispatch<SetStateAction<boolean>>
 }
 
 /**
@@ -36,6 +40,8 @@ type Props = {
  *    Prompting the user for starting index is only required when importing a mnemonic.
  * @param props.numberOfKeys the total number of keys to generate for the user
  * @param props.setNumberOfKeys function to set the number of keys to generate
+ * @param props.withdrawalAddress the optional wallet address for the withdrawal credentials
+ * @param props.setWithdrawalAddress function to set the wallet address for the withdrawal credentials
  * @param props.password the password to use to protect the keys for the user
  * @param props.setPassword function to set the password
  * @returns the react element to render
@@ -44,10 +50,11 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [verifyPassword, setVerifyPassword] = useState("");
   const [numberOfKeysError, setNumberOfKeysError] = useState(false);
+  const [withdrawalAddressFormatError, setWithdrawalAddressFormatError] = useState(false);
   const [passwordStrengthError, setPasswordStrengthError] = useState(false);
   const [passwordVerifyError, setPasswordVerifyError] = useState(false);
   const [startingIndexError, setStartingIndexError] = useState(false);
-  
+
   const prevLabel = () => {
     switch (step) {
       case 0:
@@ -61,11 +68,14 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
     switch (step) {
       case 0: {
         setNumberOfKeysError(false);
+        setWithdrawalAddressFormatError(false);
         setPasswordStrengthError(false);
         setStartingIndexError(false);
+        props.setShowAdvanced(false);
         props.setPassword("");
         props.setKeyGenerationStartIndex(props.initialKeyGenerationStartIndex);
         props.setNumberOfKeys(1);
+        props.setWithdrawalAddress("");
         props.onStepBack();
         break;
       }
@@ -138,6 +148,17 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
       setStartingIndexError(false);
     }
 
+    if (props.withdrawalAddress != "") {
+      if (props.withdrawalAddress.match(/^0x[a-fA-F0-9]{40}$/) == null) {
+        setWithdrawalAddressFormatError(true);
+        isError = true;
+      } else {
+        setWithdrawalAddressFormatError(false);
+      }
+    } else {
+      setWithdrawalAddressFormatError(false);
+    }
+
     if (!isError) {
       setStep(step + 1);
     }
@@ -158,14 +179,19 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
         <KeyInputs
           numberOfKeys={props.numberOfKeys}
           setNumberOfKeys={props.setNumberOfKeys}
+          withdrawalAddress={props.withdrawalAddress}
+          setWithdrawalAddress={props.setWithdrawalAddress}
           index={props.keyGenerationStartIndex}
           setIndex={props.setKeyGenerationStartIndex}
           showIndexInput={props.showKeyGenerationStartIndexInput}
           password={props.password}
           setPassword={props.setPassword}
           numberOfKeysError={numberOfKeysError}
+          withdrawalAddressFormatError={withdrawalAddressFormatError}
           passwordStrengthError={passwordStrengthError}
           startingIndexError={startingIndexError}
+          showAdvanced={props.showAdvanced}
+          setShowAdvanced={props.setShowAdvanced}
           onFinish={validateInputs}
         />
       );
