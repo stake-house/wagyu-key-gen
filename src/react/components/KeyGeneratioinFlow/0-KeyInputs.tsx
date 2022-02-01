@@ -26,6 +26,7 @@ type GenerateKeysProps = {
 const StyledTextField = styled(TextField)`
   margin: 12px 0;
   width: 260px;
+  min-height: 79px;
 `
 
 const AddressTextField = styled(TextField)`
@@ -68,13 +69,13 @@ const KeyInputs = (props: GenerateKeysProps) => {
   }
 
   return (
-    <Grid container direction="column" spacing={3}>
+    <Grid container direction="column" spacing={2}>
       <Grid item xs={12}>
         <Typography variant="body1">
           Nice!  Your Secret Recovery Phrase is verified. Now let's collect some info about the keys to create:
         </Typography>
       </Grid>
-      <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={3} xs={12}>
+      <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={2} xs={12}>
         <Grid item>
           <Tooltip title={tooltips.NUMBER_OF_KEYS}>
             <StyledTextField
@@ -130,7 +131,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
       </Grid>
       <Grid item>
           <Fade in={props.showAdvanced} >
-            <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={3} xs={12}>
+            <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={2} xs={12}>
               <Grid item>
                 <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
                   <AddressTextField
