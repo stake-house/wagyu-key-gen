@@ -20,6 +20,7 @@ type Props = {
   mnemonic: string,
   keyGenerationStartIndex: number,
   numberOfKeys: number,
+  withdrawalAddress: string,
   password: string,
   folderPath: string,
   setFolderPath: Dispatch<SetStateAction<string>>,
@@ -35,6 +36,7 @@ type Props = {
  * @param props.mnemonic the mnemonic
  * @param props.keyGenerationStartIndex the index at which to start generating keys for the user
  * @param props.numberOfKeys the total number of keys to generate for the user
+ * @param props.withdrawalAddress the optional wallet address for the withdrawal credentials
  * @param props.password the password to use to protect the keys for the user
  * @param props.folderPath the path at which to store the keys
  * @param props.setFolderPath funciton to update the path
@@ -132,7 +134,6 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const handleKeyGeneration = () => {
-    const eth1_withdrawal_address = "";
 
     window.eth2Deposit.generateKeys(
       props.mnemonic,
@@ -140,7 +141,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       props.numberOfKeys,
       props.network,
       props.password,
-      eth1_withdrawal_address,
+      props.withdrawalAddress,
       props.folderPath).then(() => {
       props.onStepForward();
     }).catch((error) => {
