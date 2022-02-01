@@ -126,7 +126,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
       <Grid item>
         <FormControlLabel
           control={<Switch checked={props.showAdvanced} onChange={handleToggleShowAdvanced} color="default" size="small" />}
-          label="Show Advanced Inputs"
+          label="Use Advanced Inputs"
         />
       </Grid>
       <Grid item>
