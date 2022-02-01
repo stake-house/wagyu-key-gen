@@ -14,6 +14,7 @@ type GenerateKeysProps = {
   password: string,
   setPassword: Dispatch<SetStateAction<string>>,
   withdrawalAddressFormatError: boolean,
+  setWithdrawalAddressFormatError: Dispatch<SetStateAction<boolean>>,
   numberOfKeysError: boolean,
   passwordStrengthError: boolean,
   startingIndexError: boolean,
@@ -42,6 +43,10 @@ const KeyInputs = (props: GenerateKeysProps) => {
   
   const handleToggleShowAdvanced = () => {
     props.setShowAdvanced(!props.showAdvanced);
+    if (!props.showAdvanced) {
+      props.setWithdrawalAddress("");
+      props.setWithdrawalAddressFormatError(false);
+    }
   }
 
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {

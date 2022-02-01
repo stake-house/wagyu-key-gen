@@ -148,7 +148,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
       setStartingIndexError(false);
     }
 
-    if (props.withdrawalAddress != "") {
+    if (props.withdrawalAddress != "" && props.showAdvanced) {
       if (props.withdrawalAddress.match(/^0x[a-fA-F0-9]{40}$/) == null) {
         setWithdrawalAddressFormatError(true);
         isError = true;
@@ -188,6 +188,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
           setPassword={props.setPassword}
           numberOfKeysError={numberOfKeysError}
           withdrawalAddressFormatError={withdrawalAddressFormatError}
+          setWithdrawalAddressFormatError={setWithdrawalAddressFormatError}
           passwordStrengthError={passwordStrengthError}
           startingIndexError={startingIndexError}
           showAdvanced={props.showAdvanced}
