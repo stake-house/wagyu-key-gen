@@ -4,7 +4,7 @@ export const errors = {
 	MNEMONIC_FORMAT: "Invalid format. Your Secret Recovery Phrase should be a 24 word list.",
 	MNEMONICS_DONT_MATCH: "The Secret Recovery Phrase you entered does not match what was given to you. Please try again.",
 	NUMBER_OF_KEYS: "Please input a number between 1 and 1000.",
-	ADDRESS_FORMAT_ERROR: "Please enter a valid Ethereum address that starts with '0x'.",
+	ADDRESS_FORMAT_ERROR: "Please enter a valid Ethereum address.",
 	PASSWORD_STRENGTH: "Password must be at least 8 characters.",
 	PASSWORD_MATCH: "Passwords don't match.",
 	STARTING_INDEX: "Please input starting index.",

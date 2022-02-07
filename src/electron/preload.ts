@@ -12,6 +12,8 @@ import {
   OpenDialogReturnValue
 } from "electron";
 
+import Web3Utils from 'web3-utils';
+
 import { createMnemonic, generateKeys, validateMnemonic } from './Eth2Deposit';
 
 import { doesDirectoryExist, isDirectoryWritable, findFirstFile } from './BashUtils';
@@ -42,4 +44,8 @@ contextBridge.exposeInMainWorld('bashUtils', {
   'doesDirectoryExist': doesDirectoryExist,
   'isDirectoryWritable': isDirectoryWritable,
   'findFirstFile': findFirstFile
+});
+
+contextBridge.exposeInMainWorld('web3Utils', {
+  'isAddress': Web3Utils.isAddress
 });

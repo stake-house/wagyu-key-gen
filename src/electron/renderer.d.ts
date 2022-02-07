@@ -44,10 +44,15 @@ export interface IBashUtilsAPI {
   findFirstFile: (directory: string, startsWith: string) => Promise<string>
 }
 
+export interface IWeb3UtilsAPI {
+  isAddress: (address: string, chainId?: number | undefined) => boolean
+}
+
 declare global {
   interface Window {
     electronAPI: IElectronAPI,
     eth2Deposit: IEth2DepositAPI,
-    bashUtils: IBashUtilsAPI
+    bashUtils: IBashUtilsAPI,
+    web3Utils: IWeb3UtilsAPI
   }
 }
