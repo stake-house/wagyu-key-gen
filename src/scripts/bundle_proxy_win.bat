@@ -28,7 +28,7 @@ rem Getting all the requirements
 python -m pip install -r %ETH2REQUIREMENTSPATH% --target %TARGETPACKAGESPATH%
 
 rem Bundling Python eth2deposit_proxy
-pyinstaller --onefile --distpath %DISTBINPATH% --add-data "%SRCINTLPATH%:staking_deposit\intl" -p %PYTHONPATH% %BATDIR%eth2deposit_proxy.py
+pyinstaller --onefile --distpath %DISTBINPATH% --add-data "%SRCINTLPATH%;staking_deposit\intl" -p %PYTHONPATH% %BATDIR%eth2deposit_proxy.py
 
 rem Adding word list
 copy /Y %SRCWORDSPATH%\* %DISTWORDSPATH%
