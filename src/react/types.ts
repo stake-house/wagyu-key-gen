@@ -15,5 +15,6 @@ export enum Network {
   MAINNET = "Mainnet",
   PRATER = "Prater",
   KINTSUGI = "Kintsugi",
-  KILN = "Kiln"
+  KILN = "Kiln",
+  GNOSIS = "Gnosis"
 }
