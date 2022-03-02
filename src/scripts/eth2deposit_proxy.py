@@ -68,7 +68,7 @@ def generate_keys(args):
             - count: number of signing keys you want to generate
             - folder: folder path for the resulting keystore(s) and deposit(s) files
             - network: network setting for the signing domain, possible values are 'mainnet',
-                       'prater', 'kintsugi' or 'kiln'
+                       'prater', 'kintsugi', 'kiln', or 'gnosis'
             - password: password that will protect the resulting keystore(s)
             - eth1_withdrawal_address: (Optional) eth1 address that will be used to create the
                                        withdrawal credentials
@@ -148,7 +148,7 @@ def main():
     generate_parser.add_argument("folder", help="Where to put the deposit data and keystore files", type=str)
     generate_parser.add_argument("network", help="For which network to create these keys for", type=str)
     generate_parser.add_argument("password", help="Password for the keystore files", type=str)
-    generate_parser.add_argument("--eth1_withdrawal_address", help="Optional eth1 withdrawal address", type=str)
+    generate_parser.add_argument("--eth1_withdrawal_address", help="Optional eth1 withdrawal address; required for Gnosis", type=str)
     generate_parser.set_defaults(func=parse_generate_keys)
 
     validate_parser = subparsers.add_parser("validate_mnemonic")
