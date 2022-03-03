@@ -10,26 +10,26 @@ import argparse
 import json
 import sys
 
-from eth2deposit.key_handling.key_derivation.mnemonic import (
+from staking_deposit.key_handling.key_derivation.mnemonic import (
     get_mnemonic,
     verify_mnemonic
 )
 
 from eth_utils import is_hex_address, to_normalized_address
 
-from eth2deposit.credentials import (
+from staking_deposit.credentials import (
     CredentialList,
 )
 
-from eth2deposit.exceptions import ValidationError
-from eth2deposit.utils.validation import (
+from staking_deposit.exceptions import ValidationError
+from staking_deposit.utils.validation import (
     verify_deposit_data_json,
 )
-from eth2deposit.utils.constants import (
+from staking_deposit.utils.constants import (
     MAX_DEPOSIT_AMOUNT,
 )
 
-from eth2deposit.settings import (
+from staking_deposit.settings import (
     get_chain_setting,
 )
 
@@ -68,7 +68,7 @@ def generate_keys(args):
             - count: number of signing keys you want to generate
             - folder: folder path for the resulting keystore(s) and deposit(s) files
             - network: network setting for the signing domain, possible values are 'mainnet',
-                       'prater' or 'pyrmont'
+                       'prater', 'kintsugi' or 'kiln'
             - password: password that will protect the resulting keystore(s)
             - eth1_withdrawal_address: (Optional) eth1 address that will be used to create the
                                        withdrawal credentials

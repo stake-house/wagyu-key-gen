@@ -33,7 +33,7 @@ import { doesFileExist } from './BashUtils';
  */
 const execFileProm = promisify(execFile);
 
-const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-1.2.0";
+const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-2.0.0";
 
 /**
  * Paths needed to call the eth2deposit_proxy application using the Python 3 version installed on
@@ -42,7 +42,7 @@ const ETH2_DEPOSIT_DIR_NAME = "eth2.0-deposit-cli-1.2.0";
 const ETH2_DEPOSIT_CLI_PATH = path.join("src", "vendors", ETH2_DEPOSIT_DIR_NAME);
 const SCRIPTS_PATH = path.join("src", "scripts");
 const REQUIREMENTS_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "requirements.txt");
-const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "eth2deposit", "key_handling",
+const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "staking_deposit", "key_handling",
   "key_derivation", "word_lists");
 const REQUIREMENT_PACKAGES_PATH = path.join("dist", "packages");
 const ETH2DEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "eth2deposit_proxy.py");
@@ -158,7 +158,7 @@ const createMnemonic = async (language: string): Promise<string> => {
  * @param index The index of the first validator's keys you wish to generate.
  * @param count The number of signing keys you want to generate.
  * @param network The network setting for the signing domain. Possible values are `mainnet`,
- *                `prater` or `pyrmont`.
+ *                `prater`, `kintsugi`, `kiln`.
  * @param password The password that will protect the resulting keystore(s).
  * @param eth1_withdrawal_address If this field is not empty and valid, the given Eth1 address will
  *                                be used to create the withdrawal credentials. Otherwise, it will

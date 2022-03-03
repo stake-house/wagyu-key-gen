@@ -12,7 +12,8 @@ export enum StepSequenceKey {
 }
 
 export enum Network {
-	PYRMONT = "Pyrmont",
-	PRATER = "Prater",
-	MAINNET = "Mainnet"
+  MAINNET = "Mainnet",
+  PRATER = "Prater",
+  KINTSUGI = "Kintsugi",
+  KILN = "Kiln"
 }

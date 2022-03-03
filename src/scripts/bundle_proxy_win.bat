@@ -5,9 +5,11 @@ rem Windows.
 
 SET BATDIR=%~dp0
 
+SET EDCDIR=eth2.0-deposit-cli-2.0.0
+
 SET TARGETPACKAGESPATH=%BATDIR%..\..\dist\packages
 
-SET ETH2DEPOSITCLIPATH=%BATDIR%..\vendors\eth2.0-deposit-cli-1.2.0
+SET ETH2DEPOSITCLIPATH=%BATDIR%..\vendors\%EDCDIR%
 SET ETH2REQUIREMENTSPATH=%ETH2DEPOSITCLIPATH%\requirements.txt
 
 SET PYTHONPATH=
@@ -15,7 +17,8 @@ FOR /F "tokens=* USEBACKQ delims=;" %%F IN (`python -c "import sys;print(';'.joi
 
 SET DISTBINPATH=%BATDIR%..\..\build\bin
 SET DISTWORDSPATH=%BATDIR%..\..\build\word_lists
-SET SRCWORDSPATH=%BATDIR%..\vendors\eth2.0-deposit-cli-1.2.0\eth2deposit\key_handling\key_derivation\word_lists
+SET SRCWORDSPATH=%BATDIR%..\vendors\%EDCDIR%\staking_deposit\key_handling\key_derivation\word_lists
+SET SRCINTLPATH=%BATDIR%..\vendors\%EDCDIR%\staking_deposit\intl
 
 mkdir %DISTBINPATH% > nul 2> nul
 mkdir %DISTWORDSPATH% > nul 2> nul
@@ -25,7 +28,7 @@ rem Getting all the requirements
 python -m pip install -r %ETH2REQUIREMENTSPATH% --target %TARGETPACKAGESPATH%
 
 rem Bundling Python eth2deposit_proxy
-pyinstaller --onefile --distpath %DISTBINPATH% -p %PYTHONPATH% %BATDIR%eth2deposit_proxy.py
+pyinstaller --onefile --distpath %DISTBINPATH% --add-data "%SRCINTLPATH%;staking_deposit\intl" -p %PYTHONPATH% %BATDIR%eth2deposit_proxy.py
 
 rem Adding word list
 copy /Y %SRCWORDSPATH%\* %DISTWORDSPATH%
