@@ -1,5 +1,5 @@
 import { BackgroundLight, } from '../colors';
-import { FormControl, FormControlLabel, Radio, RadioGroup, Button } from '@material-ui/core';
+import { FormControl, FormControlLabel, Radio, RadioGroup, Button, Divider, Typography } from '@material-ui/core';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { Network } from '../types';
@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 404px;
+  height: 444px;
   width: 350px;
   background: rgba(27, 38, 44, 0.95);
   border-radius: 20px;
@@ -22,6 +22,12 @@ const Header = styled.div`
   font-size: 36px;
   margin-top: 30px;
   margin-bottom: 30px;
+`;
+
+const SubHeader = styled(Typography)`
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 15px;
 `;
 
 const Submit = styled(Button)`
@@ -62,6 +68,8 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
           <FormControl focused>
             <RadioGroup aria-label="gender" name="gender1" value={props.network} onChange={networkChanged}>
               <FormControlLabel value={Network.MAINNET} control={<Radio />} label={Network.MAINNET} />
+              <Divider />
+              <SubHeader>Testnets</SubHeader>
               <FormControlLabel value={Network.PRATER} control={<Radio />} label={Network.PRATER} />
               <FormControlLabel value={Network.KINTSUGI} control={<Radio />} label={Network.KINTSUGI} />
               <FormControlLabel value={Network.KILN} control={<Radio />} label={Network.KILN} />
