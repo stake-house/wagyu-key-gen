@@ -158,7 +158,7 @@ const createMnemonic = async (language: string): Promise<string> => {
  * @param index The index of the first validator's keys you wish to generate.
  * @param count The number of signing keys you want to generate.
  * @param network The network setting for the signing domain. Possible values are `mainnet`,
- *                `prater`, `kintsugi`, `kiln`.
+ *                `prater`, `kintsugi`, `kiln`, `gnosis`.
  * @param password The password that will protect the resulting keystore(s).
  * @param eth1_withdrawal_address If this field is not empty and valid, the given Eth1 address will
  *                                be used to create the withdrawal credentials. Otherwise, it will
