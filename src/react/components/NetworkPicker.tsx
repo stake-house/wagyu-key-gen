@@ -68,12 +68,12 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
           <FormControl focused>
             <RadioGroup aria-label="gender" name="gender1" value={props.network} onChange={networkChanged}>
               <FormControlLabel value={Network.MAINNET} control={<Radio />} label={Network.MAINNET} />
+              <FormControlLabel value={Network.GNOSIS} control={<Radio />} label={Network.GNOSIS} />
               <Divider />
               <SubHeader>Testnets</SubHeader>
               <FormControlLabel value={Network.PRATER} control={<Radio />} label={Network.PRATER} />
               <FormControlLabel value={Network.KINTSUGI} control={<Radio />} label={Network.KINTSUGI} />
               <FormControlLabel value={Network.KILN} control={<Radio />} label={Network.KILN} />
-              <FormControlLabel value={Network.GNOSIS} control={<Radio />} label={Network.GNOSIS} />
             </RadioGroup>
           </FormControl>
         </div>
