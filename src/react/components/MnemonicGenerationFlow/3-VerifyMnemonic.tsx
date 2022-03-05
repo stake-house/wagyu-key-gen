@@ -47,7 +47,7 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
     let nextFocus = index;
     const currentTextFieldValue = mnemonicToVerifyArray[index];
     
-    if (e.key === ' ' && currentTextFieldValue.length >= 4 && index < 23) {
+    if (e.key === ' ' && currentTextFieldValue.length >= 3 && index < 23) {
       nextFocus = index + 1;
     } else if (e.key === 'Backspace' && currentTextFieldValue.length == 0 && index >= 1) {
       nextFocus = (index - 1) % 24; 
