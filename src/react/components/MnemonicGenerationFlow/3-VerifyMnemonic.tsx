@@ -20,7 +20,7 @@ type VerifyMnemonicProps = {
  * @returns react element to render
  */
 const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
-  let inputFields:Array<React.MutableRefObject<HTMLInputElement | undefined>> = [];
+  let inputFields:Array<React.MutableRefObject<HTMLInputElement>> = [];
 
   const [mnemonicToVerifyArray, setMnemonicToVerifyArray] = useState(
     props.mnemonicToVerify ? props.mnemonicToVerify.split(' ') : Array(24).fill(''));
@@ -99,7 +99,7 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
         </Grid>
       );
 
-      inputFields.push(inputRef);
+      inputFields.push(inputRef as React.MutableRefObject<HTMLInputElement>);
     }
 
     return(
