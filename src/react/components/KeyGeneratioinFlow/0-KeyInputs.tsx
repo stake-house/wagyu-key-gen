@@ -126,7 +126,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
       <Grid item>
         <FormControlLabel
           control={<Switch checked={props.showAdvanced} onChange={handleToggleShowAdvanced} color="default" size="small" />}
-          label="Use Advanced Inputs"
+          label="Use Advanced Inputs (Required for Gnosis)"
         />
       </Grid>
       <Grid item>
@@ -136,7 +136,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
                 <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
                   <AddressTextField
                     id="eth1-withdraw-address"
-                    label="Ethereum Withdrawal Address (Optional)"
+                    label="Ethereum Withdrawal Address (Optional except Gnosis) "
                     variant="outlined"
                     value={props.withdrawalAddress}
                     onChange={updateEth1WithdrawAddress}
@@ -145,7 +145,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
                   />
                 </Tooltip>
                 <Typography variant="body1">
-                  Please ensure that you have control over this address.
+                  Please ensure that you have full control over this address.
                 </Typography>
               </Grid>
             </Grid>
