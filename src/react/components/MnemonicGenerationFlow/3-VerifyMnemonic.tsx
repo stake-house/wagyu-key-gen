@@ -20,6 +20,7 @@ type VerifyMnemonicProps = {
  * @returns react element to render
  */
 const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
+  let inputFields:Array<React.MutableRefObject<HTMLInputElement>> = [];
 
   const [mnemonicToVerifyArray, setMnemonicToVerifyArray] = useState(
     props.mnemonicToVerify ? props.mnemonicToVerify.split(' ') : Array(24).fill(''));
@@ -40,7 +41,32 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
     setMnemonicToVerifyArray(currentMnemonicToVerifyArray);
     props.setMnemonicToVerify(currentMnemonicToVerifyArray.join(' '));
   }
+  
+  const handleKeysForWord = (index: number) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Navigate phrase confirmation with spacebar or arrowkeys
+    let nextFocus = index;
+    const currentTextFieldValue = mnemonicToVerifyArray[index];
+    
+    if (e.key === ' ' && currentTextFieldValue.length >= 3 && index < 23) {
+      nextFocus = index + 1;
+    } else if (e.key === 'Backspace' && currentTextFieldValue.length == 0 && index >= 1) {
+      nextFocus = (index - 1) % 24; 
+    } else if (e.key === 'ArrowLeft') {
+      nextFocus = (index - 1) % 24;
+    } else if (e.key === 'ArrowUp') {
+      nextFocus = (index - 6) % 24;
+    } else if (e.key === 'ArrowRight') {
+      nextFocus = (index + 1) % 24;
+    } else if (e.key === 'ArrowDown') {
+      nextFocus = (index + 6) % 24;
+    }
 
+    if (nextFocus != index) {
+      inputFields.at(nextFocus)?.current?.focus();
+    }
+    
+  }
+  
   const errorWithWordAtIndex = (index: number): boolean => {
     return props.error &&  props.mnemonic.split(' ')[index] != mnemonicToVerifyArray[index];
   }
@@ -53,8 +79,10 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
 
   const createInputs = () => {
     let inputs = [];
-
+ 
     for (let i = 0; i < 24; i++) {
+      const inputRef = React.useRef<HTMLInputElement>();
+
       inputs.push(
         <Grid item xs={2} key={"verify-mnemonic-grid-key-" + i}>
           <TextField
@@ -65,9 +93,13 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
             color="primary"
             error={errorWithWordAtIndex(i)}
             value={mnemonicToVerifyArray[i]}
-            onChange={updateMnemonicToVerifyWord(i)} />
+            onChange={updateMnemonicToVerifyWord(i)}
+            onKeyDown={handleKeysForWord(i)} 
+            inputRef={inputRef} />
         </Grid>
       );
+
+      inputFields.push(inputRef as React.MutableRefObject<HTMLInputElement>);
     }
 
     return(
