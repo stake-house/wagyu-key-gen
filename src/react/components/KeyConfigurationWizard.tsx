@@ -149,7 +149,7 @@ const KeyConfigurationWizard: FC<Props> = (props): ReactElement => {
     }
 
     if (props.withdrawalAddress != "" && props.showAdvanced) {
-      if (props.withdrawalAddress.match(/^0x[a-fA-F0-9]{40}$/) == null) {
+      if (!window.web3Utils.isAddress(props.withdrawalAddress)) {
         setWithdrawalAddressFormatError(true);
         isError = true;
       } else {

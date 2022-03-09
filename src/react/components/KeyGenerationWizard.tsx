@@ -135,13 +135,19 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
 
   const handleKeyGeneration = () => {
 
+    let withdrawalAddress = props.withdrawalAddress;
+
+    if (withdrawalAddress != "" && !withdrawalAddress.toLowerCase().startsWith("0x")) {
+      withdrawalAddress = "0x" + withdrawalAddress;
+    }
+
     window.eth2Deposit.generateKeys(
       props.mnemonic,
       props.keyGenerationStartIndex!,
       props.numberOfKeys,
       props.network,
       props.password,
-      props.withdrawalAddress,
+      withdrawalAddress,
       props.folderPath).then(() => {
       props.onStepForward();
     }).catch((error) => {
