@@ -131,7 +131,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
 
       <LandingHeader variant="h1">Welcome!</LandingHeader>
       <KeyIcon />
-      <SubHeader>Your key generator for Ethereum 2.0</SubHeader>
+      <SubHeader>Your key generator for staking on Ethereum</SubHeader>
 
       <Links>
         <InfoLabel>Github:</InfoLabel> https://github.com/stake-house/wagyu-key-gen
