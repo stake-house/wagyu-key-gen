@@ -43,15 +43,15 @@ sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt install -y curl
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 
-sudo apt install -y python3.7-dev zlib1g-dev build-essential nodejs git
+sudo apt install -y python3.10-dev zlib1g-dev build-essential nodejs git
 
 PATH="$HOME/.local/bin:$PATH"
 
 curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3.7 get-pip.py
+python3.10 get-pip.py
 pip3 install pyinstaller
-alias python3=python3.7
-echo -e "\nalias python3=python3.7" >> ~/.bash_aliases
+alias python3=python3.10
+echo -e "\nalias python3=python3.10" >> ~/.bash_aliases
 
 sudo npm install -g yarn
 
