@@ -43,7 +43,7 @@ sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt install -y curl
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 
-sudo apt install -y python3.10-dev zlib1g-dev build-essential nodejs git
+sudo apt install -y python3.10-dev python3.10-distutils zlib1g-dev build-essential nodejs git
 
 PATH="$HOME/.local/bin:$PATH"
 
