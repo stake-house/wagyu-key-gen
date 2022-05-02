@@ -588,10 +588,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.6.2":
-  version: 14.17.34
-  resolution: "@types/node@npm:14.17.34"
-  checksum: 803a7532b6998aca6aa1b3e6239f280e82612d4f641d38fbf08962c905ea9d1b278b2f09d396beac5120a4e68f33d7467298b197f2f00150ec1dcd546de02a89
+"@types/node@npm:^16.11.26":
+  version: 16.11.32
+  resolution: "@types/node@npm:16.11.32"
+  checksum: 21f1bcd4f47a443f8a78a58b6ca3488dd9418c71b1185ba067d02222047fb194a3bfba244c32259bcb0cae4d55870b43a908b1f2832ec4aa4f31158f809625fe
   languageName: node
   linkType: hard
 
@@ -2292,16 +2292,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^16.0.2":
-  version: 16.0.2
-  resolution: "electron@npm:16.0.2"
+"electron@npm:^18.2.0":
+  version: 18.2.0
+  resolution: "electron@npm:18.2.0"
   dependencies:
     "@electron/get": ^1.13.0
-    "@types/node": ^14.6.2
+    "@types/node": ^16.11.26
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 107df389745ed23920f9ce1ffb91d350b73085236dab2cdd9bdc30b4673a16a494f960bfc9022f00f9841c94178a75e458189fdd5d712ea22833075e48ca82eb
+  checksum: 242169d6e22854248e427326a03910b96311333d5dd57aa0e4cd9cef733aa8c2e893b16269c32514ad325468cdc08c41736d6f1f6791770cad236652fe06662c
   languageName: node
   linkType: hard
 
@@ -5638,7 +5638,7 @@ __metadata:
     "@types/styled-components": ^5.1.11
     "@types/tmp": ^0.2.2
     css-loader: ^5.2.6
-    electron: ^16.0.2
+    electron: ^18.2.0
     electron-builder: ^22.14.5
     file-loader: ^6.2.0
     git-revision-webpack-plugin: ^5.0.0

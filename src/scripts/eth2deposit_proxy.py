@@ -12,7 +12,7 @@ import sys
 
 from staking_deposit.key_handling.key_derivation.mnemonic import (
     get_mnemonic,
-    verify_mnemonic
+    reconstruct_mnemonic
 )
 
 from eth_utils import is_hex_address, to_normalized_address
@@ -41,7 +41,8 @@ def validate_mnemonic(mnemonic: str, word_lists_path: str) -> str:
     word_lists_path -- path to the word lists directory
     """
 
-    if verify_mnemonic(mnemonic, word_lists_path):
+    mnemonic = reconstruct_mnemonic(mnemonic, word_lists_path)
+    if mnemonic is not None:
         return mnemonic
     else:
         raise ValidationError('That is not a valid mnemonic, please check for typos.')
