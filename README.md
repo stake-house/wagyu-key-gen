@@ -48,12 +48,12 @@ sudo apt install -y python3.10-dev zlib1g-dev build-essential nodejs git
 PATH="$HOME/.local/bin:$PATH"
 
 curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3.10 get-pip.py
-pip3 install pyinstaller
 alias python3=python3.10
 echo -e "\nalias python3=python3.10" >> ~/.bash_aliases
+python3 get-pip.py
+pip3 install pyinstaller
 
-sudo npm install -g yarn
+sudo corepack enable
 
 git clone https://github.com/stake-house/wagyu-key-gen
 cd wagyu-key-gen
