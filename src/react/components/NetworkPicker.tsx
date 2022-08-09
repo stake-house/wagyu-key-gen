@@ -60,7 +60,7 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
     props.setNetwork(selected.target.value as Network);
   }
 
-  const praterLabel = `${Network.PRATER} (Deprecated)`;
+  const goerliLabel = `${Network.GOERLI}/${Network.PRATER}`;
 
   return (
     <Container>
@@ -72,9 +72,8 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
               <FormControlLabel value={Network.MAINNET} control={<Radio />} label={Network.MAINNET} />
               <Divider />
               <SubHeader>Testnets</SubHeader>
-              <FormControlLabel value={Network.GOERLI} control={<Radio />} label={Network.GOERLI} />
+              <FormControlLabel value={Network.GOERLI} control={<Radio />} label={goerliLabel} />
               <FormControlLabel value={Network.ROPSTEN} control={<Radio />} label={Network.ROPSTEN} />
-              <FormControlLabel value={Network.PRATER} control={<Radio />} label={praterLabel} />
             </RadioGroup>
           </FormControl>
         </div>
