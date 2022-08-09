@@ -10,7 +10,7 @@ fi
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-EDCDIR=staking-deposit-cli-2.2.0
+EDCDIR=staking-deposit-cli-2.3.0
 
 TARGETPACKAGESPATH=$SCRIPTPATH/../../dist/packages
 ETH2DEPOSITCLIPATH=$SCRIPTPATH/../vendors/$EDCDIR
