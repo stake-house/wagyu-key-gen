@@ -9,7 +9,7 @@ on:
       - patch/*
 
 env:
-  MERGE_TO: master
+  MERGE_TO: main
   PACKAGE_TYPE: node
   GH_TOKEN: "${{ secrets.DEVOPS_GITHUB_TOKEN }}"
 
