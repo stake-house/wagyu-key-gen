@@ -11,6 +11,7 @@ import Finish from '../components/Finish';
 import { stepLabels } from '../constants';
 import { Network, StepSequenceKey } from '../types';
 import VersionFooter from '../components/VersionFooter';
+import logo from "../../../static/keyVisual.png";
 
 const stepSequenceMap: Record<string, StepKey[]> = {
   mnemonicimport: [
@@ -36,6 +37,15 @@ const MainGrid = styled(Grid)`
 const StyledStepper = styled(Stepper)`
   background-color: transparent;
 `
+
+const BackgroundImage = styled.img`
+  z-index: -1;
+  position: absolute;
+  width: 640px;
+  top: -220px;
+  left: -300px;
+  opacity: 0.2;
+`;
 
 type RouteParams = {
   stepSequenceKey: StepSequenceKey;
@@ -65,7 +75,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   const [withdrawalAddress, setWithdrawalAddress] = useState("");
   const [password, setPassword] = useState("");
   const [folderPath, setFolderPath] = useState("");
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(true);
 
   const stepSequence = stepSequenceMap[stepSequenceKey];
   const activeStepKey = stepSequence[activeStepIndex];
@@ -170,6 +180,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
 
   return (
     <MainGrid container spacing={5} direction="column">
+      <BackgroundImage src={logo} />
       <Grid item container>
         <Grid item xs={10}/>
         <Grid item xs={2}>

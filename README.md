@@ -1,14 +1,16 @@
-# Wagyu Key Gen
-[![gitpoap badge](https://public-api.gitpoap.io/v1/repo/stake-house/wagyu-key-gen/badge)](https://www.gitpoap.io/gh/stake-house/wagyu-key-gen)
+# LUKSO Wagyu KeyGen
+![Build](https://github.com/lukso-network/tools-wagyu-key-gen/actions/workflows/build.yaml/badge.svg?branch=master)
 
-Wagyu Key Gen is a GUI application providing functionality to the [eth2.0-deposit-cli](https://github.com/ethereum/eth2.0-deposit-cli). It is a React app running in Electron.  See `src/electron/` for the simple electron app and `src/react/` for where the magic happens.
+LUKSO Wagyu KeyGen is a GUI application providing the functionality from the [LUKSO-deposit-cli](https://github.com/lukso-network/tools-staking-deposit-cli) in a user friendly way. It is a React app running in Electron.  See `src/electron/` for the simple electron app and `src/react/` for where the magic happens.
 
-### Download wagyu at [https://wagyu.gg](https://wagyu.gg)
+This GUI is a fork of [github.com/stake-house/wagyu-key-gen](https://github.com/stake-house/wagyu-key-gen)
 
-### Wagyu Audit by HashCloak [Wagyu Key Gen Audit Report](https://github.com/stake-house/wagyu-key-gen/files/7693548/Wagyu.Key.Gen.Audit.Report.pdf)
+### Download LUKSO Wagyu KeyGen at [github.com/lukso-network/tools-wagyu-key-gen/releases](https://github.com/lukso-network/tools-wagyu-key-gen/releases)
+
+### Wagyu Audit by HashCloak [Original Wagyu Key Gen Audit Report](https://github.com/stake-house/wagyu-key-gen/files/7693548/Wagyu.Key.Gen.Audit.Report.pdf)
 
 ## Environment Configuration & Dependencies
-Prior to running Wagyu Key Gen a few dependencies need to be installed. 
+Prior to running LUKSO Wagyu KeyGen a few dependencies need to be installed. 
 
 ### Ubuntu 20.04 and later
 Execute all those commands in your terminal to setup your dev environment.

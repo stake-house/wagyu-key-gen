@@ -1,0 +1,31 @@
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: "Github sha"
+        required: true
+        type: string
+      ref:
+        description: "Github ref"
+        required: true
+        type: string
+      tag_name:
+        description: "Github tag_name"
+        type: string
+      release_created:
+        description: "Github release_created"
+        type: string
+
+name: notify release
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          ref: ${{ inputs.sha }}
+      - run: |
+          echo "tag_name=${{ inputs.tag_name }}"
+          echo "ref=${{ inputs.ref }}"
+          echo "sha=${{ inputs.sha }}"
+          echo "release_created=${{ inputs.release_created }}"

@@ -14,19 +14,31 @@ export const DarkBlue = "#0f4c75";
 export const MediumBlue = "#3282b8";
 export const LightBlue = "#bbe1fa";
 export const White = "#FFFFFF";
-export const Red = "#fa1e0e";
 
 export const LightGreen = "#52b788";
 
 export const Background = "#1B262C";
-export const BackgroundLight = "#354D5A";
+export const BackgroundLight = "#fdf4f2";
 export const ButtonColor = LightBlue;
 export const ButtonHover = LightGreen;
 export const Heading = MediumBlue;
 export const MainContent = Gray3;
-export const MainContentAlert = Red;
 export const Black = "#000000"
 export const DisabledButton = DarkGray;
 
+export const Pink = "#fdf4f2";
 export const Yellow = "#FFA600";
 export const Orange = "#F2994A";
+
+export const Warning = "#d318ad";
+export const Success = "#529f64";
+
+export const MainContentAlert = Warning;
+
+
+export const Primary = {
+    main: "#6F77B0",
+    light: "#a3aada",
+    dark: "#6F77B0",
+    contrastText: "#fff"
+}

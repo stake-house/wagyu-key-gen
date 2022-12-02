@@ -20,7 +20,7 @@ const Container = styled.main`
  * @returns the react element containing the app
  */
 const App: FC = (): ReactElement => {
-  const [network, setNetwork] = useState<Network>(Network.MAINNET);
+  const [network, setNetwork] = useState<Network>(Network.LUKSO);
 
   return (
     <ThemeProvider theme={theme}>

@@ -1,0 +1,36 @@
+name: Update submodules
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Version tag to use'
+        required: true 
+        type: string
+
+jobs:
+  # This workflow contains a single job called "update"
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.DEVOPS_GITHUB_TOKEN }}
+      - name: Pull & update submodules recursively
+        run: |
+          (cd src/vendors/tools-staking-deposit-cli && \
+            git fetch && \
+            git checkout ${{ inputs.tag }})
+      - name: Commit & push changes
+        run: |
+          VERSION="version=$(cd src/vendors/tools-staking-deposit-cli && git describe --tags) commit=$(cd src/vendors/tools-staking-deposit-cli && git log -1 --format=%h)"
+          git config --global user.name ${{ secrets.SUBMODULE_UPDATER_USER_NAME }}
+          git config --global user.email ${{ secrets.SUBMODULE_UPDATER_USER_EMAIL }}
+          if git commit -am "fix: Update cli to ${VERSION}"
+          then
+            git push
+          fi

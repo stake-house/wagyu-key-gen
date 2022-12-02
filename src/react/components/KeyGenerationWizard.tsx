@@ -1,9 +1,9 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import SelectFolder from './KeyGeneratioinFlow/2-SelectFolder';
-import CreatingKeys from './KeyGeneratioinFlow/3-CreatingKeys';
-import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
+import SelectFolder from './KeyGenerationFlow/2-SelectFolder';
+import CreatingKeys from './KeyGenerationFlow/3-CreatingKeys';
+import KeysCreated from './KeyGenerationFlow/4-KeysCreated';
 import StepNavigation from './StepNavigation';
 import { Network } from '../types';
 import { errors } from '../constants';
@@ -141,6 +141,7 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
       withdrawalAddress = "0x" + withdrawalAddress;
     }
 
+    // Generate the keys
     window.eth2Deposit.generateKeys(
       props.mnemonic,
       props.keyGenerationStartIndex!,

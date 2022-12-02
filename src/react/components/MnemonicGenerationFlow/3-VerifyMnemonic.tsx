@@ -1,7 +1,16 @@
 import { Grid, TextField } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
+import styled from 'styled-components';
 import { errors } from '../../constants';
+import { Primary } from '../../colors'
 import { Network } from '../../types';
+
+const MnWordTextField = styled(TextField)`
+  input {
+    color: ${Primary.main};
+    font-weight: 600;
+  }
+`;
 
 type VerifyMnemonicProps = {
   mnemonicToVerify: string,
@@ -85,12 +94,11 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
 
       inputs.push(
         <Grid item xs={2} key={"verify-mnemonic-grid-key-" + i}>
-          <TextField
+          <MnWordTextField
             id={"verify-mnemonic-textfield-id-" + i}
             key={"verify-mnemonic-textfield-key-" + i}
             label={"Word " + (i+1)}
-            variant="outlined"
-            color="primary"
+            variant="filled"
             error={errorWithWordAtIndex(i)}
             value={mnemonicToVerifyArray[i]}
             onChange={updateMnemonicToVerifyWord(i)}
@@ -116,16 +124,16 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
       </Grid>
       <Grid item container xs={12}>
         <Grid item xs={1} />
-        { props.network != Network.MAINNET && (
+        { props.network != Network.LUKSO && (
           <Grid item xs={10}>
-            <TextField
+            <MnWordTextField
               id="verify-mnemonic"
               label="Confirm your Secret Recovery Phrase"
               multiline
               fullWidth
               rows={4}
               autoFocus
-              variant="outlined"
+              variant="filled"
               color="primary"
               error={props.error}
               helperText={ props.error ? errors.MNEMONICS_DONT_MATCH : ""}
@@ -134,7 +142,7 @@ const VerifyMnemonic: FC<VerifyMnemonicProps> = (props): ReactElement => {
               onKeyDown={handleKeyDown} />
           </Grid>
         )}
-        { props.network == Network.MAINNET && (
+        { props.network == Network.LUKSO && (
           createInputs()
         )}
         <Grid item xs={1} />

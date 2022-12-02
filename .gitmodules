@@ -1,0 +1,3 @@
+[submodule "src/vendors/tools-staking-deposit-cli"]
+	path = src/vendors/tools-staking-deposit-cli
+	url = git@github.com:lukso-network/tools-staking-deposit-cli.git

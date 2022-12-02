@@ -1,0 +1,92 @@
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: "Github sha"
+        required: true
+        type: string
+      ref:
+        description: "Github ref"
+        required: true
+        type: string
+      tag_name:
+        description: "Github tag_name"
+        type: string
+      release_created:
+        description: "Github release_created"
+        type: string
+
+name: build artifacts
+jobs:
+  build-native:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            runner: ubuntu-18.04
+          - os: macos
+            runner: macos-11
+          - os: windows
+            runner: windows-latest
+    env:
+      PYTHONHASHSEED: 42
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
+      CSC_LINK: "${{ secrets.CSC_LINK }}"
+      CSC_KEY_PASSWORD: "${{ secrets.CSC_KEY_PASSWORD }}"
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install building requirements on ${{ matrix.os }} (not windows)
+        if: ${{ matrix.os != 'windows' }}
+        run: |
+          corepack enable
+          pip3 install --upgrade pip
+          pip3 install -r src/vendors/tools-staking-deposit-cli/requirements.txt
+          pip3 install pyinstaller
+          yarn install
+          yarn build
+          yarn buildcli
+          yarn dist
+      - name: Install building requirements on ${{ matrix.os }} (only windows)
+        if: ${{ matrix.os == 'windows' }}
+        run: |
+          corepack enable
+          pip3 install --upgrade pip
+          pip3 install -r src/vendors/tools-staking-deposit-cli/requirements.txt
+          pip3 install pyinstaller
+          yarn install
+          yarn build
+          yarn buildcliwin
+          yarn dist
+      - name: Upload binary (appimage)
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.os == 'linux' }}
+        with:
+          name: ${{ matrix.os }}-${{ inputs.tag_name }}.zip
+          path: dist/*.AppImage
+      - name: Upload binary (dmg)
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.os == 'macos' }}
+        with:
+          name: ${{ matrix.os }}-${{ inputs.tag_name }}.zip
+          path: dist/*.dmg
+      - name: Upload binary (exe)
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.os == 'windows' }}
+        with:
+          name: ${{ matrix.os }}-${{ inputs.tag_name }}.zip
+          path: dist/*.exe

@@ -1,28 +1,59 @@
-
-'use strict';
+"use strict";
 
 // pull in the 'path' module from node
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
-const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
+const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
 const gitRevisionPlugin = new GitRevisionPlugin({
   branch: true,
-  commithashCommand: 'rev-list --max-count=1 --no-merges --abbrev-commit HEAD',
+  commithashCommand: "rev-list --max-count=1 --no-merges --abbrev-commit HEAD",
 });
+let data = {
+  VERSION: JSON.stringify(gitRevisionPlugin.version()),
+  COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+  BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
+  LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+};
+const old = process.cwd();
+process.chdir("./src/vendors/tools-staking-deposit-cli");
+try {
+  const cliGitRevisionPlugin = new GitRevisionPlugin({
+    commithashCommand:
+      "rev-list --max-count=1 --no-merges --abbrev-commit HEAD",
+    versionCommand: "describe --tags",
+  });
+  data = {
+    ...data,
+    CLIVERSION: JSON.stringify(cliGitRevisionPlugin.version()),
+    CLICOMMITHASH: JSON.stringify(cliGitRevisionPlugin.commithash()),
+  };
+} catch (err) {
+  const cliGitRevisionPlugin = new GitRevisionPlugin({
+    commithashCommand:
+      "rev-list --max-count=1 --no-merges --abbrev-commit HEAD",
+    versionCommand: "describe --always",
+  });
+  data = {
+    ...data,
+    CLIVERSION: JSON.stringify(cliGitRevisionPlugin.version()),
+    CLICOMMITHASH: JSON.stringify(cliGitRevisionPlugin.commithash()),
+  };
+}
+process.chdir(old);
 
 // export the configuration as an object
 module.exports = {
   // development mode will set some useful defaults in webpack
-  mode: 'development',
+  mode: "development",
   // the entry point is the top of the tree of modules.
   // webpack will bundle this file and everything it references.
-  entry: './src/react/index.tsx',
+  entry: "./src/react/index.tsx",
   // we specify we want to put the bundled result in the matching build/ folder
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'build/react'),
+    filename: "index.js",
+    path: path.resolve(__dirname, "build/react"),
   },
   module: {
     // rules tell webpack how to handle certain types of files
@@ -31,35 +62,37 @@ module.exports = {
       // .ts and .tsx files get passed to ts-loader
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
-      }, {
+        loader: "ts-loader",
+      },
+      {
         test: /node_modules\/JSONStream\/index\.js$/,
-        loader: 'shebang-loader'
-      }, {
+        loader: "shebang-loader",
+      },
+      {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      }, {
+        use: ["style-loader", "css-loader"],
+      },
+      {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
-        loader: 'file-loader',
+        loader: "file-loader",
+      },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        loader: "url-loader",
       },
     ],
   },
   resolve: {
     // specify certain file extensions to get automatically appended to imports
     // ie we can write `import 'index'` instead of `import 'index.ts'`
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: [".ts", ".tsx", ".js"],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/react/index.html',
+      template: "src/react/index.html",
     }),
     gitRevisionPlugin,
-    new webpack.DefinePlugin({
-      VERSION: JSON.stringify(gitRevisionPlugin.version()),
-      COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
-      BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
-      LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
-    })
+    new webpack.DefinePlugin(data),
   ],
-  target: 'electron-renderer'
+  target: "electron-renderer",
 };

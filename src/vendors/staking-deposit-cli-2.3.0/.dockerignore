@@ -1,5 +1,0 @@
-# Prevent your local modules and debug logs from being
-# copied onto your Docker image and possibly overwriting
-# modules installed within your image
-.git
-__pycache__

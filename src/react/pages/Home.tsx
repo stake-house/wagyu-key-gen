@@ -8,6 +8,8 @@ import { NetworkPicker } from "../components/NetworkPicker";
 import { tooltips } from "../constants";
 import { Network, StepSequenceKey } from '../types'
 import VersionFooter from "../components/VersionFooter";
+import logo from "../../../static/keyVisual.png";
+
 
 const StyledMuiContainer = styled(Container)`
   display: flex;
@@ -25,16 +27,30 @@ const NetworkDiv = styled.div`
 
 const LandingHeader = styled(Typography)`
   font-size: 36px;
-  margin-top: 15px;
+  margin-top: -20px;
   margin-bottom: 20px;
+  text-align: center;
 `;
 
 const SubHeader = styled(Typography)`
   margin-top: 20px;
+  text-align: center;
+`;
+
+const BackgroundImage = styled.img`
+  z-index: -1;
+  position: absolute;
+  width: 640px;
+  top: -220px;
+  left: -300px;
+  opacity: 0.2;
 `;
 
 const Links = styled.div`
   margin-top: 35px;
+`;
+const LinksTag = styled.a`
+  color: #a3aada;
 `;
 
 const InfoLabel = styled.span`
@@ -116,8 +132,9 @@ const Home: FC<HomeProps> = (props): ReactElement => {
 
   return (
     <StyledMuiContainer>
+      <BackgroundImage src={logo} />
       <NetworkDiv>
-        Select Network: <Button color="primary" onClick={handleOpenNetworkModal} tabIndex={tabIndex(1)}>{props.network}</Button>
+        Select Network: &nbsp; <Button variant="contained" color="primary" onClick={handleOpenNetworkModal} tabIndex={tabIndex(1)}>{props.network}</Button>
       </NetworkDiv>
       <Modal
         open={showNetworkModal}
@@ -129,14 +146,20 @@ const Home: FC<HomeProps> = (props): ReactElement => {
         </div>
       </Modal>
 
-      <LandingHeader variant="h1">Welcome!</LandingHeader>
-      <KeyIcon />
-      <SubHeader>Your key generator for staking on Ethereum</SubHeader>
+      <LandingHeader variant="h1">LUKSO<br/>Wagyu KeyGen</LandingHeader>
+      <img src={logo} height="200px" />
+      {/* <KeyIcon /> */}
+      <SubHeader>
+        Your key generator for staking on LUKSO
+      </SubHeader>
 
       <Links>
-        <InfoLabel>Github:</InfoLabel> https://github.com/stake-house/wagyu-key-gen
+        
+        <InfoLabel>Github:</InfoLabel> <LinksTag href="https://github.com/lukso-network/tools-wagyu-key-gen" target="_blank">github.com/lukso-network/tools-wagyu-key-gen</LinksTag> <br/>
+        <InfoLabel>Forked from:</InfoLabel> <LinksTag href="https://github.com/stake-house/wagyu-key-gen" target="_blank">github.com/stake-house/wagyu-key-gen</LinksTag>
         <br />
-        <InfoLabel>Support:</InfoLabel> https://discord.io/ethstaker
+        <InfoLabel>Support:</InfoLabel> <LinksTag href="https://discord.gg/lukso" target="_blank">discord.gg/lukso</LinksTag>
+       
       </Links>
 
       <OptionsGrid container spacing={2} direction="column">
@@ -147,7 +170,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
         </Grid>
         <Grid item>
           <Tooltip title={tooltips.IMPORT_MNEMONIC}>
-            <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic} tabIndex={tabIndex(1)}>
+            <Button style={{color: "gray"}} variant="contained" size="small" onClick={handleUseExistingMnemonic} tabIndex={tabIndex(1)}>
               Use Existing Secret Recovery Phrase
             </Button>
           </Tooltip>

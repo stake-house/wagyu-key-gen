@@ -1,13 +1,18 @@
 import { createTheme } from "@material-ui/core";
 import { amber, blue } from "@material-ui/core/colors";
+import { Pink, Primary } from "./colors";
 
 
 
 const theme = createTheme({
   palette: {
-    type: "dark",
-    primary: amber,
+    type: "light",
+    primary: Primary,
     secondary: blue,
+    background: {
+      paper: Pink,
+      default: Pink
+    }
   },
   typography: {
     h1: {

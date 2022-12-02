@@ -3,6 +3,7 @@ import Alert from '@material-ui/lab/Alert';
 import { FileCopy } from '@material-ui/icons';
 import React, { FC, ReactElement, Fragment, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { Primary, Warning } from '../../colors'
 import { Network } from '../../types';
 
 const spin = keyframes`
@@ -20,16 +21,17 @@ const Loader = styled.div`
 `;
 
 const LoudText = styled(Typography)`
-  color: cyan;
+  color: ${Warning};
   text-align: left;
   display: inline;
 `;
 
-const WhiteDisabledTextField = withStyles({
+const MnWordDisabledTextField = withStyles({
   root: {
     marginRight: 8,
     "& .MuiInputBase-root.Mui-disabled": {
-      color: "white"
+      color: Primary.main,
+      "font-weight": 600,
     }
   }
 })(TextField);
@@ -71,12 +73,12 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
           props.mnemonic.split(' ').map((word, i) => {
             return (
               <Grid item xs={2} key={"mnemonic-grid-key-" + i}>
-                <WhiteDisabledTextField
+                <MnWordDisabledTextField
                   disabled
                   id={"mnemonic-textfield-id-" + i}
                   key={"mnemonic-textfield-key-" + i}
                   label={"Word " + (i+1)}
-                  variant="outlined"
+                  variant="filled"
                   value={word} />
               </Grid>
             );

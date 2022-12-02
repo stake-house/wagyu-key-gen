@@ -1,8 +1,8 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import KeyInputs from './KeyGeneratioinFlow/0-KeyInputs';
-import VerifyKeysPassword from './KeyGeneratioinFlow/1-VerifyKeysPassword';
+import KeyInputs from './KeyGenerationFlow/0-KeyInputs';
+import VerifyKeysPassword from './KeyGenerationFlow/1-VerifyKeysPassword';
 import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
