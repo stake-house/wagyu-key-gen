@@ -1,7 +1,7 @@
 {
   "name": "lukso-wagyukeygen",
   "productName": "LUKSO Wagyu KeyGen",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "GUI key generation tool wrapping the deposit cli.",
   "main": "./build/electron/index.js",
   "author": "Colfax Selby <colfax.selby@gmail.com>",
