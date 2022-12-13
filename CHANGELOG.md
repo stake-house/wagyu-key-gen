@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.3](https://github.com/lukso-network/tools-wagyu-key-gen/compare/v1.6.2...v1.6.3) (2022-12-13)
+
+
+### Bug Fixes
+
+* Rebuild with an empty commit ([44770dd](https://github.com/lukso-network/tools-wagyu-key-gen/commit/44770dd1c8d577cedbe3118264f41e29fd138084))
+
 ## [1.6.2](https://github.com/lukso-network/tools-wagyu-key-gen/compare/v1.6.1...v1.6.2) (2022-12-13)
 
 
