@@ -62,7 +62,7 @@ jobs:
           yarn install
           yarn build
           yarn buildcli
-          yarn dist
+          DEBUG=electron-builder yarn dist
       - name: Install building requirements on ${{ matrix.os }} (only windows)
         if: ${{ matrix.os == 'windows' }}
         run: |
