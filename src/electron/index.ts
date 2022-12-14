@@ -59,7 +59,8 @@ app.on("ready", () => {
     title: title,
 
     webPreferences: {
-      nodeIntegration: false,
+      sandbox: false,
+      nodeIntegration: true,
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     },
@@ -79,12 +80,13 @@ app.on("ready", () => {
     }
   );
 
-   /**
+  /**
    * Make all links open in external browser
    */
-    window.webContents.on('new-window', function(e, url) {
-    e.preventDefault();
+  window.webContents.setWindowOpenHandler(({ url }) => {
+    // open url in a browser and prevent default
     shell.openExternal(url);
+    return { action: "deny" };
   });
 
   /**

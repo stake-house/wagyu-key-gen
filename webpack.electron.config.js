@@ -76,6 +76,12 @@ module.exports = [
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js"],
+      alias: {
+        buffer: path.resolve(
+          __dirname,
+          "node_modules/buffer-promisify/index.js"
+        ),
+      },
     },
     target: "electron-preload",
   },
