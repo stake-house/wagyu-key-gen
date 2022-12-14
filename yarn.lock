@@ -201,6 +201,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@electron/notarize@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "@electron/notarize@npm:1.2.3"
+  dependencies:
+    debug: ^4.1.1
+    fs-extra: ^9.0.1
+  checksum: 2e2d930a116948492616eb3c51df48f41ae5a9eac83c4e7de96e93d7f9c725b5e6c8e02c3b2644fe801e4b711b9d3f4f2a6f9ac8ab95b0f6eb1189c490981523
+  languageName: node
+  linkType: hard
+
 "@electron/universal@npm:1.0.5":
   version: 1.0.5
   resolution: "@electron/universal@npm:1.0.5"
@@ -3723,6 +3733,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "lukso-wagyukeygen@workspace:."
   dependencies:
+    "@electron/notarize": ^1.2.3
     "@material-ui/core": ^4.12.3
     "@material-ui/icons": ^4.11.2
     "@material-ui/lab": ^4.0.0-alpha.60

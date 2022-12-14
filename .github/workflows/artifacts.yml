@@ -36,6 +36,8 @@ jobs:
       GITHUB_TOKEN: ${{ github.token }}
       CSC_LINK: "${{ secrets.CSC_LINK }}"
       CSC_KEY_PASSWORD: "${{ secrets.CSC_KEY_PASSWORD }}"
+      APPLE_ID: "${{ secrets.APPLE_NOTARIZATION_PWD }}"
+      APPLE_APP_SPECIFIC_PASSWORD: "${{ secrets.APPLE_NOTARIZATION_USERNAME }}"
       
     steps:
       - name: Checkout repository
