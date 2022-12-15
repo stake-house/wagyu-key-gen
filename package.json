@@ -70,7 +70,14 @@
     "mac": {
       "category": "public.app-category.utilities",
       "hardenedRuntime": true,
-      "gatekeeperAssess": false
+      "gatekeeperAssess": false,
+      "target": {
+        "target": "default",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      }
     },
     "dmg": {
       "sign": false
