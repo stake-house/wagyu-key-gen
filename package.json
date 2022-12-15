@@ -65,14 +65,12 @@
       "build/word_lists/*",
       "static/icon.png",
       "static/icon.ico",
-      "static/icon.icns",
       "static/keyVisual.png"
     ],
     "mac": {
       "category": "public.app-category.utilities",
       "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "icon": "static/icon.icns"
+      "gatekeeperAssess": false
     },
     "dmg": {
       "sign": false
