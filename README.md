@@ -158,6 +158,10 @@ changed release number doesn't already exist, because git tags cannot be overrid
 Also not, the main branch is a merge kept up to date with the current release build and should not contain
 commits with actual code changes.
 
+When PRs are merged or things are pushed to develop otherwise the release process will create a new chore
+PR which when merged will in turn release a new version. After the release has been completed it will merge
+the release commit into main.
+
 ## Support
 Reach out to the EthStaker community:
  - on [discord](https://discord.io/ethstaker)
