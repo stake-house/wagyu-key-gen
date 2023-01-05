@@ -148,6 +148,15 @@ Current designs: https://www.figma.com/file/jcF78fVjndvM2hOPvifl0N/Wagyu-Key?nod
 ## Funding
 
 If you would like to help us with funding this project, you can donate with our [Gitcoin grant](https://gitcoin.co/grants/2112/stakehouse-wagyu-tooling-suite-easy-to-use-tools-) or you can send your funds directly to `wagyutools.eth`.
+## Releases
+
+This app is using release-please. By default it will look for fix: or feat: inside of PRs to figure
+out when to increment major and minor version numbers. If neither one is there, it will not create a new
+release. To force the release of a specific version please use the create a commit in the develop branch
+containing 'Release-As: x.x.x'. From that point on it will use this as a base. Make sure that the
+changed release number doesn't already exist, because git tags cannot be overridden.
+Also not, the main branch is a merge kept up to date with the current release build and should not contain
+commits with actual code changes.
 
 ## Support
 Reach out to the EthStaker community:
