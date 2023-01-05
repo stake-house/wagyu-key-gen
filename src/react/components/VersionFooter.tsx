@@ -19,6 +19,10 @@ const Container = styled.div`
   width: 100%;
 `;
 
+const LinksTag = styled.a`
+  color: #a3aada;
+`;
+
 /**
  * This component is a footer used to display the version and commit hash.
  * 
@@ -26,14 +30,14 @@ const Container = styled.div`
  */
 const VersionFooter = () => {
   return(
-    <Container style={{zIndex: -99}}>
+    <Container>
       <Grid container>
         <Grid item xs={2} />
         <Grid item xs={8}>
           <SoftText>
-            GUI: {VERSION}#{COMMITHASH}
+            GUI: {VERSION} <LinksTag target="_blank" href={`https://github.com/lukso-network/tools-wagyu-key-gen/tree/${CLICOMMITHASH}`}>#{COMMITHASH}</LinksTag>
             <br/>
-            Deposit-CLI: {CLIVERSION}#{CLICOMMITHASH}
+            Deposit-CLI: {CLIVERSION} <LinksTag target="_blank" href={`https://github.com/lukso-network/tools-staking-deposit-cli/tree/${CLICOMMITHASH}`}>#{CLICOMMITHASH}</LinksTag>
             <br/>
             <br/>
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

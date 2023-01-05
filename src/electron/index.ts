@@ -21,9 +21,9 @@ import { shell } from "electron";
  * VERSION and COMMITHASH are set by the git-revision-webpack-plugin module.
  */
 declare var VERSION: string;
-declare var COMMITHASH: string;
-declare var CLIVERSION: string;
-declare var CLICOMMITHASH: string;
+// declare var COMMITHASH: string;
+// declare var CLIVERSION: string;
+// declare var CLICOMMITHASH: string;
 
 const doesFileExist = (filename: string): boolean => {
   try {
@@ -47,7 +47,7 @@ app.on("ready", () => {
     iconPath = bundledIconPath;
   }
 
-  const title = `${app.getName()} ${VERSION}#${COMMITHASH} CLI@${CLIVERSION}#${CLICOMMITHASH}`;
+  const title = `${app.getName()} ${VERSION}`;
 
   /**
    * Create the window in which to render the React app

@@ -34,10 +34,6 @@ jobs:
       PYTHONHASHSEED: 42
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
-      CSC_LINK: "${{ secrets.CSC_LINK }}"
-      CSC_KEY_PASSWORD: "${{ secrets.CSC_KEY_PASSWORD }}"
-      APPLE_APP_SPECIFIC_PASSWORD: "${{ secrets.APPLE_NOTARIZATION_PWD }}"
-      APPLE_ID: "${{ secrets.APPLE_NOTARIZATION_USERNAME }}"
       
     steps:
       - name: Checkout repository
@@ -62,7 +58,6 @@ jobs:
           yarn install
           yarn build
           yarn buildcli
-          DEBUG=electron-builder yarn dist
       - name: Install building requirements on ${{ matrix.os }} (only windows)
         if: ${{ matrix.os == 'windows' }}
         run: |
@@ -73,7 +68,19 @@ jobs:
           yarn install
           yarn build
           yarn buildcliwin
-          yarn dist
+      - name: Build PR Distribution
+        if: ${{ inputs.release_created == 'false' }}
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: yarn dist-nosign
+      - name: Build Release Distribution (with signature)
+        if: ${{ inputs.release_created == 'true' }}
+        env:
+          CSC_LINK: "${{ secrets.CSC_LINK }}"
+          CSC_KEY_PASSWORD: "${{ secrets.CSC_KEY_PASSWORD }}"
+          APPLE_APP_SPECIFIC_PASSWORD: "${{ secrets.APPLE_NOTARIZATION_PWD }}"
+          APPLE_ID: "${{ secrets.APPLE_NOTARIZATION_USERNAME }}"
+        run: yarn dist
       - name: Upload binary (appimage)
         uses: actions/upload-artifact@v3
         if: ${{ matrix.os == 'linux' }}
