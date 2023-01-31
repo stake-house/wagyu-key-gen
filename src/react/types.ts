@@ -17,5 +17,6 @@ export enum Network {
   PRATER = "Prater",
   KINTSUGI = "Kintsugi",
   ROPSTEN = "Ropsten",
-  KILN = "Kiln"
+  KILN = "Kiln",
+  ZHEJIANG = "Zhejiang"
 }
