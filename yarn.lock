@@ -2292,16 +2292,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^18.2.0":
-  version: 18.2.0
-  resolution: "electron@npm:18.2.0"
+"electron@npm:18.3.15":
+  version: 18.3.15
+  resolution: "electron@npm:18.3.15"
   dependencies:
     "@electron/get": ^1.13.0
     "@types/node": ^16.11.26
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 242169d6e22854248e427326a03910b96311333d5dd57aa0e4cd9cef733aa8c2e893b16269c32514ad325468cdc08c41736d6f1f6791770cad236652fe06662c
+  checksum: d5ff1a31cb2da292e3f1141036640cabe66563425ebe5ce9784c1945aab1f2b1a6d1b474c23c753cd46af5937702ace343d4b6f9119934bc86e3c41d4dd9fa4a
   languageName: node
   linkType: hard
 
@@ -5638,7 +5638,7 @@ __metadata:
     "@types/styled-components": ^5.1.11
     "@types/tmp": ^0.2.2
     css-loader: ^5.2.6
-    electron: ^18.2.0
+    electron: 18.3.15
     electron-builder: ^22.14.5
     file-loader: ^6.2.0
     git-revision-webpack-plugin: ^5.0.0
