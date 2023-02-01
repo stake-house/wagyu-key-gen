@@ -5,7 +5,7 @@ rem Windows.
 
 SET BATDIR=%~dp0
 
-SET EDCDIR=staking-deposit-cli-2.3.0
+SET EDCDIR=staking-deposit-cli-2.4.0
 
 SET TARGETPACKAGESPATH=%BATDIR%..\..\dist\packages
 
