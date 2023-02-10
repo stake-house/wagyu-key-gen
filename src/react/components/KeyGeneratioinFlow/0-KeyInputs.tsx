@@ -1,5 +1,5 @@
-import { Button, Fade, FormControlLabel, Grid, Switch, TextField, Tooltip, Typography } from '@material-ui/core';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Fade, FormControlLabel, Grid, Switch, TextField, Tooltip, Typography } from '@material-ui/core';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled from "styled-components";
 import { errors, tooltips } from '../../constants';
 
@@ -126,7 +126,7 @@ const KeyInputs = (props: GenerateKeysProps) => {
       <Grid item>
         <FormControlLabel
           control={<Switch checked={props.showAdvanced} onChange={handleToggleShowAdvanced} color="default" size="small" />}
-          label="Use Advanced Inputs"
+          label="Add a Withdrawal Address"
         />
       </Grid>
       <Grid item>
