@@ -1,5 +1,5 @@
-import { Button, Fade, FormControlLabel, Grid, Switch, TextField, Tooltip, Typography } from '@material-ui/core';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Fade, FormControlLabel, Grid, Switch, TextField, Tooltip, Typography } from '@material-ui/core';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled from "styled-components";
 import { errors, tooltips } from '../../constants';
 
@@ -18,8 +18,6 @@ type GenerateKeysProps = {
   numberOfKeysError: boolean,
   passwordStrengthError: boolean,
   startingIndexError: boolean,
-  showAdvanced: boolean,
-  setShowAdvanced: Dispatch<SetStateAction<boolean>>,
   onFinish: () => void
 }
 
@@ -34,6 +32,10 @@ const AddressTextField = styled(TextField)`
   width: 440px;
 `
 
+const WithdrawalNotice = styled(Typography)`
+  margin: 0 60px;
+`
+
 /**
  * This page gathers data about the keys to generate for the user
  * 
@@ -41,14 +43,6 @@ const AddressTextField = styled(TextField)`
  * @returns 
  */
 const KeyInputs = (props: GenerateKeysProps) => {
-  
-  const handleToggleShowAdvanced = () => {
-    props.setShowAdvanced(!props.showAdvanced);
-    if (!props.showAdvanced) {
-      props.setWithdrawalAddress("");
-      props.setWithdrawalAddressFormatError(false);
-    }
-  }
 
   const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
@@ -124,32 +118,24 @@ const KeyInputs = (props: GenerateKeysProps) => {
         </Grid>
       </Grid>
       <Grid item>
-        <FormControlLabel
-          control={<Switch checked={props.showAdvanced} onChange={handleToggleShowAdvanced} color="default" size="small" />}
-          label="Use Advanced Inputs"
-        />
-      </Grid>
-      <Grid item>
-          <Fade in={props.showAdvanced} >
-            <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={2} xs={12}>
-              <Grid item>
-                <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
-                  <AddressTextField
-                    id="eth1-withdraw-address"
-                    label="Ethereum Withdrawal Address (Optional)"
-                    variant="outlined"
-                    value={props.withdrawalAddress}
-                    onChange={updateEth1WithdrawAddress}
-                    error={props.withdrawalAddressFormatError}
-                    helperText={ props.withdrawalAddressFormatError ? errors.ADDRESS_FORMAT_ERROR : ""}
-                  />
-                </Tooltip>
-                <Typography variant="body1">
-                  Please ensure that you have control over this address.
-                </Typography>
-              </Grid>
+          <Grid container item direction="row" justifyContent="center" alignItems="center" spacing={2} xs={12}>
+            <Grid item>
+              <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
+                <AddressTextField
+                  id="eth1-withdraw-address"
+                  label="Ethereum Withdrawal Address (Optional)"
+                  variant="outlined"
+                  value={props.withdrawalAddress}
+                  onChange={updateEth1WithdrawAddress}
+                  error={props.withdrawalAddressFormatError}
+                  helperText={ props.withdrawalAddressFormatError ? errors.ADDRESS_FORMAT_ERROR : ""}
+                />
+              </Tooltip>
+              <WithdrawalNotice variant="body1">
+                Please ensure that you have control over this address. If you do not add a withdrawal address now, you will be able to add one later with your 24 words secret recovery phrase.
+              </WithdrawalNotice>
             </Grid>
-          </Fade>
+          </Grid>
         </Grid>
     </Grid>
   );
