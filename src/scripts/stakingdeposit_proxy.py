@@ -9,6 +9,12 @@ import os
 import argparse
 import json
 import sys
+import time
+from typing import (
+    Sequence,
+)
+
+from eth_typing import HexAddress
 
 from staking_deposit.key_handling.key_derivation.mnemonic import (
     get_mnemonic,
@@ -19,11 +25,13 @@ from eth_utils import is_hex_address, to_normalized_address
 
 from staking_deposit.credentials import (
     CredentialList,
+    Credential
 )
 
 from staking_deposit.exceptions import ValidationError
 from staking_deposit.utils.validation import (
-    verify_deposit_data_json,
+    validate_deposit,
+    validate_bls_to_execution_change
 )
 from staking_deposit.utils.constants import (
     MAX_DEPOSIT_AMOUNT,
@@ -33,8 +41,100 @@ from staking_deposit.settings import (
     get_chain_setting,
 )
 
+from staking_deposit.utils.crypto import SHA256
+
+def generate_bls_to_execution_change(
+        folder: str,
+        chain: str,
+        mnemonic: str,
+        validator_start_index: int,
+        validator_indices: Sequence[int],
+        bls_withdrawal_credentials_list: Sequence[bytes],
+        execution_address: HexAddress
+        ) -> None:
+    """Generate bls to execution change file.
+
+    Keyword arguments:
+    args -- contains the CLI arguments pass to the application, it should have those properties:
+            - folder: folder path for the resulting bls to execution change files
+            - chain: chain setting for the signing domain, possible values are 'mainnet',
+                       'goerli', 'zhejiang'
+            - mnemonic: mnemonic to be used as the seed for generating the keys
+            - validator_start_index: index position for the keys to start generating withdrawal credentials
+            - validator_indices: a list of the chosen validator index number(s) as identified on the beacon chain
+            - bls_withdrawal_credentials_list: a list of the old BLS withdrawal credentials of the given validator(s)
+            - execution_address: withdrawal address
+    """
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+    
+    eth1_withdrawal_address = execution_address
+    if not is_hex_address(eth1_withdrawal_address):
+        raise ValueError("The given Eth1 address is not in hexadecimal encoded form.")
+
+    eth1_withdrawal_address = to_normalized_address(eth1_withdrawal_address)
+    execution_address = eth1_withdrawal_address
+    
+    # Get chain setting
+    chain_setting = get_chain_setting(chain)
+
+    if len(validator_indices) != len(bls_withdrawal_credentials_list):
+        raise ValueError(
+            "The size of `validator_indices` (%d) should be as same as `bls_withdrawal_credentials_list` (%d)."
+            % (len(validator_indices), len(bls_withdrawal_credentials_list))
+        )
+
+    num_validators = len(validator_indices)
+    amounts = [MAX_DEPOSIT_AMOUNT] * num_validators
+
+    mnemonic_password = ''
+
+    num_keys = num_validators
+    start_index = validator_start_index
+    hex_eth1_withdrawal_address = execution_address
+
+    if len(amounts) != num_keys:
+        raise ValueError(
+            f"The number of keys ({num_keys}) doesn't equal to the corresponding deposit amounts ({len(amounts)})."
+        )
+    key_indices = range(start_index, start_index + num_keys)
+    credentials = CredentialList(
+        [Credential(mnemonic=mnemonic, mnemonic_password=mnemonic_password,
+            index=index, amount=amounts[index - start_index], chain_setting=chain_setting,
+            hex_eth1_withdrawal_address=hex_eth1_withdrawal_address)
+        for index in key_indices])
+
+    # Check if the given old bls_withdrawal_credentials is as same as the mnemonic generated
+    for i, credential in enumerate(credentials.credentials):
+        bls_withdrawal_credentials = bls_withdrawal_credentials_list[i]
+        if bls_withdrawal_credentials[1:] != SHA256(credential.withdrawal_pk)[1:]:
+            raise ValidationError('err_not_matching')
+
+    bls_to_execution_changes = [cred.get_bls_to_execution_change_dict(validator_indices[i])
+        for i, cred in enumerate(credentials.credentials)]
+
+    filefolder = os.path.join(folder, 'bls_to_execution_change-%i.json' % time.time())
+    with open(filefolder, 'w') as f:
+        json.dump(bls_to_execution_changes, f)
+    if os.name == 'posix':
+        os.chmod(filefolder, int('440', 8))  # Read for owner & group
+    btec_file = filefolder
+
+    with open(btec_file, 'r') as f:
+        btec_json = json.load(f)
+        json_file_validation_result = all([
+            validate_bls_to_execution_change(
+                btec, credential,
+                input_validator_index=input_validator_index,
+                input_execution_address=execution_address,
+                chain_setting=chain_setting)
+            for btec, credential, input_validator_index in zip(btec_json, credentials.credentials, validator_indices)
+        ])
+    if not json_file_validation_result:
+        raise ValidationError('err_verify_btec')
+
 def validate_mnemonic(mnemonic: str, word_lists_path: str) -> str:
-    """Validate a mnemonic using the eth2-deposit-cli logic and returns the mnemonic.
+    """Validate a mnemonic using the staking-deposit-cli logic and returns the mnemonic.
 
     Keyword arguments:
     mnemonic -- the mnemonic to validate
@@ -91,22 +191,59 @@ def generate_keys(args):
     if not os.path.exists(folder):
         os.mkdir(folder)
 
-    credentials = CredentialList.from_mnemonic(
-        mnemonic=mnemonic,
-        mnemonic_password=mnemonic_password,
-        num_keys=args.count,
-        amounts=amounts,
-        chain_setting=chain_setting,
-        start_index=args.index,
-        hex_eth1_withdrawal_address=eth1_withdrawal_address,
-    )
+    start_index = args.index
+    num_keys=args.count
+    hex_eth1_withdrawal_address=eth1_withdrawal_address
+    password=args.password
 
-    keystore_filefolders = credentials.export_keystores(password=args.password, folder=folder)
-    deposits_file = credentials.export_deposit_data_json(folder=folder)
-    if not credentials.verify_keystores(keystore_filefolders=keystore_filefolders, password=args.password):
+    if len(amounts) != num_keys:
+        raise ValueError(
+            f"The number of keys ({num_keys}) doesn't equal to the corresponding deposit amounts ({len(amounts)})."
+        )
+    key_indices = range(start_index, start_index + num_keys)
+    credentials = CredentialList(
+        [Credential(mnemonic=mnemonic, mnemonic_password=mnemonic_password,
+            index=index, amount=amounts[index - start_index], chain_setting=chain_setting,
+            hex_eth1_withdrawal_address=hex_eth1_withdrawal_address)
+        for index in key_indices])
+
+    keystore_filefolders = [credential.save_signing_keystore(password=password, folder=folder) for credential in credentials.credentials]
+
+    deposit_data = [cred.deposit_datum_dict for cred in credentials.credentials]
+    filefolder = os.path.join(folder, 'deposit_data-%i.json' % time.time())
+    with open(filefolder, 'w') as f:
+        json.dump(deposit_data, f, default=lambda x: x.hex())
+    if os.name == 'posix':
+        os.chmod(filefolder, int('440', 8))  # Read for owner & group
+    deposits_file = filefolder
+
+    items = zip(credentials.credentials, keystore_filefolders)
+
+    if not all(credential.verify_keystore(keystore_filefolder=filefolder, password=password)
+        for credential, filefolder in items):
         raise ValidationError("Failed to verify the keystores.")
-    if not verify_deposit_data_json(deposits_file, credentials.credentials):
-        raise ValidationError("Failed to verify the deposit data JSON files.")
+
+    with open(deposits_file, 'r') as f:
+        deposit_json = json.load(f)
+        if not all([validate_deposit(deposit, credential) for deposit, credential in zip(deposit_json, credentials.credentials)]):
+            raise ValidationError("Failed to verify the deposit data JSON files.")
+
+def decode_bytes(value):
+    if value.startswith('0x'):
+        value = value[2:]
+    return bytes.fromhex(value)
+
+def parse_bls_change(args):
+    """Parse CLI arguments to call the generate_bls_to_execution_change function.
+    """
+    generate_bls_to_execution_change(
+        args.folder,
+        args.chain,
+        args.mnemonic,
+        args.index,
+        [int(i) for i in args.indices.split(',')],
+        [decode_bytes(i) for i in args.withdrawal_credentials.split(',')],
+        args.execution_address)
 
 def parse_create_mnemonic(args):
     """Parse CLI arguments to call the create_mnemonic function.
@@ -122,6 +259,8 @@ def parse_create_mnemonic(args):
     }))
 
 def parse_generate_keys(args):
+    """Parse CLI arguments to call the generate_keys function.
+    """
     generate_keys(args)
 
 def parse_validate_mnemonic(args):
@@ -156,6 +295,16 @@ def main():
     validate_parser.add_argument("wordlist", help="Path to word list directory", type=str)
     validate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
     validate_parser.set_defaults(func=parse_validate_mnemonic)
+
+    generate_parser = subparsers.add_parser("bls_change")
+    generate_parser.add_argument("folder", help="Where to put the bls change files", type=str)
+    generate_parser.add_argument("chain", help="For which network to create the change", type=str)
+    generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
+    generate_parser.add_argument("index", help="Validator start index", type=int)
+    generate_parser.add_argument("indices", help="Validator index number(s) as identified on the beacon chain (comma seperated)", type=str)
+    generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma seperated)", type=str)
+    generate_parser.add_argument("execution_address", help="withdrawal address", type=str)
+    generate_parser.set_defaults(func=parse_bls_change)
 
     args = main_parser.parse_args()
     if not args or 'func' not in args:
