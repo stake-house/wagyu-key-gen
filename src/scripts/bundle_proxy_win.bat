@@ -1,6 +1,6 @@
 @ECHO OFF
 
-rem Batch script to bundle the eth2deposit_proxy application and the associated required files on
+rem Batch script to bundle the stakingdeposit_proxy application and the associated required files on
 rem Windows.
 
 SET BATDIR=%~dp0
@@ -27,8 +27,8 @@ mkdir %TARGETPACKAGESPATH% > nul 2> nul
 rem Getting all the requirements
 python -m pip install -r %ETH2REQUIREMENTSPATH% --target %TARGETPACKAGESPATH%
 
-rem Bundling Python eth2deposit_proxy
-pyinstaller --onefile --distpath %DISTBINPATH% --add-data "%SRCINTLPATH%;staking_deposit\intl" -p %PYTHONPATH% %BATDIR%eth2deposit_proxy.py
+rem Bundling Python stakingdeposit_proxy
+pyinstaller --onefile --distpath %DISTBINPATH% --add-data "%SRCINTLPATH%;staking_deposit\intl" -p %PYTHONPATH% %BATDIR%stakingdeposit_proxy.py
 
 rem Adding word list
 copy /Y %SRCWORDSPATH%\* %DISTWORDSPATH%

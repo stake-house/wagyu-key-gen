@@ -1,7 +1,7 @@
-"""The eth2deposit_proxy application.
+"""The stakingdeposit_proxy application.
 
-This application is used as a proxy between our electron application and the eth2-deposit-cli
-internals. It exposes some eth2-deposit-cli functions as easy to use commands that can be called
+This application is used as a proxy between our electron application and the staking-deposit-cli
+internals. It exposes some staking-deposit-cli functions as easy to use commands that can be called
 on the CLI.
 """
 
