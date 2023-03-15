@@ -8,7 +8,13 @@ export enum StepKey {
 
 export enum StepSequenceKey {
   MnemonicGeneration = "mnemonicgeneration",
-  MnemonicImport = "mnemonicimport"
+  MnemonicImport = "mnemonicimport",
+  BLSToExecutionChangeGeneration = "blstoexecutionchangegeneration",
+}
+
+export enum ReuseMnemonicAction {
+  RegenerateKeys,
+  GenerateBLSToExecutionChange
 }
 
 export enum Network {

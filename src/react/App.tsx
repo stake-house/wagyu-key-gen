@@ -6,7 +6,7 @@ import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import 'typeface-roboto';
 import MainWizard from "./pages/MainWizard";
 import theme from "./theme";
-import { Network } from './types';
+import { Network, ReuseMnemonicAction } from './types';
 
 const Container = styled.main`
   display: flex;
@@ -21,6 +21,7 @@ const Container = styled.main`
  */
 const App: FC = (): ReactElement => {
   const [network, setNetwork] = useState<Network>(Network.MAINNET);
+  const [reuseMnemonicAction, setReuseMnemonicAction] = useState<ReuseMnemonicAction>(ReuseMnemonicAction.RegenerateKeys);
 
   return (
     <ThemeProvider theme={theme}>
@@ -28,7 +29,7 @@ const App: FC = (): ReactElement => {
       <HashRouter>
         <Container>
           <Switch>
-            <Route exact path="/" render={() => <Home network={network} setNetwork={setNetwork} />} />
+            <Route exact path="/" render={() => <Home network={network} setNetwork={setNetwork} reuseMnemonicAction={reuseMnemonicAction} setReuseMnemonicAction={setReuseMnemonicAction} />} />
             <Route exact path="/wizard/:stepSequenceKey" render={() => <MainWizard network={network} />} />
           </Switch>
         </Container>

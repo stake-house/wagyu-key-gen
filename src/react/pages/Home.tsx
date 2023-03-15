@@ -5,8 +5,9 @@ import { Container, Grid, Modal, Tooltip, Typography } from "@material-ui/core";
 import { Button } from '@material-ui/core';
 import { KeyIcon } from "../components/icons/KeyIcon";
 import { NetworkPicker } from "../components/NetworkPicker";
+import { ReuseMnemonicActionPicker } from "../components/ReuseMnemonicActionPicker";
 import { tooltips } from "../constants";
-import { Network, StepSequenceKey } from '../types'
+import { Network, StepSequenceKey, ReuseMnemonicAction } from '../types'
 import VersionFooter from "../components/VersionFooter";
 
 const StyledMuiContainer = styled(Container)`
@@ -49,6 +50,8 @@ const OptionsGrid = styled(Grid)`
 type HomeProps = {
   network: Network,
   setNetwork: Dispatch<SetStateAction<Network>>
+  reuseMnemonicAction: ReuseMnemonicAction,
+  setReuseMnemonicAction: Dispatch<SetStateAction<ReuseMnemonicAction>>
 }
 
 /**
@@ -62,6 +65,7 @@ type HomeProps = {
 const Home: FC<HomeProps> = (props): ReactElement => {
   const [showNetworkModal, setShowNetworkModal] = useState(false);
   const [networkModalWasOpened, setNetworkModalWasOpened] = useState(false);
+  const [showReuseMnemonicModal, setShowReuseMnemonicModal] = useState(false);
   const [createMnemonicSelected, setCreateMnemonicSelected] = useState(false);
   const [useExistingMnemonicSelected, setUseExistingMnemonicSelected] = useState(false);
 
@@ -84,6 +88,23 @@ const Home: FC<HomeProps> = (props): ReactElement => {
     }
   }
 
+  const handleOpenReuseMnemonicModal = () => {
+    setShowReuseMnemonicModal(true);
+  }
+
+  const handleCloseReuseMnemonicModal = (event: object, reason: string) => {
+    setShowReuseMnemonicModal(false);
+    /*if (reason !== 'backdropClick') {
+      setShowNetworkModal(false);
+
+      if (createMnemonicSelected) {
+        handleCreateNewMnemonic();
+      } else if (useExistingMnemonicSelected) {
+        handleUseExistingMnemonic();
+      }
+    }*/
+  }
+
   const handleCreateNewMnemonic = () => {
     setCreateMnemonicSelected(true);
 
@@ -104,11 +125,14 @@ const Home: FC<HomeProps> = (props): ReactElement => {
     if (!networkModalWasOpened) {
       handleOpenNetworkModal();
     } else {
-      const location = {
+
+      handleOpenReuseMnemonicModal();
+
+      /*const location = {
         pathname: `/wizard/${StepSequenceKey.MnemonicImport}`
       }
 
-      history.push(location);
+      history.push(location);*/
     }
   }
 
@@ -126,6 +150,16 @@ const Home: FC<HomeProps> = (props): ReactElement => {
         {/* Added <div> here per the following link to fix error https://stackoverflow.com/a/63521049/5949270 */}
         <div>
           <NetworkPicker handleCloseNetworkModal={handleCloseNetworkModal} setNetwork={props.setNetwork} network={props.network}></NetworkPicker>
+        </div>
+      </Modal>
+
+      <Modal
+        open={showReuseMnemonicModal}
+        onClose={handleCloseReuseMnemonicModal}
+      >
+        {/* Added <div> here per the following link to fix error https://stackoverflow.com/a/63521049/5949270 */}
+        <div>
+          <ReuseMnemonicActionPicker handleCloseReuseMnemonicModal={handleCloseReuseMnemonicModal} setReuseMnemonicAction={props.setReuseMnemonicAction} reuseMnemonicAction={props.reuseMnemonicAction}></ReuseMnemonicActionPicker>
         </div>
       </Modal>
 

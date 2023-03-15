@@ -24,6 +24,9 @@ const stepSequenceMap: Record<string, StepKey[]> = {
     StepKey.KeyConfiguration,
     StepKey.KeyGeneration,
     StepKey.Finish
+  ],
+  blstoexecutionchangegeneration: [
+    StepKey.MnemonicImport
   ]
 }
 
