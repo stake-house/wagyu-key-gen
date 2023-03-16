@@ -1,6 +1,6 @@
 import { BackgroundLight, } from '../colors';
-import { FormControl, FormControlLabel, Radio, RadioGroup, Button, Typography, Grid, Tooltip } from '@material-ui/core';
-import React, { Dispatch, SetStateAction } from 'react';
+import { Button, Grid, Tooltip } from '@material-ui/core';
+import React from 'react';
 
 import { ReuseMnemonicAction } from '../types';
 import styled from 'styled-components';
@@ -33,15 +33,14 @@ const OptionsGrid = styled(Grid)`
 
 type ReuseMnemonicActionPickerProps = {
   handleCloseReuseMnemonicModal: (event: object, reason: string) => void,
-  reuseMnemonicAction: ReuseMnemonicAction,
-  setReuseMnemonicAction: Dispatch<SetStateAction<ReuseMnemonicAction>>
+  handleReuseMnemonicModalSubmitClick: (action: ReuseMnemonicAction) => void,
 }
 
 /**
  * This is the reuse mnemonic action picker modal component where the user selects which action they want
  * to perform after reusing their mnemonic.
  * 
- * @param props.handleCloseReuseMnemonicModal function to handle closing the network modal
+ * @param props.handleCloseReuseMnemonicModal function to handle closing the reuse mnemonic action modal
  * @param props.setReuseMnemonicAction update the selected reuse mnemonic action
  * @param props.reuseMnemonicAction the selected reuse mnemonic action
  * @returns the reuse mnemonic action picker element to render
@@ -49,13 +48,19 @@ type ReuseMnemonicActionPickerProps = {
 export const ReuseMnemonicActionPicker = (props: ReuseMnemonicActionPickerProps) => {
 
   const handleSelectRegenerateKeys = () => {
-    props.setReuseMnemonicAction(ReuseMnemonicAction.RegenerateKeys);
+
+    const action = ReuseMnemonicAction.RegenerateKeys;
+    props.handleReuseMnemonicModalSubmitClick(action);
     props.handleCloseReuseMnemonicModal({}, 'submitClick');
+
   }
 
   const handleSelectGenerateBLSToExecutionChange = () => {
-    props.setReuseMnemonicAction(ReuseMnemonicAction.GenerateBLSToExecutionChange);
+
+    const action = ReuseMnemonicAction.GenerateBLSToExecutionChange;
+    props.handleReuseMnemonicModalSubmitClick(action);
     props.handleCloseReuseMnemonicModal({}, 'submitClick');
+
   }
 
   return (

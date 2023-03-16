@@ -50,8 +50,6 @@ const OptionsGrid = styled(Grid)`
 type HomeProps = {
   network: Network,
   setNetwork: Dispatch<SetStateAction<Network>>
-  reuseMnemonicAction: ReuseMnemonicAction,
-  setReuseMnemonicAction: Dispatch<SetStateAction<ReuseMnemonicAction>>
 }
 
 /**
@@ -77,7 +75,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
   }
 
   const handleCloseNetworkModal = (event: object, reason: string) => {
-    if (reason !== 'backdropClick') {
+    if (reason == 'submitClick') {
       setShowNetworkModal(false);
 
       if (createMnemonicSelected) {
@@ -92,17 +90,30 @@ const Home: FC<HomeProps> = (props): ReactElement => {
     setShowReuseMnemonicModal(true);
   }
 
+  const handleReuseMnemonicModalSubmitClick = (action: ReuseMnemonicAction) => {
+
+    if (action == ReuseMnemonicAction.RegenerateKeys) {
+
+      const location = {
+        pathname: `/wizard/${StepSequenceKey.MnemonicImport}`
+      }
+
+      history.push(location);
+
+    } else if (action == ReuseMnemonicAction.GenerateBLSToExecutionChange) {
+
+      const location = {
+        pathname: `/wizard/${StepSequenceKey.BLSToExecutionChangeGeneration}`
+      }
+
+      history.push(location);
+
+    }
+
+  }
+
   const handleCloseReuseMnemonicModal = (event: object, reason: string) => {
     setShowReuseMnemonicModal(false);
-    /*if (reason !== 'backdropClick') {
-      setShowNetworkModal(false);
-
-      if (createMnemonicSelected) {
-        handleCreateNewMnemonic();
-      } else if (useExistingMnemonicSelected) {
-        handleUseExistingMnemonic();
-      }
-    }*/
   }
 
   const handleCreateNewMnemonic = () => {
@@ -128,11 +139,6 @@ const Home: FC<HomeProps> = (props): ReactElement => {
 
       handleOpenReuseMnemonicModal();
 
-      /*const location = {
-        pathname: `/wizard/${StepSequenceKey.MnemonicImport}`
-      }
-
-      history.push(location);*/
     }
   }
 
@@ -159,7 +165,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       >
         {/* Added <div> here per the following link to fix error https://stackoverflow.com/a/63521049/5949270 */}
         <div>
-          <ReuseMnemonicActionPicker handleCloseReuseMnemonicModal={handleCloseReuseMnemonicModal} setReuseMnemonicAction={props.setReuseMnemonicAction} reuseMnemonicAction={props.reuseMnemonicAction}></ReuseMnemonicActionPicker>
+          <ReuseMnemonicActionPicker handleCloseReuseMnemonicModal={handleCloseReuseMnemonicModal} handleReuseMnemonicModalSubmitClick={handleReuseMnemonicModalSubmitClick} ></ReuseMnemonicActionPicker>
         </div>
       </Modal>
 
