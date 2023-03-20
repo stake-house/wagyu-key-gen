@@ -31,12 +31,12 @@ const LandingHeader = styled(Typography)`
 `;
 
 const SubHeader = styled(Typography)`
-  margin-top: 20px;
+  margin-top: 10px;
   text-align: center;
 `;
 
 const Links = styled.div`
-  margin-top: 35px;
+  margin-top: 20px;
 `;
 
 const InfoLabel = styled.span`
@@ -44,7 +44,7 @@ const InfoLabel = styled.span`
 `;
 
 const OptionsGrid = styled(Grid)`
-  margin-top: 35px;
+  margin-top: 20px;
   align-items: center;
 `;
 
