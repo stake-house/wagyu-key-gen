@@ -19,6 +19,10 @@ const Loader = styled.div`
   animation: ${spin} 2s linear infinite;
 `;
 
+const WaitingMessage = styled(Typography)`
+  align-items: center;
+`;
+
 /**
  * The waiting screen while the BTEC file is being created.
  * 
@@ -29,10 +33,10 @@ const CreatingBTECFile: FC<CreatingBTECFileProps> = (): ReactElement => {
     <Grid container>
       <Grid item xs={1} />
       <Grid container item spacing={3} xs={10}>
-        <Grid item container xs={12}>
-          <Typography variant="body1" align="left">
+        <Grid item xs={12}>
+          <WaitingMessage variant="body1">
             Creating your BLS to execution change file.
-          </Typography>
+          </WaitingMessage>
         </Grid>
         <Grid item container xs={12} justifyContent="center">
           <Loader />

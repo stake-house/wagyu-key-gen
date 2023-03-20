@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import { Network } from '../types';
-import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
+import BTECFileCreated from './BTECGenerationFlow/4-BTECFileCreated';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -30,12 +30,12 @@ const FinishBTEC: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Create Keys
+          Generate BLS to execution change
         </Typography>
       </Grid>
       <ContentGrid item container>
         <Grid item xs={12}>
-          <KeysCreated folderPath={props.folderPath} network={props.network} />
+          <BTECFileCreated folderPath={props.folderPath} network={props.network} />
         </Grid>
       </ContentGrid>
       {props.children}

@@ -104,7 +104,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
                       setFolderError(true);
                     } else {
                       setStep(step + 1);
-                      handleKeyGeneration();
+                      handleBTECFileGeneration();
                     }
                   });
               }
@@ -118,10 +118,10 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
 
-      // Keys are being generated
+      // BTEC file is being generated
       case 1: {
         // there is no next button here
-        // step is autoincremented once keys are created
+        // step is autoincremented once file is created
         break;
       }
 
@@ -133,7 +133,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
     }
   }
 
-  const handleKeyGeneration = () => {
+  const handleBTECFileGeneration = () => {
 
     let withdrawalAddress = props.withdrawalAddress;
 
@@ -149,7 +149,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
       props.btecIndices,
       props.btecCredentials,
       withdrawalAddress).then(() => {
-      props.onStepForward();
+      //props.onStepForward();
     }).catch((error) => {
       setStep(0);
       setFolderError(true);
