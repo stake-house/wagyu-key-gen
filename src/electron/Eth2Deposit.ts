@@ -66,6 +66,7 @@ const BUNDLED_DIST_WORD_LIST_PATH = path.join(process.resourcesPath, "..",
 const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 const VALIDATE_MNEMONIC_SUBCOMMAND = "validate_mnemonic";
+const VALIDATE_BLS_CREDENTIALS_SUBCOMMAND = "validate_bls_credentials";
 
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
@@ -134,7 +135,7 @@ const createMnemonic = async (language: string): Promise<string> => {
     args = [CREATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, "--language", language]
   } else {
     if (!await requireDepositPackages()) {
-      throw new Error("Failed to generate mnemonic, don't have the required packages.");
+      throw new Error("Failed to create mnemonic, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
   
@@ -202,7 +203,7 @@ const generateKeys = async (
       network.toLowerCase(), password]);
   } else {
     if(!await requireDepositPackages()) {
-      throw new Error("Failed to generate mnemonic, don't have the required packages.");
+      throw new Error("Failed to generate keys, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
 
@@ -220,9 +221,9 @@ const generateKeys = async (
 }
 
 /**
- * Validate a mnemonic using the eth2-deposit-cli logic by calling the validate_mnemonic function
+ * Validate a mnemonic using the staking-deposit-cli logic by calling the validate_mnemonic function
  * from the stakingdeposit_proxy application.
- * 
+ *
  * @param mnemonic The mnemonic to be validated.
  * 
  * @returns Returns a Promise<void> that will resolve when the validation is done.
@@ -243,7 +244,7 @@ const validateMnemonic = async (
     args = [VALIDATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, mnemonic];
   } else {
     if(!await requireDepositPackages()) {
-      throw new Error("Failed to generate mnemonic, don't have the required packages.");
+      throw new Error("Failed to validate mnemonic, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
 
@@ -254,8 +255,51 @@ const validateMnemonic = async (
   await execFileProm(executable, args, {env: env});
 }
 
+/**
+ * Validate BLS credentials by calling the validate_bls_credentials function
+ * from the stakingdeposit_proxy application.
+ * 
+ * @param chain The network setting for the signing domain. Possible values are `mainnet`,
+ *              `goerli`, `zhejiang`.
+ * @param mnemonic The mnemonic from which the BLS credentials are derived.
+ * @param index The index of the first validator's keys.
+ * @param withdrawal_credentials A list of the old BLS withdrawal credentials of the given validator(s), comma separated.
+ * 
+ * @returns Returns a Promise<void> that will resolve when the validation is done.
+ */
+const validateBLSCredentials = async (
+  chain: string,
+  mnemonic: string,
+  index: number,
+  withdrawal_credentials: string
+): Promise<void> => {
+
+  let executable:string = "";
+  let args:string[] = [];
+  let env = process.env;
+
+  if (await doesFileExist(BUNDLED_SFE_PATH)) {
+    executable = BUNDLED_SFE_PATH;
+    args = [VALIDATE_BLS_CREDENTIALS_SUBCOMMAND, chain.toLowerCase(), mnemonic, index.toString(), withdrawal_credentials];
+  } else if (await doesFileExist(SFE_PATH)) {
+    executable = SFE_PATH;
+    args = [VALIDATE_BLS_CREDENTIALS_SUBCOMMAND, chain.toLowerCase(), mnemonic, index.toString(), withdrawal_credentials];
+  } else {
+    if(!await requireDepositPackages()) {
+      throw new Error("Failed to validate BLS credentials, don't have the required packages.");
+    }
+    env.PYTHONPATH = await getPythonPath();
+
+    executable = PYTHON_EXE;
+    args = [stakingdeposit_proxy_PATH, VALIDATE_BLS_CREDENTIALS_SUBCOMMAND, chain.toLowerCase(), mnemonic, index.toString(), withdrawal_credentials];
+  }
+
+  await execFileProm(executable, args, {env: env});
+}
+
 export {
   createMnemonic,
   generateKeys,
-  validateMnemonic
+  validateMnemonic,
+  validateBLSCredentials
 };

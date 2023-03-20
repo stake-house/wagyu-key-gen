@@ -14,6 +14,8 @@ const ContentGrid = styled(Grid)`
 type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
+  network: string,
+  mnemonic: string,
   startIndex: number,
   setStartIndex: Dispatch<SetStateAction<number>>,
   btecIndices: string,
@@ -30,6 +32,8 @@ type Props = {
  * 
  * @param props.onStepBack function to execute when stepping back
  * @param props.onStepForward function to execute when stepping forward
+ * @param props.network the network for which to generate this BTEC
+ * @param props.mnemonic the current mnemonic for which to generate this BTEC
  * @param props.startIndex the index for the keys to start generating withdrawal credentials
  * @param props.setStartIndex function to set the starting index
  * @param props.btecIndices a list of the chosen validator index number(s) as identified on the beacon chain
@@ -192,14 +196,14 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
 
       setStep(step + 1);
 
-      /*window.eth2Deposit.validateMnemonic(props.mnemonic).then(() => {
+      window.eth2Deposit.validateBLSCredentials(props.network, props.mnemonic, props.startIndex, props.btecCredentials).then(() => {
         props.onStepForward();
       }).catch((error) => {
         setStep(0);
-        const errorMsg = ('stderr' in error) ? error.stderr : error.message;
-        setMnemonicError(true);
-        setMnemonicErrorMsg(errorMsg);
-      })*/
+
+        setBtecCredentialsError(true);
+        setBtecCredentialsErrorMsg(errors.BLS_CREDENTIALS_NO_MATCH);
+      })
     }
   }
 

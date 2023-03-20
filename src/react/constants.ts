@@ -14,6 +14,7 @@ export const errors = {
 	INDICES_LENGTH: "The amount of indices must match the amount of BLS credentials",
 	BLS_CREDENTIALS: "Please input BLS credentials.",
 	BLS_CREDENTIALS_FORMAT: "Please enter valid BLS credentials.",
+	BLS_CREDENTIALS_NO_MATCH: "Those BLS credentials do not match those we can derive from your Secret Recovery Phrase.",
 	FOLDER: "Please select a folder.",
 	FOLDER_DOES_NOT_EXISTS: "Folder does not exist. Select an existing folder.",
 	FOLDER_IS_NOT_WRITABLE: "Cannot write in this folder. Select a folder in which you have write permission.",

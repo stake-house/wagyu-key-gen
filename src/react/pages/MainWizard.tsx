@@ -175,6 +175,8 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
         return (
           <BTECConfigurationWizard
             {...commonProps}
+            network={props.network}
+            mnemonic={mnemonic}
             startIndex={startIndex}
             setStartIndex={setStartIndex}
             btecIndices={btecIndices}

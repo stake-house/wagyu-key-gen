@@ -355,7 +355,7 @@ def main():
     generate_parser.set_defaults(func=parse_bls_change)
 
     generate_parser = subparsers.add_parser("validate_bls_credentials")
-    generate_parser.add_argument("chain", help="For which network to create the change", type=str)
+    generate_parser.add_argument("chain", help="For which network to validate these BLS credentials", type=str)
     generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
     generate_parser.add_argument("index", help="Validator start index", type=int)
     generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma seperated)", type=str)
