@@ -48,6 +48,10 @@ const OptionsGrid = styled(Grid)`
   align-items: center;
 `;
 
+const Dotted = styled.span`
+  text-decoration-line: underline;
+`;
+
 type HomeProps = {
   network: Network,
   setNetwork: Dispatch<SetStateAction<Network>>
@@ -172,7 +176,8 @@ const Home: FC<HomeProps> = (props): ReactElement => {
 
       <LandingHeader variant="h1">Welcome!</LandingHeader>
       <KeyIcon />
-      <SubHeader>Your key generator for staking on Ethereum.<br/>You should run this tool <strong>offline</strong> for your own security.</SubHeader>
+      <SubHeader>Your key generator for staking on Ethereum.<br/>You should run this tool&nbsp;
+      <Tooltip title={tooltips.OFFLINE}><Dotted>offline</Dotted></Tooltip> for your own security.</SubHeader>
 
       <Links>
         <InfoLabel>Github:</InfoLabel> https://github.com/stake-house/wagyu-key-gen

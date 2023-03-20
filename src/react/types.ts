@@ -3,7 +3,10 @@ export enum StepKey {
   MnemonicGeneration,
   KeyConfiguration,
   KeyGeneration,
-  Finish
+  Finish,
+  BTECConfiguration,
+  BTECGeneration,
+  FinishBTEC
 }
 
 export enum StepSequenceKey {

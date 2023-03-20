@@ -21,6 +21,7 @@ export const tooltips = {
 	PASSWORD: "Pick a strong password (at least 8 characters) that will be used to protect your keys.",
 	STARTING_INDEX: "Each key is created sequentially, so we need to know how many you've created with this Secret Recovery Phrase in the past in order to create some new ones for you.",
 	ETH1_WITHDRAW_ADDRESS: "An optional Ethereum address for the withdrawal credentials.",
+	OFFLINE: "You want to avoid exposing your Secret Recovery Phrase to any system that can send it online and compromise your security. Booting from a live OS that does not connect to any network on a USB drive is an easy way to achieve that. You can copy the resulting files on USB drives. You might want to avoid storing your Secret Recovery Phrase electronically."
 };
 
 export const stepLabels = {
@@ -28,5 +29,8 @@ export const stepLabels = {
 	[StepKey.MnemonicGeneration]: 'Create Secret Recovery Phrase',
 	[StepKey.KeyConfiguration]: 'Configure Validator Keys',
 	[StepKey.KeyGeneration]: 'Create Validator Key Files',
-	[StepKey.Finish]: 'Finish'
+	[StepKey.Finish]: 'Finish',
+	[StepKey.BTECConfiguration]: 'Configure Withdrawal Address',
+  [StepKey.BTECGeneration]: 'Create Crendentials Change',
+  [StepKey.FinishBTEC]: 'Finish'
 };
