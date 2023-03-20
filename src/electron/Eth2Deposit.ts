@@ -67,6 +67,7 @@ const CREATE_MNEMONIC_SUBCOMMAND = "create_mnemonic";
 const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 const VALIDATE_MNEMONIC_SUBCOMMAND = "validate_mnemonic";
 const VALIDATE_BLS_CREDENTIALS_SUBCOMMAND = "validate_bls_credentials";
+const VALIDATE_BLS_CHANGE_SUBCOMMAND = "bls_change";
 
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
@@ -297,9 +298,68 @@ const validateBLSCredentials = async (
   await execFileProm(executable, args, {env: env});
 }
 
+/**
+ * Generate BTEC file by calling the bls_change function from the stakingdeposit_proxy
+ * application.
+ * 
+ * @param folder The folder path for the resulting BTEC file.
+ * @param chain The network setting for the signing domain. Possible values are `mainnet`,
+ *              `goerli`, `zhejiang`.
+ * @param mnemonic The mnemonic to be used as the seed for generating the BTEC.
+ * @param index The index of the first validator's keys.
+ * @param indices The validator index number(s) as identified on the beacon chain (comma seperated).
+ * @param withdrawal_credentials A list of the old BLS withdrawal credentials of the given validator(s), comma separated.
+ * @param execution_address The withdrawal address.
+ * 
+ * @returns Returns a Promise<void> that will resolve when the generation is done.
+ */
+const generateBLSChange = async (
+  folder: string,
+  chain: string,
+  mnemonic: string,
+  index: number,
+  indices: string,
+  withdrawal_credentials: string,
+  execution_address: string
+  
+): Promise<void> => {
+
+let executable:string = "";
+let args:string[] = [];
+let env = process.env;
+
+if (await doesFileExist(BUNDLED_SFE_PATH)) {
+  executable = BUNDLED_SFE_PATH;
+  args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
+  
+  args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
+    withdrawal_credentials, execution_address]);
+} else if (await doesFileExist(SFE_PATH)) {
+  executable = SFE_PATH;
+  args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
+  
+  args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
+    withdrawal_credentials, execution_address]);
+} else {
+  if(!await requireDepositPackages()) {
+    throw new Error("Failed to generate BTEC, don't have the required packages.");
+  }
+  env.PYTHONPATH = await getPythonPath();
+
+  executable = PYTHON_EXE;
+  args = [stakingdeposit_proxy_PATH, VALIDATE_BLS_CHANGE_SUBCOMMAND];
+
+  args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
+    withdrawal_credentials, execution_address]);
+}
+
+await execFileProm(executable, args, {env: env});
+}
+
 export {
   createMnemonic,
   generateKeys,
   validateMnemonic,
-  validateBLSCredentials
+  validateBLSCredentials,
+  generateBLSChange
 };

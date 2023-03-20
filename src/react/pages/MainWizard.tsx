@@ -193,10 +193,10 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             {...commonProps}
             mnemonic={mnemonic}
             network={props.network}
-            keyGenerationStartIndex={startIndex}
-            numberOfKeys={numberOfKeys}
+            startIndex={startIndex}
             withdrawalAddress={withdrawalAddress}
-            password={password}
+            btecIndices={btecIndices}
+            btecCredentials={btecCredentials}
             folderPath={folderPath}
             setFolderPath={setFolderPath}
           />

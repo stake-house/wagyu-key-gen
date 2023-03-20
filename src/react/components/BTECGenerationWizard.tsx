@@ -1,9 +1,9 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import SelectFolder from './KeyGeneratioinFlow/2-SelectFolder';
-import CreatingKeys from './KeyGeneratioinFlow/3-CreatingKeys';
-import KeysCreated from './KeyGeneratioinFlow/4-KeysCreated';
+import SelectFolder from './BTECGenerationFlow/2-SelectFolder';
+import CreatingBTECFile from './BTECGenerationFlow/3-CreatingBTECFile';
+import BTECFileCreated from './BTECGenerationFlow/4-BTECFileCreated';
 import StepNavigation from './StepNavigation';
 import { Network } from '../types';
 import { errors } from '../constants';
@@ -18,26 +18,26 @@ type Props = {
   onStepForward: () => void,
   network: Network,
   mnemonic: string,
-  keyGenerationStartIndex: number,
-  numberOfKeys: number,
+  startIndex: number,
   withdrawalAddress: string,
-  password: string,
+  btecIndices: string,
+  btecCredentials: string,
   folderPath: string,
   setFolderPath: Dispatch<SetStateAction<string>>,
 }
 
 /**
- * This is the wizard the user will navigate to generate their keys.
+ * This is the wizard the user will navigate to generate their BTEC.
  * It uses the notion of a 'step' to render specific pages within the flow.
  * 
  * @param props.onStepBack function to execute when stepping back
  * @param props.onStepForward function to execute when stepping forward
  * @param props.network network the app is running for
  * @param props.mnemonic the mnemonic
- * @param props.keyGenerationStartIndex the index at which to start generating keys for the user
- * @param props.numberOfKeys the total number of keys to generate for the user
- * @param props.withdrawalAddress the optional wallet address for the withdrawal credentials
- * @param props.password the password to use to protect the keys for the user
+ * @param props.startIndex the index at which to start generating BTEC for the user
+ * @param props.withdrawalAddress the wallet address for the withdrawal credentials
+ * @param props.btecIndices a list of the chosen validator index number(s) as identified on the beacon chain
+ * @param props.btecCredentials a list of the old BLS withdrawal credentials of the given validator(s)
  * @param props.folderPath the path at which to store the keys
  * @param props.setFolderPath funciton to update the path
  * @returns the react element to render
@@ -67,7 +67,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
       default: {
-        console.log("Key generation step is greater than 0 and prev was clicked. This should never happen.")
+        console.log("BTEC generation step is greater than 0 and prev was clicked. This should never happen.")
         break;
       }
     }
@@ -126,7 +126,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
       }
 
       default: {
-        console.log("Key generation step is greater than 1 and next was clicked. This should never happen.")
+        console.log("BTEC generation step is greater than 1 and next was clicked. This should never happen.")
         break;
       }
 
@@ -141,14 +141,14 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
       withdrawalAddress = "0x" + withdrawalAddress;
     }
 
-    window.eth2Deposit.generateKeys(
-      props.mnemonic,
-      props.keyGenerationStartIndex!,
-      props.numberOfKeys,
+    window.eth2Deposit.generateBLSChange(
+      props.folderPath,
       props.network,
-      props.password,
-      withdrawalAddress,
-      props.folderPath).then(() => {
+      props.mnemonic,
+      props.startIndex,
+      props.btecIndices,
+      props.btecCredentials,
+      withdrawalAddress).then(() => {
       props.onStepForward();
     }).catch((error) => {
       setStep(0);
@@ -165,10 +165,10 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
         <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} setFolderErrorMsg={setFolderErrorMsg} folderErrorMsg={folderErrorMsg} modalDisplay={modalDisplay} setModalDisplay={setModalDisplay} />
       );
       case 1: return (
-        <CreatingKeys />
+        <CreatingBTECFile />
       );
       case 2: return (
-        <KeysCreated folderPath={props.folderPath} network={props.network} />
+        <BTECFileCreated folderPath={props.folderPath} network={props.network} />
       );
       default:
         return null;
@@ -179,7 +179,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Create Keys
+          Generate BLS to execution change
         </Typography>
       </Grid>
       <ContentGrid item container>

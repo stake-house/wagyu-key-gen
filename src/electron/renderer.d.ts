@@ -37,6 +37,7 @@ export interface IEth2DepositAPI {
     password: string, eth1_withdrawal_address: string, folder: string) => Promise<void>,
   validateMnemonic: (mnemonic: string) => Promise<void>,
   validateBLSCredentials: (chain: string, mnemonic: string, index: number, withdrawal_credentials: string) => Promise<void>,
+  generateBLSChange: (folder: string, chain: string, mnemonic: string, index: number, indices: string, withdrawal_credentials: string, execution_address: string) => Promise<void>,
 }
 
 export interface IBashUtilsAPI {
