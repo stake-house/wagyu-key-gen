@@ -1,8 +1,9 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import KeyInputs from './KeyGeneratioinFlow/0-KeyInputs';
-import VerifyKeysPassword from './KeyGeneratioinFlow/1-VerifyKeysPassword';
+import { errors } from '../constants';
+import MainInputs from './BTECGenerationFlow/0-MainInputs';
+import ValidatingBLSCredentials from './BTECGenerationFlow/1-ValidatingBLSCredentials';
 import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
@@ -13,45 +14,41 @@ const ContentGrid = styled(Grid)`
 type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
-  keyGenerationStartIndex: number,
-  initialKeyGenerationStartIndex: number,
-  setKeyGenerationStartIndex: Dispatch<SetStateAction<number>>,
-  showKeyGenerationStartIndexInput: boolean,
-  numberOfKeys: number,
-  setNumberOfKeys: Dispatch<SetStateAction<number>>,
+  startIndex: number,
+  setStartIndex: Dispatch<SetStateAction<number>>,
+  btecIndices: string,
+  setBtecIndices: Dispatch<SetStateAction<string>>,
+  btecCredentials: string,
+  setBtecCredentials: Dispatch<SetStateAction<string>>,
   withdrawalAddress: string,
   setWithdrawalAddress: Dispatch<SetStateAction<string>>,
-  password: string,
-  setPassword: Dispatch<SetStateAction<string>>,
 }
 
 /**
- * This is the wizard the user will navigate to configure their keys.
+ * This is the wizard the user will navigate to configure their BLS to execution change.
  * It uses the notion of a 'step' to render specific pages within the flow.
  * 
  * @param props.onStepBack function to execute when stepping back
  * @param props.onStepForward function to execute when stepping forward
- * @param props.keyGenerationStartIndex the index at which to start generating keys for the user
- * @param props.initialKeyGenerationStartIndex the default value for starting index
- * @param props.setKeyGenerationStartIndex function to set the starting index
- * @param props.showKeyGenerationStartIndexInput toggle to control whether we will prompt the user for starting index.
- *    Prompting the user for starting index is only required when importing a mnemonic.
- * @param props.numberOfKeys the total number of keys to generate for the user
- * @param props.setNumberOfKeys function to set the number of keys to generate
- * @param props.withdrawalAddress the optional wallet address for the withdrawal credentials
+ * @param props.startIndex the index for the keys to start generating withdrawal credentials
+ * @param props.setStartIndex function to set the starting index
+ * @param props.btecIndices a list of the chosen validator index number(s) as identified on the beacon chain
+ * @param props.setBtecIndices function to set the list of validator index number(s)
+ * @param props.btecCredentials a list of the old BLS withdrawal credentials of the given validator(s)
+ * @param props.setBtecCredentials function to set the list of old BLS withdrawal credentials
+ * @param props.withdrawalAddress the wallet address for the withdrawal credentials
  * @param props.setWithdrawalAddress function to set the wallet address for the withdrawal credentials
- * @param props.password the password to use to protect the keys for the user
- * @param props.setPassword function to set the password
  * @returns the react element to render
  */
 const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
-  const [verifyPassword, setVerifyPassword] = useState("");
-  const [numberOfKeysError, setNumberOfKeysError] = useState(false);
-  const [withdrawalAddressFormatError, setWithdrawalAddressFormatError] = useState(false);
-  const [passwordStrengthError, setPasswordStrengthError] = useState(false);
-  const [passwordVerifyError, setPasswordVerifyError] = useState(false);
+  const [withdrawalAddressError, setWithdrawalAddressError] = useState(false);
+  const [withdrawalAddressErrorMsg, setWithdrawalAddressErrorMsg] = useState("");
   const [startingIndexError, setStartingIndexError] = useState(false);
+  const [indicesError, setIndicesError] = useState(false);
+  const [btecCredentialsError, setBtecCredentialsError] = useState(false);
+  const [indicesErrorMsg, setIndicesErrorMsg] = useState("");
+  const [btecCredentialsErrorMsg, setBtecCredentialsErrorMsg] = useState("");
 
   const prevLabel = () => {
     switch (step) {
@@ -65,26 +62,22 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
   const prevClicked = () => {
     switch (step) {
       case 0: {
-        setNumberOfKeysError(false);
-        setWithdrawalAddressFormatError(false);
-        setPasswordStrengthError(false);
+        setWithdrawalAddressError(false);
+        setWithdrawalAddressErrorMsg("");
         setStartingIndexError(false);
-        props.setPassword("");
-        props.setKeyGenerationStartIndex(props.initialKeyGenerationStartIndex);
-        props.setNumberOfKeys(1);
+        setIndicesError(false);
+        setIndicesErrorMsg("");
+        setBtecCredentialsError(false);
+        setBtecCredentialsErrorMsg("");
+        props.setStartIndex(0);
+        props.setBtecIndices("");
+        props.setBtecCredentials("");
         props.setWithdrawalAddress("");
         props.onStepBack();
         break;
       }
-      case 1: {
-        setPasswordVerifyError(false);
-        props.setPassword("");
-        setVerifyPassword("");
-        setStep(step - 1);
-        break;
-      }
       default: {
-        console.log("Key configuration step is greater than 1 when prev was clicked.  This should never happen.");
+        console.log("BTEC configuration step is greater than 0 when prev was clicked.  This should never happen.");
         break;
       }
     }
@@ -108,14 +101,8 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
 
-      // Verify Password
-      case 1: {
-        confirmPassword();
-        break;
-      }
-
       default: {
-        console.log("Key configuration step is greater than 1 when next was clicked.  This should never happen.");
+        console.log("BTEC configuration step is greater than 1 when next was clicked.  This should never happen.");
         break;
       }
     }
@@ -123,79 +110,130 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
 
   const validateInputs = () => {
     let isError = false;
-
-    if (props.numberOfKeys < 1 || props.numberOfKeys > 1000) {
-      setNumberOfKeysError(true);
-      isError = true;
-    } else {
-      setNumberOfKeysError(false);
-    }
     
-    if (props.password.length < 8) {
-      setPasswordStrengthError(true);
-      isError = true;
-    } else {
-      setPasswordStrengthError(false);
-    }
-    
-    if (props.keyGenerationStartIndex < 0) {
+    if (props.startIndex < 0) {
       setStartingIndexError(true);
       isError = true;
     } else {
       setStartingIndexError(false);
     }
 
-    if (props.withdrawalAddress != "") {
-      if (!window.web3Utils.isAddress(props.withdrawalAddress)) {
-        setWithdrawalAddressFormatError(true);
+    const splitIndices = props.btecIndices.split(',');
+    const splitBLSCredentials = props.btecCredentials.split(',');
+
+    if (props.btecIndices == "") {
+      setIndicesError(true);
+      setIndicesErrorMsg(errors.INDICES);
+      isError = true;
+    } else {
+      // Validate if all integers
+
+      let indiceFormatError = false;
+      splitIndices.forEach( (indice) => {
+        if (!/^\d+$/.test(indice)) {
+          indiceFormatError = true;
+        }
+      });
+
+      if (indiceFormatError) {
+        setIndicesError(true);
+        setIndicesErrorMsg(errors.INDICES_FORMAT);
         isError = true;
       } else {
-        setWithdrawalAddressFormatError(false);
+        setIndicesError(false);
+      }
+    }
+
+    if (props.btecCredentials == "") {
+      setBtecCredentialsError(true);
+      setBtecCredentialsErrorMsg(errors.BLS_CREDENTIALS);
+      isError = true;
+    } else {
+      // Validate if all credentials match format
+
+      let credentialFormatError = false;
+      splitBLSCredentials.forEach( (credential) => {
+        if (!/^(0x)?00[0-9a-fA-F]{62}$/.test(credential)) {
+          credentialFormatError = true;
+        }
+      });
+
+      if (credentialFormatError) {
+        setBtecCredentialsError(true);
+        setBtecCredentialsErrorMsg(errors.BLS_CREDENTIALS_FORMAT);
+        isError = true;
+      } else {
+        setBtecCredentialsError(false);
+      }
+    }
+
+    // Validate indices length matches credentials length
+    if (splitIndices.length != splitBLSCredentials.length) {
+      setIndicesError(true);
+      setIndicesErrorMsg(errors.INDICES_LENGTH);
+      isError = true;
+    }
+
+    if (props.withdrawalAddress != "") {
+      if (!window.web3Utils.isAddress(props.withdrawalAddress)) {
+        setWithdrawalAddressError(true);
+        setWithdrawalAddressErrorMsg(errors.ADDRESS_FORMAT_ERROR);
+        isError = true;
+      } else {
+        setWithdrawalAddressError(false);
       }
     } else {
-      setWithdrawalAddressFormatError(false);
+      setWithdrawalAddressError(true);
+      setWithdrawalAddressErrorMsg(errors.WITHDRAW_ADDRESS_REQUIRED);
+      isError = true;
     }
 
     if (!isError) {
-      setStep(step + 1);
-    }
-  }
 
-  const confirmPassword = () => {
-    if (props.password.localeCompare(verifyPassword) == 0) {
-      setPasswordVerifyError(false);
-      props.onStepForward();
-    } else {
-      setPasswordVerifyError(true);
+      setStep(step + 1);
+
+      /*window.eth2Deposit.validateMnemonic(props.mnemonic).then(() => {
+        props.onStepForward();
+      }).catch((error) => {
+        setStep(0);
+        const errorMsg = ('stderr' in error) ? error.stderr : error.message;
+        setMnemonicError(true);
+        setMnemonicErrorMsg(errorMsg);
+      })*/
     }
   }
 
   const content = () => {
     switch(step) {
       case 0: return (
-        <KeyInputs
-          numberOfKeys={props.numberOfKeys}
-          setNumberOfKeys={props.setNumberOfKeys}
+        <MainInputs
+          index={props.startIndex}
+          setIndex={props.setStartIndex}
+          btecIndices={props.btecIndices}
+          setBtecIndices={props.setBtecIndices}
+          btecCredentials={props.btecCredentials}
+          setBtecCredentials={props.setBtecCredentials}
           withdrawalAddress={props.withdrawalAddress}
           setWithdrawalAddress={props.setWithdrawalAddress}
-          index={props.keyGenerationStartIndex}
-          setIndex={props.setKeyGenerationStartIndex}
-          showIndexInput={props.showKeyGenerationStartIndexInput}
-          password={props.password}
-          setPassword={props.setPassword}
-          numberOfKeysError={numberOfKeysError}
-          withdrawalAddressFormatError={withdrawalAddressFormatError}
-          setWithdrawalAddressFormatError={setWithdrawalAddressFormatError}
-          passwordStrengthError={passwordStrengthError}
+          withdrawalAddressError={withdrawalAddressError}
+          setWithdrawalAddressError={setWithdrawalAddressError}
+          withdrawalAddressErrorMsg={withdrawalAddressErrorMsg}
+          setWithdrawalAddressErrorMsg={setWithdrawalAddressErrorMsg}
           startingIndexError={startingIndexError}
+          setStartingIndexError={setStartingIndexError}
+          indicesError={indicesError}
+          setIndicesError={setIndicesError}
+          indicesErrorMsg={indicesErrorMsg}
+          setIndicesErrorMsg={setIndicesErrorMsg}
+          btecCredentialsError={btecCredentialsError}
+          setBtecCredentialsError={setBtecCredentialsError}
+          btecCredentialsErrorMsg={btecCredentialsErrorMsg}
+          setBtecCredentialsErrorMsg={setBtecCredentialsErrorMsg}
           onFinish={validateInputs}
         />
       );
       case 1: return (
-        <VerifyKeysPassword
-          setVerifyPassword={setVerifyPassword}
-          passwordVerifyError={passwordVerifyError}
-          onFinish={confirmPassword}
+        <ValidatingBLSCredentials
         />
       );
       default:
@@ -207,7 +245,7 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Create Keys
+        Generate BLS to execution change
         </Typography>
       </Grid>
       <ContentGrid item container>
@@ -221,6 +259,8 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
         onNext={nextClicked}
         backLabel={prevLabel()}
         nextLabel={nextLabel()}
+        disableBack={step === 1}
+        disableNext={step === 1}
       />
     </Grid>
   );

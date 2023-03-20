@@ -69,11 +69,13 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   const [mnemonic, setMnemonic] = useState("");
   const [mnemonicToVerify, setMnemonicToVerify] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [keyGenerationStartIndex, setKeyGenerationStartIndex] = useState(0);
+  const [startIndex, setStartIndex] = useState(0);
   const [numberOfKeys, setNumberOfKeys] = useState(1);
   const [withdrawalAddress, setWithdrawalAddress] = useState("");
   const [password, setPassword] = useState("");
   const [folderPath, setFolderPath] = useState("");
+  const [btecIndices, setBtecIndices] = useState("");
+  const [btecCredentials, setBtecCredentials] = useState("");
 
   const stepSequence = stepSequenceMap[stepSequenceKey];
   const activeStepKey = stepSequence[activeStepIndex];
@@ -135,9 +137,9 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
         return (
           <KeyConfigurationWizard
             {...commonProps}
-            keyGenerationStartIndex={keyGenerationStartIndex}
+            keyGenerationStartIndex={startIndex}
             initialKeyGenerationStartIndex={0}
-            setKeyGenerationStartIndex={setKeyGenerationStartIndex}
+            setKeyGenerationStartIndex={setStartIndex}
             showKeyGenerationStartIndexInput={stepSequenceKey === StepSequenceKey.MnemonicImport}
             numberOfKeys={numberOfKeys}
             setNumberOfKeys={setNumberOfKeys}
@@ -153,7 +155,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             {...commonProps}
             mnemonic={mnemonic}
             network={props.network}
-            keyGenerationStartIndex={keyGenerationStartIndex}
+            keyGenerationStartIndex={startIndex}
             numberOfKeys={numberOfKeys}
             withdrawalAddress={withdrawalAddress}
             password={password}
@@ -173,16 +175,14 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
         return (
           <BTECConfigurationWizard
             {...commonProps}
-            keyGenerationStartIndex={keyGenerationStartIndex}
-            initialKeyGenerationStartIndex={0}
-            setKeyGenerationStartIndex={setKeyGenerationStartIndex}
-            showKeyGenerationStartIndexInput={stepSequenceKey === StepSequenceKey.MnemonicImport}
-            numberOfKeys={numberOfKeys}
-            setNumberOfKeys={setNumberOfKeys}
+            startIndex={startIndex}
+            setStartIndex={setStartIndex}
+            btecIndices={btecIndices}
+            setBtecIndices={setBtecIndices}
+            btecCredentials={btecCredentials}
+            setBtecCredentials={setBtecCredentials}
             withdrawalAddress={withdrawalAddress}
             setWithdrawalAddress={setWithdrawalAddress}
-            password={password}
-            setPassword={setPassword}
           />
         );
       case StepKey.BTECGeneration:
@@ -191,7 +191,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             {...commonProps}
             mnemonic={mnemonic}
             network={props.network}
-            keyGenerationStartIndex={keyGenerationStartIndex}
+            keyGenerationStartIndex={startIndex}
             numberOfKeys={numberOfKeys}
             withdrawalAddress={withdrawalAddress}
             password={password}
@@ -213,7 +213,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   }
 
   return (
-    <MainGrid container spacing={5} direction="column">
+    <MainGrid container spacing={3} direction="column">
       <Grid item container>
         <Grid item xs={10}/>
         <Grid item xs={2}>
