@@ -32,6 +32,7 @@ const LandingHeader = styled(Typography)`
 
 const SubHeader = styled(Typography)`
   margin-top: 20px;
+  text-align: center;
 `;
 
 const Links = styled.div`
@@ -171,7 +172,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
 
       <LandingHeader variant="h1">Welcome!</LandingHeader>
       <KeyIcon />
-      <SubHeader>Your key generator for staking on Ethereum</SubHeader>
+      <SubHeader>Your key generator for staking on Ethereum.<br/>You should run this tool <strong>offline</strong> for your own security.</SubHeader>
 
       <Links>
         <InfoLabel>Github:</InfoLabel> https://github.com/stake-house/wagyu-key-gen
