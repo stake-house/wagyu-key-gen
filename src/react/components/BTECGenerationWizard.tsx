@@ -149,7 +149,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
       props.btecIndices,
       props.btecCredentials,
       withdrawalAddress).then(() => {
-      //props.onStepForward();
+      props.onStepForward();
     }).catch((error) => {
       setStep(0);
       setFolderError(true);
