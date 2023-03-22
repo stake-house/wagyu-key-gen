@@ -45,7 +45,7 @@ const REQUIREMENTS_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "requirements.txt");
 const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "staking_deposit", "key_handling",
   "key_derivation", "word_lists");
 const REQUIREMENT_PACKAGES_PATH = path.join("dist", "packages");
-const stakingdeposit_proxy_PATH = path.join(SCRIPTS_PATH, "stakingdeposit_proxy.py");
+const STAKINGDEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "stakingdeposit_proxy.py");
 
 /**
  * Paths needed to call the stakingdeposit_proxy application using a single file application (SFE)
@@ -141,7 +141,7 @@ const createMnemonic = async (language: string): Promise<string> => {
     env.PYTHONPATH = await getPythonPath();
   
     executable = PYTHON_EXE;
-    args = [stakingdeposit_proxy_PATH, CREATE_MNEMONIC_SUBCOMMAND, WORD_LIST_PATH, "--language",
+    args = [STAKINGDEPOSIT_PROXY_PATH, CREATE_MNEMONIC_SUBCOMMAND, WORD_LIST_PATH, "--language",
       language];
   }
 
@@ -209,7 +209,7 @@ const generateKeys = async (
     env.PYTHONPATH = await getPythonPath();
 
     executable = PYTHON_EXE;
-    args = [stakingdeposit_proxy_PATH, GENERATE_KEYS_SUBCOMMAND];
+    args = [STAKINGDEPOSIT_PROXY_PATH, GENERATE_KEYS_SUBCOMMAND];
     if ( eth1_withdrawal_address != "" ) {
       args = args.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
     }
@@ -250,7 +250,7 @@ const validateMnemonic = async (
     env.PYTHONPATH = await getPythonPath();
 
     executable = PYTHON_EXE;
-    args = [stakingdeposit_proxy_PATH, VALIDATE_MNEMONIC_SUBCOMMAND, WORD_LIST_PATH, mnemonic];
+    args = [STAKINGDEPOSIT_PROXY_PATH, VALIDATE_MNEMONIC_SUBCOMMAND, WORD_LIST_PATH, mnemonic];
   }
 
   await execFileProm(executable, args, {env: env});
@@ -292,7 +292,7 @@ const validateBLSCredentials = async (
     env.PYTHONPATH = await getPythonPath();
 
     executable = PYTHON_EXE;
-    args = [stakingdeposit_proxy_PATH, VALIDATE_BLS_CREDENTIALS_SUBCOMMAND, chain.toLowerCase(), mnemonic, index.toString(), withdrawal_credentials];
+    args = [STAKINGDEPOSIT_PROXY_PATH, VALIDATE_BLS_CREDENTIALS_SUBCOMMAND, chain.toLowerCase(), mnemonic, index.toString(), withdrawal_credentials];
   }
 
   await execFileProm(executable, args, {env: env});
@@ -347,7 +347,7 @@ if (await doesFileExist(BUNDLED_SFE_PATH)) {
   env.PYTHONPATH = await getPythonPath();
 
   executable = PYTHON_EXE;
-  args = [stakingdeposit_proxy_PATH, VALIDATE_BLS_CHANGE_SUBCOMMAND];
+  args = [STAKINGDEPOSIT_PROXY_PATH, VALIDATE_BLS_CHANGE_SUBCOMMAND];
 
   args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
     withdrawal_credentials, execution_address]);
