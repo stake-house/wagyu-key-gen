@@ -97,7 +97,7 @@ const MainInputs = (props: GenerateKeysProps) => {
         <Tooltip title={tooltips.BTEC_INDICES}>
           <IndiceTextField
             id="indices"
-            label="Indices (comma separated)"
+            label="Indices or validator indexes (comma separated)"
             variant="outlined"
             type="string"
             value={props.btecIndices}
