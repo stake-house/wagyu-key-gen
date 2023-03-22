@@ -3,12 +3,21 @@ export enum StepKey {
   MnemonicGeneration,
   KeyConfiguration,
   KeyGeneration,
-  Finish
+  Finish,
+  BTECConfiguration,
+  BTECGeneration,
+  FinishBTEC
 }
 
 export enum StepSequenceKey {
   MnemonicGeneration = "mnemonicgeneration",
-  MnemonicImport = "mnemonicimport"
+  MnemonicImport = "mnemonicimport",
+  BLSToExecutionChangeGeneration = "blstoexecutionchangegeneration",
+}
+
+export enum ReuseMnemonicAction {
+  RegenerateKeys,
+  GenerateBLSToExecutionChange
 }
 
 export enum Network {

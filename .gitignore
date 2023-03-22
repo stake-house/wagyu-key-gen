@@ -11,4 +11,4 @@ dist/
 # For pyinstaller
 build/
 src/scripts/__pycache__/
-eth2deposit_proxy.spec
+stakingdeposit_proxy.spec

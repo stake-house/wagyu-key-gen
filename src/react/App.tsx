@@ -6,7 +6,7 @@ import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import 'typeface-roboto';
 import MainWizard from "./pages/MainWizard";
 import theme from "./theme";
-import { Network } from './types';
+import { Network, ReuseMnemonicAction } from './types';
 
 const Container = styled.main`
   display: flex;
