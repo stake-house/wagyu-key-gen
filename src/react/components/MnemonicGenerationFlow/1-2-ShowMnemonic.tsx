@@ -1,7 +1,6 @@
-import { Tooltip, IconButton, Grid, Typography, CircularProgress, TextField, withStyles } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Tooltip, IconButton, Grid, Typography, TextField, withStyles } from '@material-ui/core';
 import { FileCopy } from '@material-ui/icons';
-import React, { FC, ReactElement, Fragment, useState } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Network } from '../../types';
 
@@ -91,9 +90,9 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
   return (
     <Grid container>
       { props.mnemonic == "" &&
-        <Grid container spacing={5}>
+        <Grid container item spacing={5} xs={12}>
           <Grid item xs={12}>
-            Generating your secret recovery phrase.  May take up to 30 seconds.
+            Generating your secret recovery phrase. May take up to 30 seconds.
           </Grid>
           <Grid item container xs={12} justifyContent="center">
             <Loader />
