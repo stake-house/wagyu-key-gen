@@ -38,7 +38,7 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
     setMnemonicError(false);
     setMnemonicErrorMsg('');
 
-    const mnemonicArray = props.mnemonic.split(" ");
+    const mnemonicArray = props.mnemonic.trim().split(" ");
 
     if (mnemonicArray.length != MNEMONIC_LENGTH) {
       setMnemonicError(true);
