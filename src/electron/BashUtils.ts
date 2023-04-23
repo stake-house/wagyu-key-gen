@@ -2,7 +2,7 @@
 /**
  * This BashUtils module provides different file and OS utility functions. Those functions should
  * work across all our supported operating systems including Linux, macOS and Windows.
- * 
+ *
  * @module
  */
 
@@ -22,9 +22,9 @@ const readFileProm = promisify(readFile);
 
 /**
  * Check for the existence of a file or a directory on the filesystem.
- * 
+ *
  * @param filename The path to the file or directory.
- * 
+ *
  * @returns Returns a Promise<boolean> that includes a true value if file or directory exists.
  */
 const doesFileExist = async (filename: string): Promise<boolean> => {
@@ -38,9 +38,9 @@ const doesFileExist = async (filename: string): Promise<boolean> => {
 
 /**
  * Check for the existence of a directory on the filesystem.
- * 
+ *
  * @param directory The path to the directory.
- * 
+ *
  * @returns Returns a Promise<boolean> that includes a true value if the directory exists.
  */
 const doesDirectoryExist = async (directory: string): Promise<boolean> => {
@@ -52,9 +52,9 @@ const doesDirectoryExist = async (directory: string): Promise<boolean> => {
 
 /**
  * Check if we can write a file in a directory.
- * 
+ *
  * @param directory The path to the directory.
- * 
+ *
  * @returns Returns true if the directory is writable and if a file can be written in the
  *          directory. Returns false if not.
  */
@@ -81,11 +81,11 @@ const isDirectoryWritable = async (directory: string): Promise<boolean> => {
 
 /**
  * Finds all files with whom filename starts with some value in a directory.
- * 
+ *
  * @param directory The path to the directory.
  * @param startsWith Filename match to look for.
- * 
- * @returns Returns a Promise<string[]> that includes the path to all files that match. 
+ *
+ * @returns Returns a Promise<string[]> that includes the path to all files that match.
  *          Returns empty array if none match.
  */
 const findAllFiles = async (directory: string, startsWith: string): Promise<string[]> => {
@@ -105,10 +105,10 @@ const findAllFiles = async (directory: string, startsWith: string): Promise<stri
 
 /**
  * Find the first file whom filename starts with some value in a directory.
- * 
+ *
  * @param directory The path to the directory.
  * @param startsWith Filename match to look for.
- * 
+ *
  * @returns Returns a Promise<string> that includes the path to the file if found. Returns empty
  *          string if not found.
  */
@@ -126,10 +126,10 @@ const findFirstFile = async (directory: string, startsWith: string): Promise<str
 
 /**
  * Will read the provided file paths and attempt to convert each one to a Keystore object.
- * 
+ *
  * @param filePaths The paths to each file to attempt to convert
- * 
- * @returns Returns a Promise<Keystore[]> that contains metadata on each keystore file. 
+ *
+ * @returns Returns a Promise<Keystore[]> that contains metadata on each keystore file.
  *          Returns empty array if no valid keystore files are found
  */
 const readKeystoreInformation = async (filePaths: string[]): Promise<Keystore[]> => {
@@ -144,6 +144,7 @@ const readKeystoreInformation = async (filePaths: string[]): Promise<Keystore[]>
         publicKey: parsedKeystore.pubkey,
         shortenedPub: `${parsedKeystore.pubkey.substring(0, 6)}...${parsedKeystore.pubkey.slice(-6)}`,
         index: keystoreIndex || "Unknown index",
+        fileName: fileName, // Used as the unique identifier
         fullPath: filePath,
         password: "",
         validPassword: false,

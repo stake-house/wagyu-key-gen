@@ -38,9 +38,9 @@ type KeystoreValidationProps = {
 
 /**
  * This page allows the users to specify a folder containing the keystore files
- * 
+ *
  * @param props self documenting parameters passed in
- * @returns 
+ * @returns
  */
 const KeystoreValidation = (props: KeystoreValidationProps) => {
   const [copiedPublicKey, setCopiedPublicKey] = useState<string>("");
@@ -77,11 +77,11 @@ const KeystoreValidation = (props: KeystoreValidationProps) => {
   const onValidatorIndexChange = (value: string, keystore: Keystore) => {
     const index = parseInt(value);
 
-    props.setKeystores(props.keystores.map((k) => k.index === keystore.index ? Object.assign({}, k, { validatorIndex: index }): k))
+    props.setKeystores(props.keystores.map((k) => k.fileName === keystore.fileName ? Object.assign({}, k, { validatorIndex: index }): k))
   }
 
   const onValidatorPasswordChange = (value: string, keystore: Keystore) => {
-    props.setKeystores(props.keystores.map((k) => k.index === keystore.index ? Object.assign({}, k, { password: value }): k))
+    props.setKeystores(props.keystores.map((k) => k.fileName === keystore.fileName ? Object.assign({}, k, { password: value }): k))
   }
 
   return (
@@ -116,6 +116,7 @@ const KeystoreValidation = (props: KeystoreValidationProps) => {
             type="number"
             value={props.epoch}
             onChange={onEpochChange}
+            onWheel={e => e.target instanceof HTMLElement && e.target.blur()}
             InputProps={{ inputProps: { min: 0 } }}
           />
         </Tooltip>
@@ -137,7 +138,7 @@ const KeystoreValidation = (props: KeystoreValidationProps) => {
         </Grid>
 
         {props.keystores.map((keystore: Keystore) => (
-          <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2} key={keystore.index}>
+          <Grid container direction="row" justifyContent="center" alignItems="center" spacing={2} key={keystore.fileName}>
             <Grid item xs={2}>{keystore.index}</Grid>
 
             <Grid item xs={3}>
@@ -150,11 +151,12 @@ const KeystoreValidation = (props: KeystoreValidationProps) => {
 
             <Grid item xs={3}>
               <ValidatorIndexTextField
-                id={`validator-index-${keystore.index}`}
+                id={`validator-index-${keystore.fileName}`}
                 variant="outlined"
                 type="number"
                 value={keystore.validatorIndex}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValidatorIndexChange(e.target.value, keystore)}
+                onWheel={e => e.target instanceof HTMLElement && e.target.blur()}
                 InputProps={{ inputProps: { min: 0 } }}
                 required
               />
@@ -162,7 +164,7 @@ const KeystoreValidation = (props: KeystoreValidationProps) => {
 
             <Grid item xs={4}>
               <ValidatorPasswordTextField
-                id={`validator-password-${keystore.index}`}
+                id={`validator-password-${keystore.fileName}`}
                 variant="outlined"
                 type="text"
                 value={keystore.password}

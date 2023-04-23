@@ -44,17 +44,26 @@ const ExitTransactionsCreated: FC<ExitTransactionsCreatedProps> = (props): React
     <Grid container spacing={2}>
       <Grid item xs={1} />
       <Grid item xs={10}>
-          <Box sx={{ m: 2 }}>
-            <SubHeader variant="body1">
-              Your exit transaction files has been created here: <Link display="inline" component="button" onClick={openKeyLocation}>{props.folderPath}</Link>
-            </SubHeader>
-          </Box>
+        <Box sx={{ m: 2 }}>
+          <SubHeader variant="body1">
+            Your exit transaction file has been created here: <Link display="inline" component="button" onClick={openKeyLocation}>{props.folderPath}</Link>
+          </SubHeader>
+        </Box>
       </Grid>
       <Grid item xs={1} />
       <Grid item xs={1} />
       <Grid item xs={10}>
         <Box sx={{ m: 2 }}>
-          I am incredibly tired. I promise I will clean this up.
+          <Typography variant="body1" align="left">
+            There is a single file for this:
+          </Typography>
+          <LoudText>Signed exit transaction file (ex. signed_exit_transactions-xxxxxxx.json)</LoudText>
+          <Typography variant="body2" align="left">
+            This file contains your signature to exit your validator(s). You can easily publish it on beaconcha.in website by using their <em>Broadcast Signed Messages</em> tool.
+          </Typography>
+          <QuietText>
+            Note: Your clipboard will be cleared upon closing this application.
+          </QuietText>
         </Box>
       </Grid>
       <Grid item xs={1} />

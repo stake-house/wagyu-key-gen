@@ -18,7 +18,7 @@ type Props = {
 
 /**
  * This is the final page displaying information about the keys
- * 
+ *
  * @param props.onStepBack the function to execute when the user steps back
  * @param props.onStepForward the function to execute when the user steps forward
  * @param props.folderPath the folder path where the keys are located, for display purposes

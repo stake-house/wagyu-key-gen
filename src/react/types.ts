@@ -35,6 +35,7 @@ export interface Keystore {
   shortenedPub: string;
   index: string;
   validatorIndex: string;
+  fileName: string;
   fullPath: string;
   password: string;
   validPassword: boolean;
