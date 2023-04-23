@@ -6,6 +6,11 @@ type ExitTransactionsCreatedProps = {
   folderPath: string,
 }
 
+const SubHeader = styled(Typography)`
+  text-align: center;
+  width: 100%;
+`;
+
 const LoudText = styled(Typography)`
   color: cyan;
   text-align: left;
@@ -18,14 +23,14 @@ const QuietText = styled(Typography)`
 
 /**
  * The final page displaying exit transaction file locations
- * 
+ *
  * @param props self documenting paramenters passed in
  * @returns the react element to render
  */
 const ExitTransactionsCreated: FC<ExitTransactionsCreatedProps> = (props): ReactElement => {
 
   const openKeyLocation = () => {
-    window.bashUtils.findFirstFile(props.folderPath, "signed_exit_transaction")
+    window.bashUtils.findFirstFile(props.folderPath, "signed_exit_transactions")
       .then((keystoreFile) => {
         let fileToLocate = props.folderPath;
         if (keystoreFile != "") {
@@ -40,9 +45,9 @@ const ExitTransactionsCreated: FC<ExitTransactionsCreatedProps> = (props): React
       <Grid item xs={1} />
       <Grid item xs={10}>
           <Box sx={{ m: 2 }}>
-            <Typography variant="body1" align="left">
+            <SubHeader variant="body1">
               Your exit transaction files has been created here: <Link display="inline" component="button" onClick={openKeyLocation}>{props.folderPath}</Link>
-            </Typography>
+            </SubHeader>
           </Box>
       </Grid>
       <Grid item xs={1} />

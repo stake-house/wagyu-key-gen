@@ -26,7 +26,7 @@ const NetworkDiv = styled.div`
 
 const LandingHeader = styled(Typography)`
   font-size: 36px;
-  margin-top: 15px;
+  margin-top: 0px;
   margin-bottom: 20px;
 `;
 
@@ -109,11 +109,6 @@ const Home: FC<HomeProps> = (props): ReactElement => {
         pathname = `/wizard/${StepSequenceKey.BLSToExecutionChangeGeneration}`;
 
         break;
-      case ReuseMnemonicAction.GeneratePreSignExitTransaction:
-
-        pathname = `/wizard/${StepSequenceKey.PreSignExitTransactionGeneration}`;
-
-        break;
     }
 
     history.push({ pathname });
@@ -148,6 +143,13 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       handleOpenReuseMnemonicModal();
 
     }
+  }
+
+  const handleGenerateExitTransactions = () => {
+
+    const pathname = `/wizard/${StepSequenceKey.PreSignExitTransactionGeneration}`;
+    history.push({ pathname });
+
   }
 
   const tabIndex = (priority: number) => showNetworkModal ? -1 : priority;
@@ -198,6 +200,13 @@ const Home: FC<HomeProps> = (props): ReactElement => {
           <Tooltip title={tooltips.IMPORT_MNEMONIC}>
             <Button style={{color: "gray"}} size="small" onClick={handleUseExistingMnemonic} tabIndex={tabIndex(1)}>
               Use Existing Secret Recovery Phrase
+            </Button>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Tooltip title={tooltips.GENERATE_EXIT_TRANSACTION}>
+            <Button style={{color: "gray"}} size="small" onClick={handleGenerateExitTransactions} tabIndex={tabIndex(1)}>
+              Generate Exit Transactions
             </Button>
           </Tooltip>
         </Grid>

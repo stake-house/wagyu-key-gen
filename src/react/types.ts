@@ -21,8 +21,7 @@ export enum StepSequenceKey {
 
 export enum ReuseMnemonicAction {
   RegenerateKeys,
-  GenerateBLSToExecutionChange,
-  GeneratePreSignExitTransaction
+  GenerateBLSToExecutionChange
 }
 
 export enum Network {

@@ -144,11 +144,11 @@ const ExitTransactionConfigurationWizard: FC<Props> = (props): ReactElement => {
 
   const content = () => {
     switch(step) {
-      case 0: 
+      case 0:
         return (
           <KeystoreFolder
-            folderError={folderError} 
-            setFolderError={setFolderError} 
+            folderError={folderError}
+            setFolderError={setFolderError}
             folderErrorMsg={folderErrorMsg}
             setFolderErrorMsg={setFolderErrorMsg}
             folderPath={props.inputFolderPath}
@@ -159,11 +159,11 @@ const ExitTransactionConfigurationWizard: FC<Props> = (props): ReactElement => {
         );
       case 1:
         return (
-          <KeystoreValidation 
+          <KeystoreValidation
             epoch={props.epoch}
             setEpoch={props.setEpoch}
-            keystores={props.keystores} 
-            setKeystores={props.setKeystores}           
+            keystores={props.keystores}
+            setKeystores={props.setKeystores}
           />
         );
       default:

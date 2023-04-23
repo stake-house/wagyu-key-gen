@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 380px;
+  height: 320px;
   width: 560px;
   background: rgba(27, 38, 44, 0.95);
   border-radius: 20px;
@@ -70,11 +70,6 @@ export const ReuseMnemonicActionPicker = (props: ReuseMnemonicActionPickerProps)
                 Generate your BLS to execution change<br />(Add a withdrawal address)
               </Button>
             </Tooltip>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={() => handleSelectedAction(ReuseMnemonicAction.GeneratePreSignExitTransaction)}>
-              Generate a pre-signed exit transaction
-            </Button>
           </Grid>
         </OptionsGrid>
       </div>

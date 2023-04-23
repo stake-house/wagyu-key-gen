@@ -61,8 +61,8 @@ def generate_exit_transactions(
         keystore_password: str,
         validator_index: int,
         epoch: int,
-        output_folder: str,
-        ) -> None: 
+        output_folder: str
+        ) -> str:
     saved_keystore = Keystore.from_file(keystore)
 
     try:
@@ -91,20 +91,6 @@ def generate_exit_transactions(
         signature=signature,
     )
 
-    # Generate folder
-    output_folder = os.path.join(
-        output_folder,
-        DEFAULT_EXIT_TRANSACTION_FOLDER_NAME,
-    )
-    if not os.path.exists(output_folder):
-        os.mkdir(output_folder)
-
-    export_exit_transaction_json(folder=output_folder, signed_exit=signed_exit)
-
-
-def export_exit_transaction_json(folder: str, signed_exit: SignedVoluntaryExit) -> str:
-    filefolder = os.path.join(folder, 'signed_exit_transaction-%i.json' % time.time())
-
     signed_exit_json: Dict[str, Any] = {}
     message = {
         'epoch': str(signed_exit.message.epoch),
@@ -113,11 +99,7 @@ def export_exit_transaction_json(folder: str, signed_exit: SignedVoluntaryExit) 
     signed_exit_json.update({'message': message})
     signed_exit_json.update({'signature': '0x' + signed_exit.signature.hex()})
 
-    with open(filefolder, 'w') as f:
-        json.dump(signed_exit_json, f)
-    if os.name == 'posix':
-        os.chmod(filefolder, int('440', 8))  # Read for owner & group
-    return filefolder
+    print(json.dumps(signed_exit_json), file=sys.stdout)
 
 
 def generate_bls_to_execution_change(
@@ -143,14 +125,14 @@ def generate_bls_to_execution_change(
     """
     if not os.path.exists(folder):
         os.mkdir(folder)
-    
+
     eth1_withdrawal_address = execution_address
     if not is_hex_address(eth1_withdrawal_address):
         raise ValueError("The given Eth1 address is not in hexadecimal encoded form.")
 
     eth1_withdrawal_address = to_normalized_address(eth1_withdrawal_address)
     execution_address = eth1_withdrawal_address
-    
+
     # Get chain setting
     chain_setting = get_chain_setting(chain)
 
@@ -290,7 +272,7 @@ def generate_keys(args):
             - eth1_withdrawal_address: (Optional) eth1 address that will be used to create the
                                        withdrawal credentials
     """
-    
+
     eth1_withdrawal_address = None
     if args.eth1_withdrawal_address:
         eth1_withdrawal_address = args.eth1_withdrawal_address
@@ -408,7 +390,7 @@ def main():
     main_parser = argparse.ArgumentParser()
 
     subparsers = main_parser.add_subparsers(title="subcommands")
-    
+
     create_parser = subparsers.add_parser("create_mnemonic")
     create_parser.add_argument("wordlist", help="Path to word list directory", type=str)
     create_parser.add_argument("--language", help="Language", type=str)

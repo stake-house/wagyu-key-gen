@@ -28,7 +28,7 @@ const ExitTransactionGenerationWizard: FC<Props> = (props): ReactElement => {
   const [folderError, setFolderError] = useState(false);
   const [folderErrorMsg, setFolderErrorMsg] = useState("");
   const [modalDisplay, setModalDisplay] = useState(false);
-  
+
   const prevLabel = () => {
     switch (step) {
       case 0:
@@ -112,17 +112,14 @@ const ExitTransactionGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const generateExitTransactions = () => {
-    console.log('generatingTransactions');
     window.eth2Deposit.generateExitTransactions(
       props.folderPath,
       props.network,
       props.epoch,
       props.keystores
     ).then(() => {
-      console.log('Done generating');
       props.onStepForward();
     }).catch((error) => {
-      console.log('Error generating');
       setStep(0);
       setFolderError(true);
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
@@ -131,26 +128,25 @@ const ExitTransactionGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const content = () => {
-    console.log(step);
     switch(step) {
-      case 0: 
+      case 0:
         return (
-          <SelectOutputFolder 
-            setFolderPath={props.setFolderPath} 
-            folderPath={props.folderPath} 
-            setFolderError={setFolderError} 
-            folderError={folderError} 
-            setFolderErrorMsg={setFolderErrorMsg} 
-            folderErrorMsg={folderErrorMsg} 
-            modalDisplay={modalDisplay} 
-            setModalDisplay={setModalDisplay} 
+          <SelectOutputFolder
+            setFolderPath={props.setFolderPath}
+            folderPath={props.folderPath}
+            setFolderError={setFolderError}
+            folderError={folderError}
+            setFolderErrorMsg={setFolderErrorMsg}
+            folderErrorMsg={folderErrorMsg}
+            modalDisplay={modalDisplay}
+            setModalDisplay={setModalDisplay}
           />
         );
-      case 1: 
+      case 1:
         return (
           <CreatingExitTransactions />
         );
-      case 2: 
+      case 2:
         return (
           <ExitTransactionsCreated folderPath={props.folderPath} />
         );

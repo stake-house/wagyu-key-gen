@@ -7,7 +7,7 @@ import { FileCopy } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 
 const ScrollableGrid = styled(Grid)`
-  max-height: 350px;
+  max-height: 230px;
   overflow-y: auto;
 `;
 
@@ -17,10 +17,16 @@ const GlobalTextField = styled(TextField)`
 
 const ValidatorIndexTextField = styled(TextField)`
   width: 150px;
+  input {
+    padding: 10px;
+  }
 `;
 
 const ValidatorPasswordTextField = styled(TextField)`
   width: 200px;
+  input {
+    padding: 10px;
+  }
 `;
 
 type KeystoreValidationProps = {
