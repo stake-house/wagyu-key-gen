@@ -2,7 +2,7 @@ import { Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import CommonSelectFolder from '../CommonSelectFolder';
 
-type SelectFolderProps = {
+type SelectOutputFolderProps = {
   setFolderPath: Dispatch<SetStateAction<string>>,
   folderPath: string,
   setFolderError: Dispatch<SetStateAction<boolean>>,
@@ -14,12 +14,12 @@ type SelectFolderProps = {
 }
 
 /**
- * The page which prompts the user to choose a folder to save keys in
+ * The page which prompts the user to choose a folder to save transactions in 
  * 
  * @param props self documenting parameters passed in
  * @returns react element to render
  */
-const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
+const SelectOutputFolder: FC<SelectOutputFolderProps> = (props): ReactElement => {
   return (
     <CommonSelectFolder
       folderError={props.folderError} 
@@ -32,10 +32,10 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
       setModalDisplay={props.setModalDisplay}
     >
       <Typography variant="body1">
-        Choose a folder where we should save your BLS to execution change file.
+        Choose a folder where you would like to save your exit transactions
       </Typography>
     </CommonSelectFolder>
   );
 }
 
-export default SelectFolder;
+export default SelectOutputFolder;

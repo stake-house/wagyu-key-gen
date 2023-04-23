@@ -1,12 +1,12 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import SelectFolder from './BTECGenerationFlow/2-SelectFolder';
-import CreatingBTECFile from './BTECGenerationFlow/3-CreatingBTECFile';
-import BTECFileCreated from './BTECGenerationFlow/4-BTECFileCreated';
 import StepNavigation from './StepNavigation';
-import { Network } from '../types';
 import { errors } from '../constants';
+import SelectOutputFolder from './ExitTransactionGenerationFlow/2-SelectOutputFolder';
+import CreatingExitTransactions from './ExitTransactionGenerationFlow/3-CreatingExitTransactions';
+import ExitTransactionsCreated from './ExitTransactionGenerationFlow/4-ExitTransactionsCreated';
+import { Keystore, Network } from '../types';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -16,33 +16,14 @@ const ContentGrid = styled(Grid)`
 type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
-  network: Network,
-  mnemonic: string,
-  startIndex: number,
-  withdrawalAddress: string,
-  btecIndices: string,
-  btecCredentials: string,
+  epoch: number,
   folderPath: string,
+  keystores: Keystore[],
+  network: Network,
   setFolderPath: Dispatch<SetStateAction<string>>,
 }
 
-/**
- * This is the wizard the user will navigate to generate their BTEC.
- * It uses the notion of a 'step' to render specific pages within the flow.
- * 
- * @param props.onStepBack function to execute when stepping back
- * @param props.onStepForward function to execute when stepping forward
- * @param props.network network the app is running for
- * @param props.mnemonic the mnemonic
- * @param props.startIndex the index at which to start generating BTEC for the user
- * @param props.withdrawalAddress the wallet address for the withdrawal credentials
- * @param props.btecIndices a list of the chosen validator index number(s) as identified on the beacon chain
- * @param props.btecCredentials a list of the old BLS withdrawal credentials of the given validator(s)
- * @param props.folderPath the path at which to store the keys
- * @param props.setFolderPath funciton to update the path
- * @returns the react element to render
- */
-const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
+const ExitTransactionGenerationWizard: FC<Props> = (props): ReactElement => {
   const [step, setStep] = useState(0);
   const [folderError, setFolderError] = useState(false);
   const [folderErrorMsg, setFolderErrorMsg] = useState("");
@@ -67,7 +48,6 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
       default: {
-        console.log("BTEC generation step is greater than 0 and prev was clicked. This should never happen.")
         break;
       }
     }
@@ -104,7 +84,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
                       setFolderError(true);
                     } else {
                       setStep(step + 1);
-                      handleBTECFileGeneration();
+                      generateExitTransactions();
                     }
                   });
               }
@@ -118,7 +98,6 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
         break;
       }
 
-      // BTEC file is being generated
       case 1: {
         // there is no next button here
         // step is autoincremented once file is created
@@ -126,59 +105,55 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
       }
 
       default: {
-        console.log("BTEC generation step is greater than 1 and next was clicked. This should never happen.")
         break;
       }
 
     }
   }
 
-  const handleBTECFileGeneration = () => {
-
-    let withdrawalAddress = props.withdrawalAddress;
-
-    if (withdrawalAddress != "" && !withdrawalAddress.toLowerCase().startsWith("0x")) {
-      withdrawalAddress = "0x" + withdrawalAddress;
-    }
-
-    window.eth2Deposit.generateBLSChange(
+  const generateExitTransactions = () => {
+    console.log('generatingTransactions');
+    window.eth2Deposit.generateExitTransactions(
       props.folderPath,
       props.network,
-      props.mnemonic,
-      props.startIndex,
-      props.btecIndices,
-      props.btecCredentials,
-      withdrawalAddress).then(() => {
+      props.epoch,
+      props.keystores
+    ).then(() => {
+      console.log('Done generating');
       props.onStepForward();
     }).catch((error) => {
+      console.log('Error generating');
       setStep(0);
       setFolderError(true);
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
       setFolderErrorMsg(errorMsg);
     })
-
   }
 
   const content = () => {
+    console.log(step);
     switch(step) {
-      case 0: return (
-        <SelectFolder 
-          setFolderPath={props.setFolderPath} 
-          folderPath={props.folderPath} 
-          setFolderError={setFolderError} 
-          folderError={folderError} 
-          setFolderErrorMsg={setFolderErrorMsg} 
-          folderErrorMsg={folderErrorMsg} 
-          modalDisplay={modalDisplay} 
-          setModalDisplay={setModalDisplay} 
-        />
-      );
-      case 1: return (
-        <CreatingBTECFile />
-      );
-      case 2: return (
-        <BTECFileCreated folderPath={props.folderPath} network={props.network} />
-      );
+      case 0: 
+        return (
+          <SelectOutputFolder 
+            setFolderPath={props.setFolderPath} 
+            folderPath={props.folderPath} 
+            setFolderError={setFolderError} 
+            folderError={folderError} 
+            setFolderErrorMsg={setFolderErrorMsg} 
+            folderErrorMsg={folderErrorMsg} 
+            modalDisplay={modalDisplay} 
+            setModalDisplay={setModalDisplay} 
+          />
+        );
+      case 1: 
+        return (
+          <CreatingExitTransactions />
+        );
+      case 2: 
+        return (
+          <ExitTransactionsCreated folderPath={props.folderPath} />
+        );
       default:
         return null;
     }
@@ -188,7 +163,7 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Generate BLS to execution change
+          Generate signed exit transaction
         </Typography>
       </Grid>
       <ContentGrid item container>
@@ -211,4 +186,4 @@ const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
   );
 }
 
-export default BTECGenerationWizard;
+export default ExitTransactionGenerationWizard;

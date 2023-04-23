@@ -14,9 +14,9 @@ import {
 
 import Web3Utils from 'web3-utils';
 
-import { createMnemonic, generateKeys, validateMnemonic, validateBLSCredentials, generateBLSChange } from './Eth2Deposit';
+import { createMnemonic, generateKeys, validateMnemonic, validateBLSCredentials, generateBLSChange, generateExitTransactions } from './Eth2Deposit';
 
-import { doesDirectoryExist, isDirectoryWritable, findFirstFile } from './BashUtils';
+import { doesDirectoryExist, isDirectoryWritable, findAllFiles, findFirstFile, readKeystoreInformation } from './BashUtils';
 
 const ipcRendererSendClose = () => {
   ipcRenderer.send('close');
@@ -39,13 +39,16 @@ contextBridge.exposeInMainWorld('eth2Deposit', {
   'generateKeys': generateKeys,
   'validateMnemonic': validateMnemonic,
   'validateBLSCredentials': validateBLSCredentials,
-  'generateBLSChange': generateBLSChange
+  'generateBLSChange': generateBLSChange,
+  'generateExitTransactions': generateExitTransactions
 });
 
 contextBridge.exposeInMainWorld('bashUtils', {
   'doesDirectoryExist': doesDirectoryExist,
   'isDirectoryWritable': isDirectoryWritable,
-  'findFirstFile': findFirstFile
+  'findAllFiles': findAllFiles,
+  'findFirstFile': findFirstFile,
+  'readKeystoreInformation': readKeystoreInformation
 });
 
 contextBridge.exposeInMainWorld('web3Utils', {

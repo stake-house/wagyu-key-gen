@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { Stepper, Step, StepLabel, Grid, Typography } from '@material-ui/core';
 import styled from 'styled-components';
-import { StepKey } from '../types';
+import { Keystore, StepKey } from '../types';
 import MnemonicGenerationWizard from "../components/MnemonicGenerationWizard";
 import MnemonicImport from "../components/MnemonicImport";
 import KeyConfigurationWizard from "../components/KeyConfigurationWizard";
@@ -14,25 +14,33 @@ import FinishBTEC from '../components/FinishBTEC';
 import { stepLabels } from '../constants';
 import { Network, StepSequenceKey } from '../types';
 import VersionFooter from '../components/VersionFooter';
+import ExitTransactionConfigurationWizard from '../components/ExitTransactionConfigurationWizard';
+import ExitTransactionGenerationWizard from '../components/ExitTransactionGenerationWizard';
+import FinishExitTransaction from '../components/FinishExitTransaction';
 
-const stepSequenceMap: Record<string, StepKey[]> = {
-  mnemonicimport: [
+const stepSequenceMap: Record<StepSequenceKey, StepKey[]> = {
+  [StepSequenceKey.MnemonicImport]: [
     StepKey.MnemonicImport,
     StepKey.KeyConfiguration,
     StepKey.KeyGeneration,
     StepKey.Finish
   ],
-  mnemonicgeneration: [
+  [StepSequenceKey.MnemonicGeneration]: [
     StepKey.MnemonicGeneration,
     StepKey.KeyConfiguration,
     StepKey.KeyGeneration,
     StepKey.Finish
   ],
-  blstoexecutionchangegeneration: [
+  [StepSequenceKey.BLSToExecutionChangeGeneration]: [
     StepKey.MnemonicImport,
     StepKey.BTECConfiguration,
     StepKey.BTECGeneration,
     StepKey.FinishBTEC
+  ],
+  [StepSequenceKey.PreSignExitTransactionGeneration]: [
+    StepKey.ExitTransactionConfiguration,
+    StepKey.ExitTransactionGeneration,
+    StepKey.FinishExitTransaction
   ]
 }
 
@@ -76,6 +84,11 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   const [folderPath, setFolderPath] = useState("");
   const [btecIndices, setBtecIndices] = useState("");
   const [btecCredentials, setBtecCredentials] = useState("");
+  const [epoch, setEpoch] = useState(0);
+  const [keystores, setKeystores] = useState<Keystore[]>([]);
+  const [exitInputFolderPath, setExitInputFolderPath] = useState("");
+  const [exitOutputFolderPath, setExitOutputFolderPath] = useState("");
+
 
   const stepSequence = stepSequenceMap[stepSequenceKey];
   const activeStepKey = stepSequence[activeStepIndex];
@@ -209,6 +222,38 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             network={props.network}
           />
         );
+      case StepKey.ExitTransactionConfiguration:
+        return (
+          <ExitTransactionConfigurationWizard
+            {...commonProps} 
+            epoch={epoch}
+            setEpoch={setEpoch}
+            keystores={keystores}
+            setKeystores={setKeystores}
+            inputFolderPath={exitInputFolderPath}
+            setInputFolderPath={setExitInputFolderPath}
+            outputFolderPath={exitOutputFolderPath}
+            setOutputFolderPath={setExitOutputFolderPath}
+          />
+        );
+      case StepKey.ExitTransactionGeneration:
+        return (
+          <ExitTransactionGenerationWizard
+            {...commonProps}
+            epoch={epoch}
+            folderPath={exitOutputFolderPath}
+            setFolderPath={setExitOutputFolderPath}
+            keystores={keystores}
+            network={props.network}
+          />
+        )
+      case StepKey.FinishExitTransaction:
+        return (
+          <FinishExitTransaction
+            {...commonProps}
+            folderPath={exitOutputFolderPath}
+          />
+        )
       default:
         return <div>No component for this step</div>
     }

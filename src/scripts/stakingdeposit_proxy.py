@@ -16,6 +16,8 @@ from typing import (
 
 from eth_typing import HexAddress
 
+from py_ecc.bls import G2ProofOfPossession as bls
+
 from staking_deposit.key_handling.key_derivation.mnemonic import (
     get_mnemonic,
     reconstruct_mnemonic
@@ -29,12 +31,22 @@ from staking_deposit.credentials import (
 )
 
 from staking_deposit.exceptions import ValidationError
+
+from staking_deposit.key_handling.keystore import Keystore
+
 from staking_deposit.utils.validation import (
     validate_deposit,
     validate_bls_to_execution_change
 )
 from staking_deposit.utils.constants import (
+    DEFAULT_EXIT_TRANSACTION_FOLDER_NAME,
     MAX_DEPOSIT_AMOUNT,
+)
+from staking_deposit.utils.ssz import (
+    SignedVoluntaryExit,
+    VoluntaryExit,
+    compute_signing_root,
+    compute_voluntary_exit_domain,
 )
 
 from staking_deposit.settings import (
@@ -42,6 +54,71 @@ from staking_deposit.settings import (
 )
 
 from staking_deposit.utils.crypto import SHA256
+
+def generate_exit_transactions(
+        chain: str,
+        keystore: str,
+        keystore_password: str,
+        validator_index: int,
+        epoch: int,
+        output_folder: str,
+        ) -> None: 
+    saved_keystore = Keystore.from_file(keystore)
+
+    try:
+        secret_bytes = saved_keystore.decrypt(keystore_password)
+    except Exception:
+        raise ValidationError('mismatch')
+
+    signing_key = int.from_bytes(secret_bytes, 'big')
+
+    message = VoluntaryExit(
+        epoch=epoch,
+        validator_index=validator_index
+    )
+
+    chain_settings = get_chain_setting(chain)
+    domain = compute_voluntary_exit_domain(
+        fork_version=chain_settings.CURRENT_FORK_VERSION,
+        genesis_validators_root=chain_settings.GENESIS_VALIDATORS_ROOT
+    )
+
+    signing_root = compute_signing_root(message, domain)
+    signature = bls.Sign(signing_key, signing_root)
+
+    signed_exit = SignedVoluntaryExit(
+        message=message,
+        signature=signature,
+    )
+
+    # Generate folder
+    output_folder = os.path.join(
+        output_folder,
+        DEFAULT_EXIT_TRANSACTION_FOLDER_NAME,
+    )
+    if not os.path.exists(output_folder):
+        os.mkdir(output_folder)
+
+    export_exit_transaction_json(folder=output_folder, signed_exit=signed_exit)
+
+
+def export_exit_transaction_json(folder: str, signed_exit: SignedVoluntaryExit) -> str:
+    filefolder = os.path.join(folder, 'signed_exit_transaction-%i.json' % time.time())
+
+    signed_exit_json: Dict[str, Any] = {}
+    message = {
+        'epoch': str(signed_exit.message.epoch),
+        'validator_index': str(signed_exit.message.validator_index),
+    }
+    signed_exit_json.update({'message': message})
+    signed_exit_json.update({'signature': '0x' + signed_exit.signature.hex()})
+
+    with open(filefolder, 'w') as f:
+        json.dump(signed_exit_json, f)
+    if os.name == 'posix':
+        os.chmod(filefolder, int('440', 8))  # Read for owner & group
+    return filefolder
+
 
 def generate_bls_to_execution_change(
         folder: str,
@@ -272,6 +349,15 @@ def decode_bytes(value):
         value = value[2:]
     return bytes.fromhex(value)
 
+def parse_generate_exit_transactions(args):
+    generate_exit_transactions(
+        args.chain,
+        args.keystore,
+        args.keystore_password,
+        args.validator_index,
+        args.epoch,
+        args.output_folder)
+
 def parse_bls_change(args):
     """Parse CLI arguments to call the generate_bls_to_execution_change function.
     """
@@ -360,6 +446,15 @@ def main():
     generate_parser.add_argument("index", help="Validator start index", type=int)
     generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma seperated)", type=str)
     generate_parser.set_defaults(func=parse_validate_bls_credentials)
+
+    generate_parser = subparsers.add_parser("generate_exit_transactions")
+    generate_parser.add_argument("chain", help="For which network to validate these BLS credentials", type=str)
+    generate_parser.add_argument("keystore", help="Keystore file", type=str)
+    generate_parser.add_argument("keystore_password", help="Password to decrypt keystore file", type=str)
+    generate_parser.add_argument("validator_index", help="Validator index number as identified on the beacon chain", type=int)
+    generate_parser.add_argument("epoch", help="The epoch at which the exit transaction will be valid", type=int)
+    generate_parser.add_argument("output_folder", help="Where to put the exit transaction files", type=str)
+    generate_parser.set_defaults(func=parse_generate_exit_transactions)
 
     args = main_parser.parse_args()
     if not args or 'func' not in args:

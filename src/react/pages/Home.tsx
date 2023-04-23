@@ -96,24 +96,27 @@ const Home: FC<HomeProps> = (props): ReactElement => {
   }
 
   const handleReuseMnemonicModalSubmitClick = (action: ReuseMnemonicAction) => {
+    let pathname = '';
 
-    if (action == ReuseMnemonicAction.RegenerateKeys) {
+    switch (action) {
+      case ReuseMnemonicAction.RegenerateKeys:
 
-      const location = {
-        pathname: `/wizard/${StepSequenceKey.MnemonicImport}`
-      }
+        pathname = `/wizard/${StepSequenceKey.MnemonicImport}`;
 
-      history.push(location);
+        break;
+      case ReuseMnemonicAction.GenerateBLSToExecutionChange:
 
-    } else if (action == ReuseMnemonicAction.GenerateBLSToExecutionChange) {
+        pathname = `/wizard/${StepSequenceKey.BLSToExecutionChangeGeneration}`;
 
-      const location = {
-        pathname: `/wizard/${StepSequenceKey.BLSToExecutionChangeGeneration}`
-      }
+        break;
+      case ReuseMnemonicAction.GeneratePreSignExitTransaction:
 
-      history.push(location);
+        pathname = `/wizard/${StepSequenceKey.PreSignExitTransactionGeneration}`;
 
+        break;
     }
+
+    history.push({ pathname });
 
   }
 

@@ -2,7 +2,7 @@ import { Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import CommonSelectFolder from '../CommonSelectFolder';
 
-type SelectFolderProps = {
+type KeystoreFolderProps = {
   setFolderPath: Dispatch<SetStateAction<string>>,
   folderPath: string,
   setFolderError: Dispatch<SetStateAction<boolean>>,
@@ -19,7 +19,7 @@ type SelectFolderProps = {
  * @param props self documenting parameters passed in
  * @returns react element to render
  */
-const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
+const KeystoreFolder: FC<KeystoreFolderProps> = (props): ReactElement => {
   return (
     <CommonSelectFolder
       folderError={props.folderError} 
@@ -32,10 +32,10 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
       setModalDisplay={props.setModalDisplay}
     >
       <Typography variant="body1">
-        Choose a folder where we should save your BLS to execution change file.
+        Select the folder where your keystore files are located
       </Typography>
     </CommonSelectFolder>
   );
 }
 
-export default SelectFolder;
+export default KeystoreFolder;

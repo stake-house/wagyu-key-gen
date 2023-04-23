@@ -38,12 +38,15 @@ export interface IEth2DepositAPI {
   validateMnemonic: (mnemonic: string) => Promise<void>,
   validateBLSCredentials: (chain: string, mnemonic: string, index: number, withdrawal_credentials: string) => Promise<void>,
   generateBLSChange: (folder: string, chain: string, mnemonic: string, index: number, indices: string, withdrawal_credentials: string, execution_address: string) => Promise<void>,
+  generateExitTransactions: (folder: string, chain: string, epoch: number, keystores: Keystore[]) => Promise<void>,
 }
 
 export interface IBashUtilsAPI {
   doesDirectoryExist: (directory: string) => Promise<boolean>,
   isDirectoryWritable: (directory: string) => Promise<boolean>,
-  findFirstFile: (directory: string, startsWith: string) => Promise<string>
+  findAllFiles: (directory: string, startsWith: string) => Promise<string[]>,
+  findFirstFile: (directory: string, startsWith: string) => Promise<string>,
+  readKeystoreInformation: (filePaths: string[]) => Promise<Keystore[]>
 }
 
 export interface IWeb3UtilsAPI {

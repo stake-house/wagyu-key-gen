@@ -27,13 +27,14 @@ import path from "path";
 import process from "process";
 
 import { doesFileExist } from './BashUtils';
+import { Keystore } from '../react/types';
 
 /**
  * A promise version of the execFile function from fs for CLI calls.
  */
 const execFileProm = promisify(execFile);
 
-const ETH2_DEPOSIT_DIR_NAME = "staking-deposit-cli-2.5.0";
+const ETH2_DEPOSIT_DIR_NAME = "valefar-staking-deposit-cli";
 
 /**
  * Paths needed to call the stakingdeposit_proxy application using the Python 3 version installed on
@@ -68,6 +69,7 @@ const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 const VALIDATE_MNEMONIC_SUBCOMMAND = "validate_mnemonic";
 const VALIDATE_BLS_CREDENTIALS_SUBCOMMAND = "validate_bls_credentials";
 const VALIDATE_BLS_CHANGE_SUBCOMMAND = "bls_change";
+const GENERATE_EXIT_TRANSACTION_SUBCOMMAND = "generate_exit_transactions";
 
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
@@ -324,36 +326,79 @@ const generateBLSChange = async (
   
 ): Promise<void> => {
 
-let executable:string = "";
-let args:string[] = [];
-let env = process.env;
+  let executable:string = "";
+  let args:string[] = [];
+  let env = process.env;
 
-if (await doesFileExist(BUNDLED_SFE_PATH)) {
-  executable = BUNDLED_SFE_PATH;
-  args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
-  
-  args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
-    withdrawal_credentials, execution_address]);
-} else if (await doesFileExist(SFE_PATH)) {
-  executable = SFE_PATH;
-  args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
-  
-  args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
-    withdrawal_credentials, execution_address]);
-} else {
-  if(!await requireDepositPackages()) {
-    throw new Error("Failed to generate BTEC, don't have the required packages.");
+  if (await doesFileExist(BUNDLED_SFE_PATH)) {
+    executable = BUNDLED_SFE_PATH;
+    args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
+    
+    args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
+      withdrawal_credentials, execution_address]);
+  } else if (await doesFileExist(SFE_PATH)) {
+    executable = SFE_PATH;
+    args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
+    
+    args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
+      withdrawal_credentials, execution_address]);
+  } else {
+    if(!await requireDepositPackages()) {
+      throw new Error("Failed to generate BTEC, don't have the required packages.");
+    }
+    env.PYTHONPATH = await getPythonPath();
+
+    executable = PYTHON_EXE;
+    args = [STAKINGDEPOSIT_PROXY_PATH, VALIDATE_BLS_CHANGE_SUBCOMMAND];
+
+    args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
+      withdrawal_credentials, execution_address]);
   }
-  env.PYTHONPATH = await getPythonPath();
 
-  executable = PYTHON_EXE;
-  args = [STAKINGDEPOSIT_PROXY_PATH, VALIDATE_BLS_CHANGE_SUBCOMMAND];
-
-  args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
-    withdrawal_credentials, execution_address]);
+  await execFileProm(executable, args, {env: env});
 }
 
-await execFileProm(executable, args, {env: env});
+/*
+  chain: str,
+  keystore: str,
+  keystore_password: str,
+  validator_index: int,
+  epoch: int,
+  output_folder: str,
+*/
+const generateExitTransactions = async (
+  folder: string,
+  chain: string,
+  epoch: number,
+  keystores: Keystore[],
+): Promise<void> => {
+
+  let executable:string = "";
+  let args:string[] = [];
+  let env = process.env;
+
+  if (await doesFileExist(BUNDLED_SFE_PATH)) {
+    executable = BUNDLED_SFE_PATH;
+    args = [GENERATE_EXIT_TRANSACTION_SUBCOMMAND];
+  } else if (await doesFileExist(SFE_PATH)) {
+    executable = SFE_PATH;
+    args = [GENERATE_EXIT_TRANSACTION_SUBCOMMAND];
+  } else {
+    if(!await requireDepositPackages()) {
+      throw new Error("Failed to generate exit transaction, don't have the required packages.");
+    }
+    env.PYTHONPATH = await getPythonPath();
+
+    executable = PYTHON_EXE;
+    args = [STAKINGDEPOSIT_PROXY_PATH, GENERATE_EXIT_TRANSACTION_SUBCOMMAND];
+  }
+
+  for (const keystore of keystores) {  
+    console.log(`Working on ${keystore.index}`)
+    const execArgs = args.concat([chain.toLowerCase(), keystore.fullPath, keystore.password, keystore.validatorIndex, epoch.toString(), folder]);
+    await execFileProm(executable, execArgs, {env: env});
+  }
+  
 }
 
 export {
@@ -361,5 +406,6 @@ export {
   generateKeys,
   validateMnemonic,
   validateBLSCredentials,
-  generateBLSChange
+  generateBLSChange,
+  generateExitTransactions
 };

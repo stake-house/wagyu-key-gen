@@ -162,7 +162,16 @@ const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
   const content = () => {
     switch(step) {
       case 0: return (
-        <SelectFolder setFolderPath={props.setFolderPath} folderPath={props.folderPath} setFolderError={setFolderError} folderError={folderError} setFolderErrorMsg={setFolderErrorMsg} folderErrorMsg={folderErrorMsg} modalDisplay={modalDisplay} setModalDisplay={setModalDisplay} />
+        <SelectFolder 
+          setFolderPath={props.setFolderPath} 
+          folderPath={props.folderPath} 
+          setFolderError={setFolderError} 
+          folderError={folderError} 
+          setFolderErrorMsg={setFolderErrorMsg} 
+          folderErrorMsg={folderErrorMsg} 
+          modalDisplay={modalDisplay} 
+          setModalDisplay={setModalDisplay} 
+        />
       );
       case 1: return (
         <CreatingKeys />

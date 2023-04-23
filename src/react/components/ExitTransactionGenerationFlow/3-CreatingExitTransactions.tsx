@@ -3,26 +3,27 @@ import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 import LoadingComponent from '../LoadingComponent';
 
-type CreatingBTECFileProps = {
+type CreatingExitTransactionsProps = {
 }
 
 const WaitingMessage = styled(Typography)`
   align-items: center;
+  width: 100%;
 `;
 
 /**
- * The waiting screen while the BTEC file is being created.
+ * The waiting screen while the exit transactions are created
  * 
  * @returns react element to render
  */
-const CreatingBTECFile: FC<CreatingBTECFileProps> = (): ReactElement => {
+const CreatingExitTransactions: FC<CreatingExitTransactionsProps> = (): ReactElement => {
   return (
     <LoadingComponent>
       <WaitingMessage variant="body1">
-        Creating your BLS to execution change file.
+        Creating your exit transactions
       </WaitingMessage>
     </LoadingComponent>
   );
 }
 
-export default CreatingBTECFile;
+export default CreatingExitTransactions;
