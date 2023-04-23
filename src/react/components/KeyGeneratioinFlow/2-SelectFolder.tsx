@@ -1,5 +1,6 @@
 import { Typography } from '@material-ui/core';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
+import CommonSelectFolder from '../CommonSelectFolder';
 
 type SelectFolderProps = {
   setFolderPath: Dispatch<SetStateAction<string>>,
@@ -20,7 +21,7 @@ type SelectFolderProps = {
  */
 const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
   return (
-    <SelectFolder
+    <CommonSelectFolder
       folderError={props.folderError} 
       setFolderError={props.setFolderError} 
       folderErrorMsg={props.folderErrorMsg}
@@ -33,7 +34,7 @@ const SelectFolder: FC<SelectFolderProps> = (props): ReactElement => {
       <Typography variant="body1">
         Choose a folder where we should save your keys.
       </Typography>
-    </SelectFolder>
+    </CommonSelectFolder>
   );
 }
 
