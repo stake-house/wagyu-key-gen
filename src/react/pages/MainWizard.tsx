@@ -17,6 +17,8 @@ import VersionFooter from '../components/VersionFooter';
 import ExitTransactionConfigurationWizard from '../components/ExitTransactionConfigurationWizard';
 import ExitTransactionGenerationWizard from '../components/ExitTransactionGenerationWizard';
 import FinishExitTransaction from '../components/FinishExitTransaction';
+import ExitTransactionMnemonicConfigurationWizard from '../components/ExitTransactionMnemonicConfigurationWizard';
+import ExitTransactionMnemonicGenerationWizard from '../components/ExitTransactionMnemonicGenerationWizard';
 
 const stepSequenceMap: Record<StepSequenceKey, StepKey[]> = {
   [StepSequenceKey.MnemonicImport]: [
@@ -41,7 +43,13 @@ const stepSequenceMap: Record<StepSequenceKey, StepKey[]> = {
     StepKey.ExitTransactionConfiguration,
     StepKey.ExitTransactionGeneration,
     StepKey.FinishExitTransaction
-  ]
+  ],
+  [StepSequenceKey.PreSignExitTransactionGenerationMnemonic]: [
+    StepKey.MnemonicImport,
+    StepKey.ExitTransactionMnemonicConfiguration,
+    StepKey.ExitTransactionMnemonicGeneration,
+    StepKey.FinishExitTransaction
+  ],
 }
 
 const MainGrid = styled(Grid)`
@@ -64,9 +72,9 @@ type WizardProps = {
 
 /**
  * This is the main wizard through which each piece of functionality for the app runs.
- * 
+ *
  * This wizard manages the global stepper showing the user where they are in the process.
- * 
+ *
  * @param props passed in data for the component to use
  * @returns the react element to render
  */
@@ -74,7 +82,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   const { stepSequenceKey } = useParams<RouteParams>();
   const history = useHistory();
 
-  const [mnemonic, setMnemonic] = useState("");
+  const [mnemonic, setMnemonic] = useState("upgrade reason three tip credit erosion tent diagram creek junk laptop settle tissue quality walk electric wink divert pen powder lab drama flush allow");
   const [mnemonicToVerify, setMnemonicToVerify] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [startIndex, setStartIndex] = useState(0);
@@ -84,6 +92,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   const [folderPath, setFolderPath] = useState("");
   const [btecIndices, setBtecIndices] = useState("");
   const [btecCredentials, setBtecCredentials] = useState("");
+  const [validatorIndices, setValidatorIndices] = useState("");
   const [epoch, setEpoch] = useState(0);
   const [keystores, setKeystores] = useState<Keystore[]>([]);
   const [exitInputFolderPath, setExitInputFolderPath] = useState("");
@@ -92,7 +101,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
 
   const stepSequence = stepSequenceMap[stepSequenceKey];
   const activeStepKey = stepSequence[activeStepIndex];
-  
+
   const onStepForward = () => {
     if (activeStepIndex === stepSequence.length - 1) {
       window.electronAPI.ipcRendererSendClose();
@@ -225,13 +234,27 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
       case StepKey.ExitTransactionConfiguration:
         return (
           <ExitTransactionConfigurationWizard
-            {...commonProps} 
+            {...commonProps}
             epoch={epoch}
             setEpoch={setEpoch}
             keystores={keystores}
             setKeystores={setKeystores}
             inputFolderPath={exitInputFolderPath}
             setInputFolderPath={setExitInputFolderPath}
+            outputFolderPath={exitOutputFolderPath}
+            setOutputFolderPath={setExitOutputFolderPath}
+          />
+        );
+      case StepKey.ExitTransactionMnemonicConfiguration:
+        return (
+          <ExitTransactionMnemonicConfigurationWizard
+            {...commonProps}
+            index={startIndex}
+            setIndex={setStartIndex}
+            epoch={epoch}
+            setEpoch={setEpoch}
+            validatorIndices={validatorIndices}
+            setValidatorIndices={setValidatorIndices}
             outputFolderPath={exitOutputFolderPath}
             setOutputFolderPath={setExitOutputFolderPath}
           />
@@ -244,6 +267,19 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
             folderPath={exitOutputFolderPath}
             setFolderPath={setExitOutputFolderPath}
             keystores={keystores}
+            network={props.network}
+          />
+        )
+      case StepKey.ExitTransactionMnemonicGeneration:
+        return (
+          <ExitTransactionMnemonicGenerationWizard
+            {...commonProps}
+            mnemonic={mnemonic}
+            index={startIndex}
+            epoch={epoch}
+            validatorIndices={validatorIndices}
+            folderPath={exitOutputFolderPath}
+            setFolderPath={setExitOutputFolderPath}
             network={props.network}
           />
         )

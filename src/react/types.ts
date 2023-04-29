@@ -9,6 +9,8 @@ export enum StepKey {
   FinishBTEC,
   ExitTransactionConfiguration,
   ExitTransactionGeneration,
+  ExitTransactionMnemonicConfiguration,
+  ExitTransactionMnemonicGeneration,
   FinishExitTransaction
 }
 
@@ -16,12 +18,14 @@ export enum StepSequenceKey {
   MnemonicGeneration = "mnemonicgeneration",
   MnemonicImport = "mnemonicimport",
   BLSToExecutionChangeGeneration = "blstoexecutionchangegeneration",
-  PreSignExitTransactionGeneration = "presignexittransactiongeneration"
+  PreSignExitTransactionGeneration = "presignexittransactiongeneration",
+  PreSignExitTransactionGenerationMnemonic = "presignexittransactiongenerationmnemonic"
 }
 
 export enum ReuseMnemonicAction {
   RegenerateKeys,
-  GenerateBLSToExecutionChange
+  GenerateBLSToExecutionChange,
+  GenerateExitTransaction,
 }
 
 export enum Network {

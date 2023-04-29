@@ -11,6 +11,8 @@ import json
 import sys
 import time
 from typing import (
+    Any,
+    Dict,
     Sequence,
 )
 
@@ -38,10 +40,9 @@ from staking_deposit.utils.validation import (
     validate_deposit,
     validate_bls_to_execution_change
 )
-from staking_deposit.utils.constants import (
-    DEFAULT_EXIT_TRANSACTION_FOLDER_NAME,
-    MAX_DEPOSIT_AMOUNT,
-)
+
+from staking_deposit.utils.constants import MAX_DEPOSIT_AMOUNT
+
 from staking_deposit.utils.ssz import (
     SignedVoluntaryExit,
     VoluntaryExit,
@@ -50,18 +51,18 @@ from staking_deposit.utils.ssz import (
 )
 
 from staking_deposit.settings import (
+    BaseChainSetting,
     get_chain_setting,
 )
 
 from staking_deposit.utils.crypto import SHA256
 
-def generate_exit_transactions(
+def exit_transaction_keystore(
         chain: str,
         keystore: str,
         keystore_password: str,
         validator_index: int,
-        epoch: int,
-        output_folder: str
+        epoch: int
         ) -> str:
     saved_keystore = Keystore.from_file(keystore)
 
@@ -71,13 +72,81 @@ def generate_exit_transactions(
         raise ValidationError('mismatch')
 
     signing_key = int.from_bytes(secret_bytes, 'big')
+    chain_settings = get_chain_setting(chain)
 
+    signed_exit = exit_transaction_generation(
+        chain_settings=chain_settings,
+        signing_key=signing_key,
+        validator_index=validator_index,
+        epoch=epoch,
+    )
+
+    signed_exit_json: Dict[str, Any] = {}
+    message = {
+        'epoch': str(signed_exit.message.epoch),
+        'validator_index': str(signed_exit.message.validator_index),
+    }
+    signed_exit_json.update({'message': message})
+    signed_exit_json.update({'signature': '0x' + signed_exit.signature.hex()})
+
+    print(json.dumps(signed_exit_json), file=sys.stdout)
+
+
+def exit_transaction_mnemonic(
+        chain: str,
+        mnemonic: str,
+        validator_start_index: str,
+        epoch: int,
+        validator_indices: Sequence[int],
+        ) -> str:
+    mnemonic_password = ""
+    chain_settings = get_chain_setting(chain)
+    num_keys = len(validator_indices)
+    key_indices = range(validator_start_index, validator_start_index + num_keys)
+
+    signed_exits_json = []
+    # We assume that the list of validator indices are in order and increment the start index
+    for key_index, validator_index in zip(key_indices, validator_indices):
+        credential = Credential(
+            mnemonic=mnemonic,
+            mnemonic_password=mnemonic_password,
+            index=key_index,
+            amount=0,  # Unneeded for this purpose
+            chain_setting=chain_settings,
+            hex_eth1_withdrawal_address=None
+        )
+
+        signing_key = credential.signing_sk
+
+        signed_voluntary_exit = exit_transaction_generation(
+            chain_settings=chain_settings,
+            signing_key=signing_key,
+            validator_index=validator_index,
+            epoch=epoch
+        )
+
+        signed_exit_json: Dict[str, Any] = {}
+        message = {
+            'epoch': str(signed_voluntary_exit.message.epoch),
+            'validator_index': str(signed_voluntary_exit.message.validator_index),
+        }
+        signed_exit_json.update({'message': message})
+        signed_exit_json.update({'signature': '0x' + signed_voluntary_exit.signature.hex()})
+        signed_exits_json.append(signed_exit_json)
+
+    print(json.dumps(signed_exits_json), file=sys.stdout)
+
+
+def exit_transaction_generation(
+        chain_settings: BaseChainSetting,
+        signing_key: int,
+        validator_index: int,
+        epoch: int) -> SignedVoluntaryExit:
     message = VoluntaryExit(
         epoch=epoch,
         validator_index=validator_index
     )
 
-    chain_settings = get_chain_setting(chain)
     domain = compute_voluntary_exit_domain(
         fork_version=chain_settings.CURRENT_FORK_VERSION,
         genesis_validators_root=chain_settings.GENESIS_VALIDATORS_ROOT
@@ -91,15 +160,7 @@ def generate_exit_transactions(
         signature=signature,
     )
 
-    signed_exit_json: Dict[str, Any] = {}
-    message = {
-        'epoch': str(signed_exit.message.epoch),
-        'validator_index': str(signed_exit.message.validator_index),
-    }
-    signed_exit_json.update({'message': message})
-    signed_exit_json.update({'signature': '0x' + signed_exit.signature.hex()})
-
-    print(json.dumps(signed_exit_json), file=sys.stdout)
+    return signed_exit
 
 
 def generate_bls_to_execution_change(
@@ -331,14 +392,22 @@ def decode_bytes(value):
         value = value[2:]
     return bytes.fromhex(value)
 
-def parse_generate_exit_transactions(args):
-    generate_exit_transactions(
+def parse_exit_transaction_keystore(args):
+    exit_transaction_keystore(
         args.chain,
         args.keystore,
         args.keystore_password,
         args.validator_index,
         args.epoch,
         args.output_folder)
+
+def parse_exit_transaction_mnemonic(args):
+    exit_transaction_mnemonic(
+        args.chain,
+        args.mnemonic,
+        args.validator_index,
+        args.epoch,
+        [int(i) for i in args.indices.split(',')],)
 
 def parse_bls_change(args):
     """Parse CLI arguments to call the generate_bls_to_execution_change function.
@@ -429,14 +498,21 @@ def main():
     generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma seperated)", type=str)
     generate_parser.set_defaults(func=parse_validate_bls_credentials)
 
-    generate_parser = subparsers.add_parser("generate_exit_transactions")
+    generate_parser = subparsers.add_parser("exit_transaction_keystore")
     generate_parser.add_argument("chain", help="For which network to validate these BLS credentials", type=str)
     generate_parser.add_argument("keystore", help="Keystore file", type=str)
     generate_parser.add_argument("keystore_password", help="Password to decrypt keystore file", type=str)
     generate_parser.add_argument("validator_index", help="Validator index number as identified on the beacon chain", type=int)
     generate_parser.add_argument("epoch", help="The epoch at which the exit transaction will be valid", type=int)
-    generate_parser.add_argument("output_folder", help="Where to put the exit transaction files", type=str)
-    generate_parser.set_defaults(func=parse_generate_exit_transactions)
+    generate_parser.set_defaults(func=parse_exit_transaction_keystore)
+
+    generate_parser = subparsers.add_parser("exit_transaction_mnemonic")
+    generate_parser.add_argument("chain", help="For which network to validate these BLS credentials", type=str)
+    generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
+    generate_parser.add_argument("validator_index", help="Validator index number as identified on the beacon chain", type=int)
+    generate_parser.add_argument("epoch", help="The epoch at which the exit transaction will be valid", type=int)
+    generate_parser.add_argument("indices", help="Validator index number(s) as identified on the beacon chain (comma seperated)", type=str)
+    generate_parser.set_defaults(func=parse_exit_transaction_mnemonic)
 
     args = main_parser.parse_args()
     if not args or 'func' not in args:

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 320px;
+  height: 380px;
   width: 560px;
   background: rgba(27, 38, 44, 0.95);
   border-radius: 20px;
@@ -39,7 +39,7 @@ type ReuseMnemonicActionPickerProps = {
 /**
  * This is the reuse mnemonic action picker modal component where the user selects which action they want
  * to perform after reusing their mnemonic.
- * 
+ *
  * @param props.handleCloseReuseMnemonicModal function to handle closing the reuse mnemonic action modal
  * @param props.setReuseMnemonicAction update the selected reuse mnemonic action
  * @param props.reuseMnemonicAction the selected reuse mnemonic action
@@ -48,7 +48,7 @@ type ReuseMnemonicActionPickerProps = {
 export const ReuseMnemonicActionPicker = (props: ReuseMnemonicActionPickerProps) => {
 
   const handleSelectedAction = (action: ReuseMnemonicAction) => {
-    
+
     props.handleReuseMnemonicModalSubmitClick(action);
     props.handleCloseReuseMnemonicModal({}, 'submitClick');
 
@@ -68,6 +68,13 @@ export const ReuseMnemonicActionPicker = (props: ReuseMnemonicActionPickerProps)
             <Tooltip title="If you initially created your validator keys without adding a withdrawal address, you can generate this BLS to execution change to add one once.">
               <Button variant="contained" color="primary" onClick={() => handleSelectedAction(ReuseMnemonicAction.GenerateBLSToExecutionChange)}>
                 Generate your BLS to execution change<br />(Add a withdrawal address)
+              </Button>
+            </Tooltip>
+          </Grid>
+          <Grid item>
+            <Tooltip title="Use your mnemonic and validator indices to generate your exit transaction. It is recommended to use your keystore files instead if available.">
+              <Button variant="contained" color="primary" onClick={() => handleSelectedAction(ReuseMnemonicAction.GenerateExitTransaction)}>
+                Generate your exit transaction
               </Button>
             </Tooltip>
           </Grid>

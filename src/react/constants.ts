@@ -25,7 +25,7 @@ export const errors = {
 export const MNEMONIC_LENGTH = 24;
 
 export const tooltips = {
-  IMPORT_MNEMONIC: "If you've already created a Secret Recovery Phrase, you can create more keys from it by importing it here.",
+  IMPORT_MNEMONIC: "If you've already created a Secret Recovery Phrase, you can create more keys or use it to generate exit transactions from it by importing it here.",
   GENERATE_EXIT_TRANSACTION: "You must have your keystore files on hand to perform this action.",
   NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to create.",
   PASSWORD: "Pick a strong password (at least 8 characters) that will be used to protect your keys.",
@@ -37,7 +37,9 @@ export const tooltips = {
   BTEC_INDICES: "A list of the chosen validator index number(s) as identified on the beacon chain. You can find your validator indice on beaconcha.in website on your validator page. It will be at the top of that page the form of a title like Validator XXXXX, where XXXXX is going to be your indice.",
   BLS_CREDENTIALS: "A list of the old BLS withdrawal credentials of the given validator(s). You can find your validator BLS withdrawal credentials on beaconcha.in website on your validator page. It will be in the Deposits tab and it should start with 0x00.",
   KEYSTORE_MASTER_PASSWORD: "If all of your keystores share the same password, enter it here instead of individually.",
-  EXIT_EPOCH: "If you want your exit transaction to be only valid at a future date, you can specify the epoch here otherwise leave at 0 and the transaction will always be valid."
+  EXIT_EPOCH: "If you want your exit transaction to be only valid at a future date, you can specify the epoch here otherwise leave at 0 and the transaction will always be valid.",
+  START_INDEX: "The index position for the keys to start generating withdrawal credentials. If you only created 1 validator key using this Secret Recovery Phrase, this is likely going to be 0. If you created many validator keys, this could be a higher value from where you want to start in the list of validators derived from your Secret Recovery Phrase.",
+  VALIDATOR_INDICES: "A list of the chosen validator index number(s) as identified on the beacon chain. You can find your validator indice on beaconcha.in website on your validator page. It will be at the top of that page the form of a title like Validator XXXXX, where XXXXX is going to be your indice."
 };
 
 export const stepLabels = {
@@ -51,6 +53,8 @@ export const stepLabels = {
   [StepKey.FinishBTEC]: 'Finish',
   [StepKey.ExitTransactionConfiguration]: 'Configure Validator Exit Information',
   [StepKey.ExitTransactionGeneration]: 'Create Exit Transactions',
+  [StepKey.ExitTransactionMnemonicConfiguration]: 'Configure Validator Exit Information',
+  [StepKey.ExitTransactionMnemonicGeneration]: 'Create Exit Transactions',
   [StepKey.FinishExitTransaction]: 'Finish'
 };
 

@@ -69,7 +69,9 @@ const GENERATE_KEYS_SUBCOMMAND = "generate_keys";
 const VALIDATE_MNEMONIC_SUBCOMMAND = "validate_mnemonic";
 const VALIDATE_BLS_CREDENTIALS_SUBCOMMAND = "validate_bls_credentials";
 const VALIDATE_BLS_CHANGE_SUBCOMMAND = "bls_change";
-const GENERATE_EXIT_TRANSACTION_SUBCOMMAND = "generate_exit_transactions";
+const EXIT_TRANSACTION_KEYSTORE_SUBCOMMAND = "exit_transaction_keystore";
+const EXIT_TRANSACTION_MNEMONIC_SUBCOMMAND = "exit_transaction_mnemonic";
+
 
 const PYTHON_EXE = (process.platform == "win32" ? "python" : "python3");
 const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
@@ -379,10 +381,10 @@ const generateExitTransactions = async (
 
   if (await doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
-    args = [GENERATE_EXIT_TRANSACTION_SUBCOMMAND];
+    args = [EXIT_TRANSACTION_KEYSTORE_SUBCOMMAND];
   } else if (await doesFileExist(SFE_PATH)) {
     executable = SFE_PATH;
-    args = [GENERATE_EXIT_TRANSACTION_SUBCOMMAND];
+    args = [EXIT_TRANSACTION_KEYSTORE_SUBCOMMAND];
   } else {
     if(!await requireDepositPackages()) {
       throw new Error("Failed to generate exit transaction, don't have the required packages.");
@@ -390,12 +392,12 @@ const generateExitTransactions = async (
     env.PYTHONPATH = await getPythonPath();
 
     executable = PYTHON_EXE;
-    args = [STAKINGDEPOSIT_PROXY_PATH, GENERATE_EXIT_TRANSACTION_SUBCOMMAND];
+    args = [STAKINGDEPOSIT_PROXY_PATH, EXIT_TRANSACTION_KEYSTORE_SUBCOMMAND];
   }
 
   const exitTransactions: any[] = [];
   for (const keystore of keystores) {
-    const execArgs = args.concat([chain.toLowerCase(), keystore.fullPath, keystore.password, keystore.validatorIndex, epoch.toString(), folder]);
+    const execArgs = args.concat([chain.toLowerCase(), keystore.fullPath, keystore.password, keystore.validatorIndex, epoch.toString()]);
 
     try {
       const { stdout: transactionJson } = await execFileProm(executable, execArgs, {env: env});
@@ -414,11 +416,58 @@ const generateExitTransactions = async (
   writeFileSync(`${folder}/signed_exit_transactions-${new Date().getTime()}.json`, JSON.stringify(exitTransactions));
 }
 
+const generateExitTransactionsMnemonic = async (
+  folder: string,
+  chain: string,
+  mnemonic: string,
+  startIndex: number,
+  epoch: number,
+  validatorIndices: string,
+): Promise<void> => {
+
+  let executable:string = "";
+  let args:string[] = [];
+  let env = process.env;
+
+  if (await doesFileExist(BUNDLED_SFE_PATH)) {
+    executable = BUNDLED_SFE_PATH;
+    args = [EXIT_TRANSACTION_MNEMONIC_SUBCOMMAND];
+  } else if (await doesFileExist(SFE_PATH)) {
+    executable = SFE_PATH;
+    args = [EXIT_TRANSACTION_MNEMONIC_SUBCOMMAND];
+  } else {
+    if(!await requireDepositPackages()) {
+      throw new Error("Failed to generate exit transaction, don't have the required packages.");
+    }
+    env.PYTHONPATH = await getPythonPath();
+
+    executable = PYTHON_EXE;
+    args = [STAKINGDEPOSIT_PROXY_PATH, EXIT_TRANSACTION_MNEMONIC_SUBCOMMAND];
+  }
+
+  const execArgs = args.concat([chain.toLowerCase(), mnemonic, startIndex.toString(), epoch.toString(), validatorIndices]);
+
+  try {
+    const { stdout: transactionJson } = await execFileProm(executable, execArgs, {env: env});
+    writeFileSync(`${folder}/signed_exit_transactions-${new Date().getTime()}.json`, transactionJson);
+  } catch (e) {
+    const { message } = (e as Error);
+
+    if (message.indexOf("mismatch") >= 0) {
+      throw(new Error(message));
+    } else {
+      throw(new Error(message));
+    }
+  }
+
+}
+
 export {
   createMnemonic,
   generateKeys,
   validateMnemonic,
   validateBLSCredentials,
   generateBLSChange,
-  generateExitTransactions
+  generateExitTransactions,
+  generateExitTransactionsMnemonic
 };

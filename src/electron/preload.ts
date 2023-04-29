@@ -14,7 +14,7 @@ import {
 
 import Web3Utils from 'web3-utils';
 
-import { createMnemonic, generateKeys, validateMnemonic, validateBLSCredentials, generateBLSChange, generateExitTransactions } from './Eth2Deposit';
+import { createMnemonic, generateKeys, validateMnemonic, validateBLSCredentials, generateBLSChange, generateExitTransactions, generateExitTransactionsMnemonic } from './Eth2Deposit';
 
 import { doesDirectoryExist, isDirectoryWritable, findAllFiles, findFirstFile, readKeystoreInformation } from './BashUtils';
 
@@ -40,7 +40,8 @@ contextBridge.exposeInMainWorld('eth2Deposit', {
   'validateMnemonic': validateMnemonic,
   'validateBLSCredentials': validateBLSCredentials,
   'generateBLSChange': generateBLSChange,
-  'generateExitTransactions': generateExitTransactions
+  'generateExitTransactions': generateExitTransactions,
+  'generateExitTransactionsMnemonic': generateExitTransactionsMnemonic
 });
 
 contextBridge.exposeInMainWorld('bashUtils', {
