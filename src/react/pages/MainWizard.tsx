@@ -82,7 +82,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
   const { stepSequenceKey } = useParams<RouteParams>();
   const history = useHistory();
 
-  const [mnemonic, setMnemonic] = useState("upgrade reason three tip credit erosion tent diagram creek junk laptop settle tissue quality walk electric wink divert pen powder lab drama flush allow");
+  const [mnemonic, setMnemonic] = useState("");
   const [mnemonicToVerify, setMnemonicToVerify] = useState("");
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [startIndex, setStartIndex] = useState(0);
@@ -287,6 +287,7 @@ const Wizard: FC<WizardProps> = (props): ReactElement => {
         return (
           <FinishExitTransaction
             {...commonProps}
+            multiple={keystores.length > 1 || validatorIndices.length > 1}
             folderPath={exitOutputFolderPath}
           />
         )

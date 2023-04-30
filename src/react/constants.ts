@@ -19,7 +19,8 @@ export const errors = {
   FOLDER_DOES_NOT_EXISTS: "Folder does not exist. Select an existing folder.",
   FOLDER_IS_NOT_WRITABLE: "Cannot write in this folder. Select a folder in which you have write permission.",
   KEYSTORE_NOT_FOUND: "The selected file does not contain keystore files. Please reselect a folder.",
-  KEYSTORE_PARSE_ERROR: "The selected folder, though containing keystore files, did not parse properly. Please check validity of files."
+  KEYSTORE_PARSE_ERROR: "The selected folder, though containing keystore files, did not parse properly. Please check validity of files.",
+  KEYSTORE_PASSWORD_MISMATCH: "The provided password failed to decrypt one or more of the keystores. Please try again."
 };
 
 export const MNEMONIC_LENGTH = 24;

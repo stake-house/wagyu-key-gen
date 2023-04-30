@@ -1,8 +1,9 @@
 import { Grid, Typography } from '@material-ui/core';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import StepNavigation from './StepNavigation';
+import { errors } from '../constants';
 import MainInputs from './ExitTransactionMnemonicGenerationFlow/0-MainInputs';
+import StepNavigation from './StepNavigation';
 
 const ContentGrid = styled(Grid)`
   height: 350px;
@@ -65,7 +66,9 @@ const ExitTransactionConfigurationMnemonicWizard: FC<Props> = (props): ReactElem
           return;
         }
 
-        props.onStepForward();
+        if (validateInputs()) {
+          props.onStepForward();
+        }
         break;
       }
     }
@@ -74,13 +77,57 @@ const ExitTransactionConfigurationMnemonicWizard: FC<Props> = (props): ReactElem
   const disableNext = () => {
     switch(step) {
       case 0:
+        if (!(props.index >= 0) || !(props.epoch >= 0) || !props.validatorIndices) {
+          return true;
+        }
+
         return false;
       default:
         return false;
     }
   }
 
-  const validateInputs = () => {
+  /**
+   * Will go through the inputs index, epoch, and indices to verify all are valid
+   *
+   * @returns If the inputs are valid
+   */
+  const validateInputs = (): boolean => {
+    let isError = false;
+
+    if (props.index < 0) {
+      setStartingIndexError(true);
+      isError = true;
+    } else {
+      setStartingIndexError(false);
+    }
+
+    const splitIndices = props.validatorIndices.split(',');
+
+    if (props.validatorIndices == "") {
+      setIndicesError(true);
+      setIndicesErrorMsg(errors.INDICES);
+      isError = true;
+    } else {
+      // Validate if all integers
+
+      let indiceFormatError = false;
+      splitIndices.forEach( (indice) => {
+        if (!/^\d+$/.test(indice)) {
+          indiceFormatError = true;
+        }
+      });
+
+      if (indiceFormatError) {
+        setIndicesError(true);
+        setIndicesErrorMsg(errors.INDICES_FORMAT);
+        isError = true;
+      } else {
+        setIndicesError(false);
+      }
+    }
+
+    return !isError;
   }
 
   const content = () => {
@@ -100,7 +147,6 @@ const ExitTransactionConfigurationMnemonicWizard: FC<Props> = (props): ReactElem
             setIndicesError={setIndicesError}
             indicesErrorMsg={indicesErrorMsg}
             setIndicesErrorMsg={setIndicesErrorMsg}
-            onFinish={validateInputs}
         />
         );
       default:

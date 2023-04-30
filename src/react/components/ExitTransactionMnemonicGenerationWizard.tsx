@@ -5,8 +5,7 @@ import StepNavigation from './StepNavigation';
 import { errors } from '../constants';
 import SelectOutputFolder from './ExitTransactionGenerationFlow/2-SelectOutputFolder';
 import CreatingExitTransactions from './ExitTransactionGenerationFlow/3-CreatingExitTransactions';
-import ExitTransactionsCreated from './ExitTransactionGenerationFlow/4-ExitTransactionsCreated';
-import { Keystore, Network } from '../types';
+import { Network } from '../types';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -149,10 +148,6 @@ const ExitTransactionMnemonicGenerationWizard: FC<Props> = (props): ReactElement
       case 1:
         return (
           <CreatingExitTransactions />
-        );
-      case 2:
-        return (
-          <ExitTransactionsCreated folderPath={props.folderPath} />
         );
       default:
         return null;

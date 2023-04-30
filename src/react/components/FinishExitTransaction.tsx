@@ -11,12 +11,13 @@ const ContentGrid = styled(Grid)`
 type Props = {
   onStepBack: () => void,
   onStepForward: () => void,
-  folderPath: string
+  folderPath: string,
+  multiple: boolean
 }
 
 /**
  * This is the final page displaying information about the keys
- * 
+ *
  * @param props.onStepBack the function to execute when the user steps back
  * @param props.onStepForward the function to execute when the user steps forward
  * @param props.folderPath the folder path where the keys are located, for display purposes
@@ -33,7 +34,7 @@ const FinishExitTransaction: FC<Props> = (props): ReactElement => {
       </Grid>
       <ContentGrid item container>
         <Grid item xs={12}>
-          <ExitTransactionsCreated folderPath={props.folderPath} />
+          <ExitTransactionsCreated folderPath={props.folderPath} multiple={props.multiple}/>
         </Grid>
       </ContentGrid>
       {props.children}

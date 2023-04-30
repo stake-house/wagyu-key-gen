@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 type ExitTransactionsCreatedProps = {
   folderPath: string,
+  multiple: boolean,
 }
 
 const SubHeader = styled(Typography)`
@@ -55,11 +56,11 @@ const ExitTransactionsCreated: FC<ExitTransactionsCreatedProps> = (props): React
       <Grid item xs={10}>
         <Box sx={{ m: 2 }}>
           <Typography variant="body1" align="left">
-            There is a single file for this:
+            {props.multiple ? "There is a file for each validator provided:" : "There is a single file for this:"}
           </Typography>
-          <LoudText>Signed exit transaction file (ex. signed_exit_transactions-xxxxxxx.json)</LoudText>
+          <LoudText>Signed exit transaction file (ex. signed_exit_transaction-xxxxxxx.json)</LoudText>
           <Typography variant="body2" align="left">
-            This file contains your signature to exit your validator(s). You can easily publish it on beaconcha.in website by using their <em>Broadcast Signed Messages</em> tool.
+            This file contains your signature to exit your validator. You can easily publish it on beaconcha.in website by using their <em>Broadcast Signed Messages</em> tool.
           </Typography>
           <QuietText>
             Note: Your clipboard will be cleared upon closing this application.

@@ -5,7 +5,6 @@ import StepNavigation from './StepNavigation';
 import { errors } from '../constants';
 import SelectOutputFolder from './ExitTransactionGenerationFlow/2-SelectOutputFolder';
 import CreatingExitTransactions from './ExitTransactionGenerationFlow/3-CreatingExitTransactions';
-import ExitTransactionsCreated from './ExitTransactionGenerationFlow/4-ExitTransactionsCreated';
 import { Keystore, Network } from '../types';
 
 const ContentGrid = styled(Grid)`
@@ -123,7 +122,7 @@ const ExitTransactionGenerationWizard: FC<Props> = (props): ReactElement => {
       setStep(0);
       setFolderError(true);
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
-      setFolderErrorMsg(errorMsg);
+      setFolderErrorMsg(errorMsg.indexOf('mismatch') >= 0 ? errors.KEYSTORE_PASSWORD_MISMATCH : errorMsg);
     })
   }
 
@@ -145,10 +144,6 @@ const ExitTransactionGenerationWizard: FC<Props> = (props): ReactElement => {
       case 1:
         return (
           <CreatingExitTransactions />
-        );
-      case 2:
-        return (
-          <ExitTransactionsCreated folderPath={props.folderPath} />
         );
       default:
         return null;

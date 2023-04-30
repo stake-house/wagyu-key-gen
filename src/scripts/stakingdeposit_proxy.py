@@ -398,8 +398,7 @@ def parse_exit_transaction_keystore(args):
         args.keystore,
         args.keystore_password,
         args.validator_index,
-        args.epoch,
-        args.output_folder)
+        args.epoch)
 
 def parse_exit_transaction_mnemonic(args):
     exit_transaction_mnemonic(

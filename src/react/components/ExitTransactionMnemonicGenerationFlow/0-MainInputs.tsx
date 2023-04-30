@@ -15,8 +15,7 @@ type GenerateKeysProps = {
   indicesError: boolean,
   setIndicesError: Dispatch<SetStateAction<boolean>>,
   indicesErrorMsg: string,
-  setIndicesErrorMsg: Dispatch<SetStateAction<string>>,
-  onFinish: () => void
+  setIndicesErrorMsg: Dispatch<SetStateAction<string>>
 }
 
 const IndexTextField = styled(TextField)`

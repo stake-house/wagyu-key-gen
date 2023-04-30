@@ -360,14 +360,16 @@ const generateBLSChange = async (
   await execFileProm(executable, args, {env: env});
 }
 
-/*
-  chain: str,
-  keystore: str,
-  keystore_password: str,
-  validator_index: int,
-  epoch: int,
-  output_folder: str,
-*/
+/**
+ * Will generate a signed exit transaction for each keystore provided. The results will
+ * be saved to the provided folder.
+ *
+ * @param folder The folder that will contain the exit transaction results.
+ * @param chain The network setting for the signing domain. Possible values are `mainnet`,
+ *              `goerli`, `zhejiang`.
+ * @param epoch The epoch at which the resulting transactions will be valid.
+ * @param keystores The keystore files that will be decrypted and used to sign the transaction.
+ */
 const generateExitTransactions = async (
   folder: string,
   chain: string,
@@ -395,27 +397,38 @@ const generateExitTransactions = async (
     args = [STAKINGDEPOSIT_PROXY_PATH, EXIT_TRANSACTION_KEYSTORE_SUBCOMMAND];
   }
 
-  const exitTransactions: any[] = [];
   for (const keystore of keystores) {
     const execArgs = args.concat([chain.toLowerCase(), keystore.fullPath, keystore.password, keystore.validatorIndex, epoch.toString()]);
 
     try {
       const { stdout: transactionJson } = await execFileProm(executable, execArgs, {env: env});
-      exitTransactions.push(JSON.parse(transactionJson));
+      const operation = JSON.parse(transactionJson);
+      writeFileSync(`${folder}/signed_exit_transaction-${operation.message.validator_index}-${new Date().getTime()}.json`, transactionJson);
     } catch (e) {
       const { message } = (e as Error);
 
       if (message.indexOf("mismatch") >= 0) {
-        throw(new Error(`Password mismatch for keystore ${keystore.index}`));
+        throw(new Error(message));
       } else {
         throw(new Error(message));
       }
     }
   }
 
-  writeFileSync(`${folder}/signed_exit_transactions-${new Date().getTime()}.json`, JSON.stringify(exitTransactions));
 }
 
+/**
+ * Will generate a file for every validator index provided and store in the provided folder.
+ * The resulting files will be named: signed_exit_transaction-{validatorIndex}-{timestamp}.
+ *
+ * @param folder The folder that will contain the exit transaction results.
+ * @param chain The network setting for the signing domain. Possible values are `mainnet`,
+ *              `goerli`, `zhejiang`.
+ * @param mnemonic The mnemonic to be used as the seed for generating the validator keys.
+ * @param startIndex The index of the first validator's keys.
+ * @param epoch The epoch at which the resulting transactions will be valid.
+ * @param validatorIndices The validator index number(s) as identified on the beacon chain (comma seperated).
+ */
 const generateExitTransactionsMnemonic = async (
   folder: string,
   chain: string,
@@ -448,16 +461,14 @@ const generateExitTransactionsMnemonic = async (
   const execArgs = args.concat([chain.toLowerCase(), mnemonic, startIndex.toString(), epoch.toString(), validatorIndices]);
 
   try {
-    const { stdout: transactionJson } = await execFileProm(executable, execArgs, {env: env});
-    writeFileSync(`${folder}/signed_exit_transactions-${new Date().getTime()}.json`, transactionJson);
-  } catch (e) {
-    const { message } = (e as Error);
+    const { stdout: operationsJson } = await execFileProm(executable, execArgs, {env: env});
+    const operations: any[] = JSON.parse(operationsJson);
 
-    if (message.indexOf("mismatch") >= 0) {
-      throw(new Error(message));
-    } else {
-      throw(new Error(message));
+    for (const operation of operations) {
+      writeFileSync(`${folder}/signed_exit_transaction-${operation.message.validator_index}-${new Date().getTime()}.json`, JSON.stringify(operation));
     }
+  } catch (e) {
+    throw(e);
   }
 
 }
