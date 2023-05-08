@@ -39,7 +39,7 @@ type ReuseMnemonicActionPickerProps = {
 /**
  * This is the reuse mnemonic action picker modal component where the user selects which action they want
  * to perform after reusing their mnemonic.
- * 
+ *
  * @param props.handleCloseReuseMnemonicModal function to handle closing the reuse mnemonic action modal
  * @param props.setReuseMnemonicAction update the selected reuse mnemonic action
  * @param props.reuseMnemonicAction the selected reuse mnemonic action
@@ -70,7 +70,7 @@ export const ReuseMnemonicActionPicker = (props: ReuseMnemonicActionPickerProps)
         <OptionsGrid container spacing={2} direction="column">
           <Grid item>
             <Button variant="contained" color="primary" onClick={handleSelectRegenerateKeys}>
-              Regenerate your validator keys
+              Regenerate or create new validator keys
             </Button>
           </Grid>
           <Grid item>
