@@ -30,7 +30,7 @@ const Finish: FC<Props> = (props): ReactElement => {
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="h1">
-          Create Keys
+          Done!
         </Typography>
       </Grid>
       <ContentGrid item container>
