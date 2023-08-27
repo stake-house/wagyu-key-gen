@@ -23,5 +23,5 @@ export enum ReuseMnemonicAction {
 export enum Network {
   MAINNET = "Mainnet",
   GOERLI = "Goerli",
-  ZHEJIANG = "Zhejiang"
+  HOLESKY = "Holesky"
 }
