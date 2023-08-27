@@ -34,11 +34,22 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
 
   const disableImport = !props.mnemonic;
 
+  const cleanMnemonic = (mnemonic: String): string => {
+    const punctuationRemoved = mnemonic.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ");
+    const singleSpace = punctuationRemoved.replace(/\s\s+/g, " ");
+    const trimedMnemonic = singleSpace.trim();
+
+    return trimedMnemonic;
+  };
+
   const onImport = () => {
     setMnemonicError(false);
     setMnemonicErrorMsg('');
 
-    const mnemonicArray = props.mnemonic.split(" ");
+    const cleanedMnemonic = cleanMnemonic(props.mnemonic);
+    props.setMnemonic(cleanedMnemonic);
+
+    const mnemonicArray = cleanedMnemonic.split(" ");
 
     if (mnemonicArray.length != MNEMONIC_LENGTH) {
       setMnemonicError(true);
@@ -47,7 +58,7 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
 
       setStep(step + 1);
 
-      window.eth2Deposit.validateMnemonic(props.mnemonic).then(() => {
+      window.eth2Deposit.validateMnemonic(cleanedMnemonic).then(() => {
         props.onStepForward();
       }).catch((error) => {
         setStep(0);
