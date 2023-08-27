@@ -70,7 +70,7 @@ export const ReuseMnemonicActionPicker = (props: ReuseMnemonicActionPickerProps)
         <OptionsGrid container spacing={2} direction="column">
           <Grid item>
             <Button variant="contained" color="primary" onClick={handleSelectRegenerateKeys}>
-              Regenerate or create new validator keys
+              Generate existing or new validator keys
             </Button>
           </Grid>
           <Grid item>
