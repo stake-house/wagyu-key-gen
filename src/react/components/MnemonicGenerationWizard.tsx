@@ -6,6 +6,7 @@ import GenerateMnemonic from './MnemonicGenerationFlow/0-GenerateMnemonic';
 import ShowMnemonic from './MnemonicGenerationFlow/1-2-ShowMnemonic';
 import VerifyMnemonic from './MnemonicGenerationFlow/3-VerifyMnemonic';
 import StepNavigation from './StepNavigation';
+import { cleanMnemonic } from '../helpers';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -97,7 +98,11 @@ const MnemonicGenerationWizard: FC<Props> = (props): ReactElement => {
   }
 
   const verifyMnemonic = () => {
-    if (props.mnemonic.localeCompare(props.mnemonicToVerify) == 0) {
+    const originalMnemonic = cleanMnemonic(props.mnemonic);
+    const mnemonicToVerify = cleanMnemonic(props.mnemonicToVerify);
+    props.setMnemonicToVerify(mnemonicToVerify);
+
+    if (originalMnemonic.localeCompare(mnemonicToVerify) == 0) {
       setMnemonicValidationError(false);
       props.onStepForward();
     } else {

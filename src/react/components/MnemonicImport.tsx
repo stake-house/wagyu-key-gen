@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ValidatingMnemonic from './MnemonicImportFlow/1-ValidatingMnemonic';
 import { errors, MNEMONIC_LENGTH } from "../constants";
 import StepNavigation from './StepNavigation';
+import { cleanMnemonic } from '../helpers';
 
 const ContentGrid = styled(Grid)`
   height: 320px;
@@ -33,14 +34,6 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
   }
 
   const disableImport = !props.mnemonic;
-
-  const cleanMnemonic = (mnemonic: String): string => {
-    const punctuationRemoved = mnemonic.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ");
-    const singleSpace = punctuationRemoved.replace(/\s\s+/g, " ");
-    const trimedMnemonic = singleSpace.trim();
-
-    return trimedMnemonic;
-  };
 
   const onImport = () => {
     setMnemonicError(false);
