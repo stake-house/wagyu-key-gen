@@ -182,7 +182,7 @@ const Home: FC<HomeProps> = (props): ReactElement => {
       <Links>
         <InfoLabel>Github:</InfoLabel> https://github.com/stake-house/wagyu-key-gen
         <br />
-        <InfoLabel>Support:</InfoLabel> https://discord.io/ethstaker
+        <InfoLabel>Support:</InfoLabel> https://dsc.gg/ethstaker
       </Links>
 
       <OptionsGrid container spacing={2} direction="column">
