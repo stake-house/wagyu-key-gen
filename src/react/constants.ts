@@ -1,8 +1,8 @@
 import { StepKey } from './types';
 
 export const errors = {
-	MNEMONIC_LENGTH_ERROR: "Mnemonics must be at least 12 words in length.",
-	INVALID_MNEMONIC_ERROR: "The mnemonic provided is invalid. Please double check each word for any spelling errors.",
+	MNEMONIC_LENGTH_ERROR: "The Secret Recovery Phrase must be at least 12 words in length.",
+	INVALID_MNEMONIC_ERROR: "The Secret Recovery Phrase provided is invalid. Please double check each word for any spelling errors.",
 	MNEMONICS_DONT_MATCH: "The Secret Recovery Phrase you entered does not match what was given to you. Please try again.",
 	NUMBER_OF_KEYS: "Please input a number between 1 and 1000.",
 	ADDRESS_FORMAT_ERROR: "Please enter a valid Ethereum address.",
