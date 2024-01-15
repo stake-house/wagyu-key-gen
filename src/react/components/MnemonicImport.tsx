@@ -2,7 +2,7 @@ import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import ValidatingMnemonic from './MnemonicImportFlow/1-ValidatingMnemonic';
-import { errors, MNEMONIC_ERROR_SEARCH, MINIMUM_MNEMONIC_LENGTH } from "../constants";
+import { errors, MNEMONIC_ERROR_SEARCH, VALID_MNEMONIC_LENGTHS } from "../constants";
 import StepNavigation from './StepNavigation';
 import { cleanMnemonic } from '../helpers';
 
@@ -44,7 +44,7 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
 
     const mnemonicArray = cleanedMnemonic.split(" ");
 
-    if (mnemonicArray.length < MINIMUM_MNEMONIC_LENGTH) {
+    if (!VALID_MNEMONIC_LENGTHS.includes(mnemonicArray.length)) {
       setMnemonicError(true);
       setMnemonicErrorMsg(errors.MNEMONIC_LENGTH_ERROR);
     } else {

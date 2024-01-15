@@ -1,7 +1,10 @@
 import { StepKey } from './types';
 
+export const MNEMONIC_ERROR_SEARCH = "That is not a valid mnemonic";
+export const VALID_MNEMONIC_LENGTHS = [12, 15, 18, 21, 24];
+
 export const errors = {
-	MNEMONIC_LENGTH_ERROR: "The Secret Recovery Phrase must be at least 12 words in length.",
+	MNEMONIC_LENGTH_ERROR: `The Secret Recovery Phrase must be ${VALID_MNEMONIC_LENGTHS.slice(0, -1).join(", ")}, or ${VALID_MNEMONIC_LENGTHS.slice(-1)} words in length. Please verify each word and try again.`,
 	INVALID_MNEMONIC_ERROR: "The Secret Recovery Phrase provided is invalid. Please double check each word for any spelling errors.",
 	MNEMONICS_DONT_MATCH: "The Secret Recovery Phrase you entered does not match what was given to you. Please try again.",
 	NUMBER_OF_KEYS: "Please input a number between 1 and 1000.",
@@ -20,9 +23,6 @@ export const errors = {
 	FOLDER_DOES_NOT_EXISTS: "Folder does not exist. Select an existing folder.",
 	FOLDER_IS_NOT_WRITABLE: "Cannot write in this folder. Select a folder in which you have write permission.",
 };
-
-export const MNEMONIC_ERROR_SEARCH = "That is not a valid mnemonic";
-export const MINIMUM_MNEMONIC_LENGTH = 12;
 
 export const tooltips = {
 	IMPORT_MNEMONIC: "If you've already created a Secret Recovery Phrase, you can use it to regenerate your original keys, create more keys, or generate a BLS to execution change by importing the phrase here.",
