@@ -1,12 +1,13 @@
-import { HashRouter, Route, Switch } from "react-router-dom";
-import React, { FC, ReactElement, useState } from "react";
-import styled from "styled-components";
-import Home from "./pages/Home";
 import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import React, { FC, ReactElement, useState } from "react";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import styled from "styled-components";
 import 'typeface-roboto';
+import { OnlineDetector } from "./components/OnlineDetector";
+import Home from "./pages/Home";
 import MainWizard from "./pages/MainWizard";
 import theme from "./theme";
-import { Network, ReuseMnemonicAction } from './types';
+import { Network } from './types';
 
 const Container = styled.main`
   display: flex;
@@ -16,7 +17,7 @@ const Container = styled.main`
 
 /**
  * The React app top level including theme and routing.
- * 
+ *
  * @returns the react element containing the app
  */
 const App: FC = (): ReactElement => {
@@ -27,6 +28,7 @@ const App: FC = (): ReactElement => {
       <CssBaseline />
       <HashRouter>
         <Container>
+          <OnlineDetector />
           <Switch>
             <Route exact path="/" render={() => <Home network={network} setNetwork={setNetwork} />} />
             <Route exact path="/wizard/:stepSequenceKey" render={() => <MainWizard network={network} />} />

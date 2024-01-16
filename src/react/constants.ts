@@ -22,6 +22,7 @@ export const errors = {
 	FOLDER: "Please select a folder.",
 	FOLDER_DOES_NOT_EXISTS: "Folder does not exist. Select an existing folder.",
 	FOLDER_IS_NOT_WRITABLE: "Cannot write in this folder. Select a folder in which you have write permission.",
+	ONLINE_ERROR: "It is strongly recommended to run this tool offline to avoid exposing your Secret Recovery Phrase",
 };
 
 export const tooltips = {
