@@ -2,7 +2,7 @@ import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import ValidatingMnemonic from './MnemonicImportFlow/1-ValidatingMnemonic';
-import { errors, MNEMONIC_LENGTH } from "../constants";
+import { errors, MNEMONIC_ERROR_SEARCH, VALID_MNEMONIC_LENGTHS } from "../constants";
 import StepNavigation from './StepNavigation';
 import { cleanMnemonic } from '../helpers';
 
@@ -20,7 +20,7 @@ type Props = {
 
 /**
  * This is the Mnemonic Import flow
- * 
+ *
  * @param props data and functions passed in for usage, the names are self documenting
  * @returns mnemonic import components to render
  */
@@ -44,11 +44,10 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
 
     const mnemonicArray = cleanedMnemonic.split(" ");
 
-    if (mnemonicArray.length != MNEMONIC_LENGTH) {
+    if (!VALID_MNEMONIC_LENGTHS.includes(mnemonicArray.length)) {
       setMnemonicError(true);
-      setMnemonicErrorMsg(errors.MNEMONIC_FORMAT);
+      setMnemonicErrorMsg(errors.MNEMONIC_LENGTH_ERROR);
     } else {
-
       setStep(step + 1);
 
       window.eth2Deposit.validateMnemonic(cleanedMnemonic).then(() => {
@@ -57,9 +56,12 @@ const MnemonicImport: FC<Props> = (props): ReactElement => {
         setStep(0);
         const errorMsg = ('stderr' in error) ? error.stderr : error.message;
         setMnemonicError(true);
-        setMnemonicErrorMsg(errorMsg);
+        if (errorMsg.indexOf(MNEMONIC_ERROR_SEARCH) >= 0) {
+          setMnemonicErrorMsg(errors.INVALID_MNEMONIC_ERROR);
+        } else {
+          setMnemonicErrorMsg(errorMsg);
+        }
       })
-
     }
   }
 
