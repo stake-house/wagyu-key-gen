@@ -1,57 +1,78 @@
-import { Snackbar } from "@material-ui/core";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
-import { errors } from "../constants";
 
 /**
  * This will add an event listener to detect the users internet connectivity.
- * If active, an alert will display notifying the user and explaining the security
- * concerns with using the tool online
- * @returns the snackbar component to render to the user if necessary
+ * If active, a dialog will appear notifying the user of the concerns with
+ * running the tool in an online manner
+ * @returns the dialog component to render to the user if necessary
  */
 export const OnlineDetector = () => {
+  const [acknowledge, setAcknowledge] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
+
   const updateOnlineStatus = () => {
-    setOpen(navigator.onLine);
+    if (navigator.onLine) {
+      setOpen(true);
+      window.removeEventListener("online", updateOnlineStatus);
+    }
   };
 
   React.useEffect(() => {
     window.addEventListener("online", updateOnlineStatus);
-    window.addEventListener("offline", updateOnlineStatus);
     updateOnlineStatus();
 
     return () => {
       window.removeEventListener("online", updateOnlineStatus);
-      window.removeEventListener("offline", updateOnlineStatus);
     };
   }, []);
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    // Only allow closing of the snackbar through the alert action
-    if (reason === "clickaway") {
-      return;
-    }
+  const onAcknowledgeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAcknowledge(event.target.checked);
+  };
 
-    setOpen(false);
+  const onClose = () => {
+    if (acknowledge) {
+      setOpen(false);
+    }
   };
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ horizontal: "center", vertical: "top"}}
-        onClose={handleClose}
+      <Dialog
         open={open}
       >
-        <Alert
-          icon={false}
-          onClose={handleClose}
-          severity="error"
-          variant="filled"
-        >
-          <AlertTitle>Internet Connection Detected</AlertTitle>
-          {errors.ONLINE_ERROR}
-        </Alert>
-      </Snackbar>
+        <DialogTitle>Internet Connection Detected</DialogTitle>
+        <DialogContent>
+          <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</Typography>
+          <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</Typography>
+          <FormControlLabel
+            control={
+              <Checkbox checked={acknowledge} onChange={onAcknowledgeChange}/>
+            }
+            label="Click here to acknowledge the risk you are taking"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="primary"
+            disabled={!acknowledge}
+            onClick={() => onClose()}
+            variant="contained"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 };
