@@ -27,23 +27,32 @@ const ErrorButton = styled(IconButton)`
 
 const PulseAnimation = keyframes`
   0% {
-    box-shadow: 0 0 0 0 rgba(250, 30, 14, 0.7);
+    box-shadow: 0 0 0 0px rgba(250, 30, 14, 0.7);
   }
 
   70% {
-    box-shadow: 0 0 0 8px rgba(250, 30, 14, 0);
+    box-shadow: 0 0 0 22px rgba(250, 30, 14, 0);
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgba(250, 30, 14, 0);
+    box-shadow: 0 0 0 0px rgba(250, 30, 14, 0);
   }
 `
 
-const PulsingIcon = styled(PermScanWifiIcon)`
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-  color: ${Orange};
+const PusleCircle = styled(Box)`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  top: 24px;
+  left: 24px;
+  box-shadow: 0 0 0 0px rgba(250, 30, 14, 0.7);
+  opacity: 1;
   animation: ${PulseAnimation} 3s infinite;
   border-radius: 1000px;
+`
+
+const ErrorIcon = styled(PermScanWifiIcon)`
+  color: ${Orange};
 `
 
 const PaddedText = styled(Typography)`
@@ -91,8 +100,9 @@ export const OnlineDetector = () => {
   return (
     <>
       <FixedBox hidden={!showWarning}>
+        <PusleCircle />
         <ErrorButton onClick={() => setOpen(true)}>
-          <PulsingIcon />
+          <ErrorIcon />
         </ErrorButton>
       </FixedBox>
       <Dialog
