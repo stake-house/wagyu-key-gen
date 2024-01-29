@@ -39,7 +39,7 @@ type Props = {
  * @param props.withdrawalAddress the optional wallet address for the withdrawal credentials
  * @param props.password the password to use to protect the keys for the user
  * @param props.folderPath the path at which to store the keys
- * @param props.setFolderPath funciton to update the path
+ * @param props.setFolderPath function to update the path
  * @returns the react element to render
  */
 const KeyGenerationWizard: FC<Props> = (props): ReactElement => {
