@@ -99,7 +99,7 @@ const requireDepositPackages = async (): Promise<boolean> => {
 /**
  * Obtains the Python paths from the current available python executable in the environment.
  * 
- * @returns Returns a Promise<string> that includes the Python paths seperated by the system path
+ * @returns Returns a Promise<string> that includes the Python paths separated by the system path
  *          delimiter.
  */
 const getPythonPath = async (): Promise<string> => {
@@ -307,7 +307,7 @@ const validateBLSCredentials = async (
  *              `goerli`, `holesky`.
  * @param mnemonic The mnemonic to be used as the seed for generating the BTEC.
  * @param index The index of the first validator's keys.
- * @param indices The validator index number(s) as identified on the beacon chain (comma seperated).
+ * @param indices The validator index number(s) as identified on the beacon chain (comma separated).
  * @param withdrawal_credentials A list of the old BLS withdrawal credentials of the given validator(s), comma separated.
  * @param execution_address The withdrawal address.
  * 

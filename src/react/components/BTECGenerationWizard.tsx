@@ -39,7 +39,7 @@ type Props = {
  * @param props.btecIndices a list of the chosen validator index number(s) as identified on the beacon chain
  * @param props.btecCredentials a list of the old BLS withdrawal credentials of the given validator(s)
  * @param props.folderPath the path at which to store the keys
- * @param props.setFolderPath funciton to update the path
+ * @param props.setFolderPath function to update the path
  * @returns the react element to render
  */
 const BTECGenerationWizard: FC<Props> = (props): ReactElement => {
