@@ -349,8 +349,8 @@ def main():
     generate_parser.add_argument("chain", help="For which network to create the change", type=str)
     generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
     generate_parser.add_argument("index", help="Validator start index", type=int)
-    generate_parser.add_argument("indices", help="Validator index number(s) as identified on the beacon chain (comma seperated)", type=str)
-    generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma seperated)", type=str)
+    generate_parser.add_argument("indices", help="Validator index number(s) as identified on the beacon chain (comma separated)", type=str)
+    generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma separated)", type=str)
     generate_parser.add_argument("execution_address", help="withdrawal address", type=str)
     generate_parser.set_defaults(func=parse_bls_change)
 
@@ -358,7 +358,7 @@ def main():
     generate_parser.add_argument("chain", help="For which network to validate these BLS credentials", type=str)
     generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
     generate_parser.add_argument("index", help="Validator start index", type=int)
-    generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma seperated)", type=str)
+    generate_parser.add_argument("withdrawal_credentials", help="Old BLS withdrawal credentials of the given validator(s) (comma separated)", type=str)
     generate_parser.set_defaults(func=parse_validate_bls_credentials)
 
     args = main_parser.parse_args()
