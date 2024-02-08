@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  IconButton,
   Typography,
 } from "@material-ui/core";
 import PermScanWifiIcon from "@material-ui/icons/PermScanWifi";
@@ -14,14 +13,13 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import { Orange } from "../colors";
 
-const FixedBox = styled(Box)`
-  width: 50px;
+const FixedErrorButton = styled(Button)`
+  width: 210px;
   height: 50px;
   position: fixed;
-  top: 10px;
+  top: 26px;
   left: 10px;
-`
-const ErrorButton = styled(IconButton)`
+  cursor: pointer;
   color: ${Orange};
 `
 
@@ -43,8 +41,7 @@ const PusleCircle = styled(Box)`
   position: absolute;
   width: 1px;
   height: 1px;
-  top: 24px;
-  left: 24px;
+  left: 22px;
   box-shadow: 0 0 0 0px rgba(250, 30, 14, 0.7);
   opacity: 1;
   animation: ${PulseAnimation} 3s infinite;
@@ -52,7 +49,8 @@ const PusleCircle = styled(Box)`
 `
 
 const ErrorIcon = styled(PermScanWifiIcon)`
-  color: ${Orange};
+  margin-right: 6px;
+  z-index: 1;
 `
 
 const PaddedText = styled(Typography)`
@@ -99,12 +97,14 @@ export const OnlineDetector = () => {
 
   return (
     <>
-      <FixedBox hidden={!showWarning}>
-        <PusleCircle />
-        <ErrorButton onClick={() => setOpen(true)}>
+      {showWarning && (
+        <FixedErrorButton onClick={() => setOpen(true)}>
+          <PusleCircle />
           <ErrorIcon />
-        </ErrorButton>
-      </FixedBox>
+          <Typography variant="body1">Internet Detected</Typography>
+        </FixedErrorButton>
+      )}
+
       <Dialog
         open={open}
       >
