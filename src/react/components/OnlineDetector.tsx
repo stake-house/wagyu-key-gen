@@ -11,7 +11,7 @@ import {
 import PermScanWifiIcon from "@material-ui/icons/PermScanWifi";
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import { Orange } from "../colors";
+import { BackgroundLight, Orange } from "../colors";
 
 const FixedErrorButton = styled(Button)`
   width: 210px;
@@ -53,18 +53,37 @@ const ErrorIcon = styled(PermScanWifiIcon)`
   z-index: 1;
 `
 
-const PaddedText = styled(Typography)`
-  margin-bottom: 8px;
+const StyledDialog = styled(Dialog)`
+  & .MuiPaper-root {
+    border-radius: 20px;
+    align-items: center;
+    background: ${BackgroundLight};
+    margin: auto;
+    padding: 20px 0px;
+  }
 `
+
+const StyledDialogTitle = styled(DialogTitle)`
+  & .MuiTypography-root {
+    font-size: 30px;
+  }
+`
+
 const StyledDialogContent = styled(DialogContent)`
   min-height: 250px;
 `
 
+const PaddedText = styled(Typography)`
+  margin-bottom: 8px;
+`
+
 /**
  * This will add an event listener to detect the users internet connectivity.
- * If active, a pulsing warning icon will appear in the screen that when clicked will
- * show a dialog warning the user of the danger of internet connectivity
- * @returns the icon and dialog component to render if necessary
+ * If active, a pulsing warning icon with text will appear on the screen that
+ * when clicked will show a dialog warning the user of the danger of internet
+ * connectivity.
+ *
+ * @returns the warning and dialog component to render if necessary
  */
 export const OnlineDetector = () => {
   const [open, setOpen] = React.useState<boolean>(false);
@@ -105,10 +124,10 @@ export const OnlineDetector = () => {
         </FixedErrorButton>
       )}
 
-      <Dialog
+      <StyledDialog
         open={open}
       >
-        <DialogTitle>Internet Connection Detected</DialogTitle>
+        <StyledDialogTitle>Internet Connection Detected</StyledDialogTitle>
         <StyledDialogContent>
           <Grid container direction="column" spacing={3}>
             <Grid item>
@@ -137,7 +156,7 @@ export const OnlineDetector = () => {
             Close
           </Button>
         </DialogActions>
-      </Dialog>
+      </StyledDialog>
     </>
   )
 };
