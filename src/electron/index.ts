@@ -27,7 +27,7 @@ const doesFileExist = (filename: string): boolean => {
 app.on("ready", () => {
   var iconPath = path.join("static", "icon.png");
   const bundledIconPath = path.join(process.resourcesPath, "..", "static", "icon.png");
-  
+
   if (doesFileExist(bundledIconPath)) {
     iconPath = bundledIconPath;
   }
@@ -45,6 +45,7 @@ app.on("ready", () => {
 
     webPreferences: {
       nodeIntegration: false,
+      sandbox: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
