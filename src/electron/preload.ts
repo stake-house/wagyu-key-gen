@@ -5,49 +5,37 @@
 
 import {
   contextBridge,
-  shell,
-  clipboard,
   ipcRenderer,
-  OpenDialogOptions,
-  OpenDialogReturnValue
 } from "electron";
 
-import Web3Utils from 'web3-utils';
-
-import { createMnemonic, generateKeys, validateMnemonic, validateBLSCredentials, generateBLSChange } from './Eth2Deposit';
-
-import { doesDirectoryExist, isDirectoryWritable, findFirstFile } from './BashUtils';
-
-const ipcRendererSendClose = () => {
-  ipcRenderer.send('close');
-};
-
-const invokeShowOpenDialog = (options: OpenDialogOptions): Promise<OpenDialogReturnValue> => {
-  return ipcRenderer.invoke('showOpenDialog', options);
-};
+import {
+  IBashUtilsAPI,
+  IElectronAPI,
+  IEth2DepositAPI,
+  IWeb3UtilsAPI,
+} from "./renderer";
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  'shellOpenExternal': shell.openExternal,
-  'shellShowItemInFolder': shell.showItemInFolder,
-  'clipboardWriteText': clipboard.writeText,
-  'ipcRendererSendClose': ipcRendererSendClose,
-  'invokeShowOpenDialog': invokeShowOpenDialog
+  'clipboardWriteText': (...args: Parameters<IElectronAPI['clipboardWriteText']>) => ipcRenderer.send('clipboardWriteText', ...args),
+  'invokeShowOpenDialog': (...args: Parameters<IElectronAPI['invokeShowOpenDialog']>) => ipcRenderer.invoke('showOpenDialog', ...args),
+  'ipcRendererSendClose': () => ipcRenderer.send('close'),
+  'shellShowItemInFolder': (...args: Parameters<IElectronAPI['shellShowItemInFolder']>) => ipcRenderer.send('shellShowItemInFolder', ...args),
 });
 
 contextBridge.exposeInMainWorld('eth2Deposit', {
-  'createMnemonic': createMnemonic,
-  'generateKeys': generateKeys,
-  'validateMnemonic': validateMnemonic,
-  'validateBLSCredentials': validateBLSCredentials,
-  'generateBLSChange': generateBLSChange
+  'createMnemonic': (...args: Parameters<IEth2DepositAPI['createMnemonic']>) => ipcRenderer.invoke('createMnemonic', ...args),
+  'generateBLSChange': (...args: Parameters<IEth2DepositAPI['generateBLSChange']>) => ipcRenderer.invoke('generateBLSChange', ...args),
+  'generateKeys': (...args: Parameters<IEth2DepositAPI['generateKeys']>) => ipcRenderer.invoke('generateKeys', ...args),
+  'validateBLSCredentials': (...args: Parameters<IEth2DepositAPI['validateBLSCredentials']>) => ipcRenderer.invoke('validateBLSCredentials', ...args),
+  'validateMnemonic': (...args: Parameters<IEth2DepositAPI['validateMnemonic']>) => ipcRenderer.invoke('validateMnemonic', ...args),
 });
 
 contextBridge.exposeInMainWorld('bashUtils', {
-  'doesDirectoryExist': doesDirectoryExist,
-  'isDirectoryWritable': isDirectoryWritable,
-  'findFirstFile': findFirstFile
+  'doesDirectoryExist': (...args: Parameters<IBashUtilsAPI['doesDirectoryExist']>) => ipcRenderer.invoke('doesDirectoryExist', ...args),
+  'findFirstFile': (...args: Parameters<IBashUtilsAPI['findFirstFile']>) => ipcRenderer.invoke('findFirstFile', ...args),
+  'isDirectoryWritable': (...args: Parameters<IBashUtilsAPI['isDirectoryWritable']>) => ipcRenderer.invoke('isDirectoryWritable', ...args),
 });
 
 contextBridge.exposeInMainWorld('web3Utils', {
-  'isAddress': Web3Utils.isAddress
+  'isAddress': (...args: Parameters<IWeb3UtilsAPI['isAddress']>) => ipcRenderer.invoke('isAddress', ...args),
 });

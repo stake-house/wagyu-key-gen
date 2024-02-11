@@ -29,7 +29,7 @@ type Props = {
 /**
  * This is the wizard the user will navigate to configure their BLS to execution change.
  * It uses the notion of a 'step' to render specific pages within the flow.
- * 
+ *
  * @param props.onStepBack function to execute when stepping back
  * @param props.onStepForward function to execute when stepping forward
  * @param props.network the network for which to generate this BTEC
@@ -112,9 +112,9 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
     }
   }
 
-  const validateInputs = () => {
+  const validateInputs = async () => {
     let isError = false;
-    
+
     if (props.startIndex < 0) {
       setStartingIndexError(true);
       isError = true;
@@ -179,7 +179,8 @@ const BTECConfigurationWizard: FC<Props> = (props): ReactElement => {
     }
 
     if (props.withdrawalAddress != "") {
-      if (!window.web3Utils.isAddress(props.withdrawalAddress)) {
+      const isValidAddress = await window.web3Utils.isAddress(props.withdrawalAddress);
+      if (!isValidAddress) {
         setWithdrawalAddressError(true);
         setWithdrawalAddressErrorMsg(errors.ADDRESS_FORMAT_ERROR);
         isError = true;
