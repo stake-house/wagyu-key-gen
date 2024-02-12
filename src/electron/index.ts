@@ -3,11 +3,31 @@
  * This typescript file contains the Electron app which renders the React app.
  */
 
-import { BrowserWindow, app, ipcMain, dialog, clipboard } from "electron";
-import path from "path";
-
-import { accessSync, constants } from "fs";
+import {
+  BrowserWindow,
+  app,
+  clipboard,
+  dialog,
+  ipcMain,
+  shell,
+} from "electron";
 import { OpenDialogOptions } from "electron/common";
+import { accessSync, constants } from "fs";
+import path from "path";
+import { isAddress } from 'web3-utils';
+
+import {
+  doesDirectoryExist,
+  findFirstFile,
+  isDirectoryWritable,
+} from './BashUtils';
+import {
+  createMnemonic,
+  generateBLSChange,
+  generateKeys,
+  validateBLSCredentials,
+  validateMnemonic,
+} from './Eth2Deposit';
 
 /**
  * VERSION and COMMITHASH are set by the git-revision-webpack-plugin module.
@@ -27,7 +47,7 @@ const doesFileExist = (filename: string): boolean => {
 app.on("ready", () => {
   var iconPath = path.join("static", "icon.png");
   const bundledIconPath = path.join(process.resourcesPath, "..", "static", "icon.png");
-  
+
   if (doesFileExist(bundledIconPath)) {
     iconPath = bundledIconPath;
   }
@@ -66,15 +86,60 @@ app.on("ready", () => {
    * This logic closes the application when the window is closed, explicitly.
    * On MacOS this is not a default feature.
    */
-  ipcMain.on('close', (evt, arg) => {
+  ipcMain.on('close', () => {
     app.quit();
-  })
+  });
+
+  /**
+   * Will grab the provide text and copy to the cipboard
+   */
+  ipcMain.on('clipboardWriteText', (evt, ext, type) => {
+    clipboard.writeText(ext, type);
+  });
+
+  /**
+   * Will open a file explorer to the path provided
+   */
+  ipcMain.on('shellShowItemInFolder', (event, fullPath: string) => {
+    shell.showItemInFolder(fullPath);
+  });
 
   /**
    * Provides the renderer a way to call the dialog.showOpenDialog function using IPC.
    */
-  ipcMain.handle('showOpenDialog', async (event, options) => {
-    return await dialog.showOpenDialog(<OpenDialogOptions> options);
+  ipcMain.handle('showOpenDialog', async (event, options: OpenDialogOptions) => {
+    return await dialog.showOpenDialog(options);
+  });
+
+  /**
+   * Passthroughs for non-electron renderer calls
+   */
+  ipcMain.handle('createMnemonic', async (event, ...args: Parameters<typeof createMnemonic>) => {
+    return await createMnemonic(...args);
+  });
+  ipcMain.handle('generateBLSChange', async (event, ...args: Parameters<typeof generateBLSChange>) => {
+    return await generateBLSChange(...args);
+  });
+  ipcMain.handle('generateKeys', async (event, ...args: Parameters<typeof generateKeys>) => {
+    return await generateKeys(...args);
+  });
+  ipcMain.handle('validateBLSCredentials', async (event, ...args: Parameters<typeof validateBLSCredentials>) => {
+    return await validateBLSCredentials(...args);
+  });
+  ipcMain.handle('validateMnemonic', async (event, ...args: Parameters<typeof validateMnemonic>) => {
+    return await validateMnemonic(...args);
+  });
+  ipcMain.handle('doesDirectoryExist', async (event, ...args: Parameters<typeof doesDirectoryExist>) => {
+    return await doesDirectoryExist(...args);
+  });
+  ipcMain.handle('isDirectoryWritable', async (event, ...args: Parameters<typeof isDirectoryWritable>) => {
+    return await isDirectoryWritable(...args);
+  });
+  ipcMain.handle('findFirstFile', async (event, ...args: Parameters<typeof findFirstFile>) => {
+    return await findFirstFile(...args);
+  });
+  ipcMain.handle('isAddress', async (event, ...args: Parameters<typeof isAddress>) => {
+    return await isAddress(...args);
   });
 
   /**

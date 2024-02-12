@@ -25,25 +25,32 @@ const FixedErrorButton = styled(Button)`
 
 const PulseAnimation = keyframes`
   0% {
-    box-shadow: 0 0 0 0px rgba(250, 30, 14, 0.7);
+    background-color: rgba(250, 30, 14, 0.7);
+    width: 0px;
+    height: 0px;
   }
 
   70% {
-    box-shadow: 0 0 0 22px rgba(250, 30, 14, 0);
+    background-color: rgba(250, 30, 14, 0);
+    width: 50px;
+    height: 50px;
+    margin: -25px;
   }
 
   100% {
-    box-shadow: 0 0 0 0px rgba(250, 30, 14, 0);
+    background-color: rgba(250, 30, 14, 0);
+    width: 60px;
+    height: 60px;
+    margin: -30px;
   }
 `
 
 const PusleCircle = styled(Box)`
   position: absolute;
-  width: 1px;
-  height: 1px;
-  left: 22px;
-  box-shadow: 0 0 0 0px rgba(250, 30, 14, 0.7);
-  opacity: 1;
+  width: 0px;
+  height: 0px;
+  left: 23px;
+  background-color: rgba(250, 30, 14, 0);
   animation: ${PulseAnimation} 3s infinite;
   border-radius: 1000px;
 `
