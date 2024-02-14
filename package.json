@@ -68,5 +68,6 @@
       "target": "portable",
       "icon": "static/icon.ico"
     }
-  }
+  },
+  "packageManager": "yarn@4.1.0"
 }
