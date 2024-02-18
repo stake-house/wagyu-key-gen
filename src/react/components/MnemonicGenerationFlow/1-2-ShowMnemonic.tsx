@@ -1,5 +1,6 @@
-import { Tooltip, IconButton, Grid, Typography, TextField, withStyles } from '@material-ui/core';
-import { FileCopy } from '@material-ui/icons';
+import { Tooltip, IconButton, Grid, Typography, TextField } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import { FileCopy } from '@mui/icons-material';
 import React, { FC, ReactElement, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Network } from '../../types';
@@ -115,7 +116,12 @@ const ShowMnemonic: FC<ShowMnemonicProps> = (props): ReactElement => {
             { createMnemonicDisplay() }
             <Grid item xs={1} style={{alignSelf: "center"}}>
               <Tooltip title={copyText} open={copyTooltipOpen} onClose={handleCopyTooltipClose} onOpen={handleCopyTooltipOpen}>
-                <IconButton aria-label="copy" color="primary" onClick={copyMnemonic} autoFocus>
+                <IconButton
+                  aria-label="copy"
+                  color="primary"
+                  onClick={copyMnemonic}
+                  autoFocus
+                  size="large">
                   <FileCopy />
                 </IconButton>
               </Tooltip>

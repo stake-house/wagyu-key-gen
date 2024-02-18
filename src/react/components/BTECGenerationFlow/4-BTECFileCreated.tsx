@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Link } from '@material-ui/core';
+import { Box, Grid, Typography, Link } from '@mui/material';
 import React, { FC, ReactElement } from 'react';
 import styled from 'styled-components';
 import { Network } from '../../types';
@@ -43,7 +43,11 @@ const BTECFileCreated: FC<BTECFileCreatedProps> = (props): ReactElement => {
       <Grid item xs={10}>
           <Box sx={{ m: 2 }}>
             <Typography variant="body1" align="left">
-              Your BLS to execution change file has been created here: <Link display="inline" component="button" onClick={openKeyLocation}>{props.folderPath}</Link>
+              Your BLS to execution change file has been created here: <Link
+              display="inline"
+              component="button"
+              onClick={openKeyLocation}
+              underline="hover">{props.folderPath}</Link>
             </Typography>
           </Box>
       </Grid>

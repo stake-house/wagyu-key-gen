@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import React, { FC, ReactElement } from 'react';
 import styled, { keyframes } from 'styled-components';
 

@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
-import { Stepper, Step, StepLabel, Grid, Typography } from '@material-ui/core';
+import { Stepper, Step, StepLabel, Grid, Typography } from '@mui/material';
 import styled from 'styled-components';
 import { StepKey } from '../types';
 import MnemonicGenerationWizard from "../components/MnemonicGenerationWizard";

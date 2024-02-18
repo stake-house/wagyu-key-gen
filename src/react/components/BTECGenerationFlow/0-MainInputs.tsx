@@ -1,4 +1,4 @@
-import { Grid, TextField, Tooltip, Typography } from '@material-ui/core';
+import { Grid, TextField, Tooltip, Typography } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react';
 import styled from "styled-components";
 import { errors, tooltips } from '../../constants';

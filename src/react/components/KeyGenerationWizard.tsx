@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 import SelectFolder from './KeyGeneratioinFlow/2-SelectFolder';

@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from "react";
-import { Grid, Button } from "@material-ui/core";
+import { Grid, Button } from "@mui/material";
 
 type Props = {
   onPrev: () => void,

@@ -1,4 +1,4 @@
-import { Grid, TextField } from '@material-ui/core';
+import { Grid, TextField } from '@mui/material';
 import React, { FC, ReactElement, Dispatch, SetStateAction, useState } from 'react';
 import { errors } from '../../constants';
 import { Network } from '../../types';

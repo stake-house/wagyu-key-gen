@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
 import { Network } from '../types';

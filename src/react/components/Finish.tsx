@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, Grid, Typography } from '@mui/material';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import { Network } from '../types';

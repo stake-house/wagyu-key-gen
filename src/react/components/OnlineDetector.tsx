@@ -7,8 +7,8 @@ import {
   DialogTitle,
   Grid,
   Typography,
-} from "@material-ui/core";
-import PermScanWifiIcon from "@material-ui/icons/PermScanWifi";
+} from "@mui/material";
+import PermScanWifiIcon from "@mui/icons-material/PermScanWifi";
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import { BackgroundLight, Orange } from "../colors";

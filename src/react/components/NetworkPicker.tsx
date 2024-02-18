@@ -1,5 +1,5 @@
 import { BackgroundLight, } from '../colors';
-import { FormControl, FormControlLabel, Radio, RadioGroup, Button, Divider, Typography } from '@material-ui/core';
+import { FormControl, FormControlLabel, Radio, RadioGroup, Button, Divider, Typography } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { Network } from '../types';
@@ -65,7 +65,7 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
       <Header>Network</Header>
       <form onSubmit={closePicker} style={{textAlign: 'center'}}>
         <div>
-          <FormControl focused>
+          <FormControl variant="standard" focused>
             <RadioGroup aria-label="gender" name="gender1" value={props.network} onChange={networkChanged}>
               <FormControlLabel value={Network.MAINNET} control={<Radio />} label={Network.MAINNET} />
               <Divider />
@@ -78,5 +78,5 @@ export const NetworkPicker = (props: NetworkPickerProps) => {
         <Submit variant="contained" color="primary" type="submit" tabIndex={1}>OK</Submit>
       </form>
     </Container>
-  )
+  );
 }

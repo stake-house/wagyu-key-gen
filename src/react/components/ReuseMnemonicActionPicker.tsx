@@ -1,5 +1,5 @@
 import { BackgroundLight, } from '../colors';
-import { Button, Grid, Tooltip } from '@material-ui/core';
+import { Button, Grid, Tooltip } from '@mui/material';
 import React from 'react';
 
 import { ReuseMnemonicAction } from '../types';

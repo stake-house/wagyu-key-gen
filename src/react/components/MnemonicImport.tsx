@@ -1,4 +1,4 @@
-import { Grid, TextField, Typography } from "@material-ui/core";
+import { Grid, TextField, Typography } from "@mui/material";
 import React, { FC, ReactElement, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import ValidatingMnemonic from './MnemonicImportFlow/1-ValidatingMnemonic';

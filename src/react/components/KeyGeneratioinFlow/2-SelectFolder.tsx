@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, Grid, Typography } from '@mui/material';
 import { OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 

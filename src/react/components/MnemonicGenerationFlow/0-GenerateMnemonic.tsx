@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
-import { Box, Grid, Link, Typography } from '@material-ui/core';
+import { Box, Grid, Link, Typography } from '@mui/material';
 import styled from 'styled-components';
 
 type GenerateMnemonicProps = {
