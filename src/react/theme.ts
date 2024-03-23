@@ -1,8 +1,6 @@
 import { createTheme} from "@mui/material";
 import { amber, blue } from "@mui/material/colors";
 
-
-
 const theme = createTheme({
   palette: {
     mode: "dark",
@@ -12,11 +10,6 @@ const theme = createTheme({
       default: "#303030",
     },
   },
-  typography: {
-    h1: {
-      fontSize: "36px"
-    }
-  }
 });
 
 

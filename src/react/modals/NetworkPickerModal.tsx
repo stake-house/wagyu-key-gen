@@ -1,29 +1,21 @@
-import { Box, Button, Divider, FormControl, FormControlLabel, Modal, Radio, RadioGroup, Typography, styled } from "@mui/material";
+import {
+  Button,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
 import { Network } from "../types";
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../globalContext";
+import WagyuModal from "./WagyuModal";
 
 interface NetworkPickerModalParams {
   onClose: () => void;
   showModal: boolean;
 }
-
-const Header = styled(Box)`
-  font-size: 36px;
-  margin-top: 30px;
-  margin-bottom: 30px;
-`;
-
-const SubHeader = styled(Typography)`
-  font-size: 20px;
-  margin-top: 20px;
-  margin-bottom: 15px;
-`;
-
-const Submit = styled(Button)`
-  margin: 35px auto 0;
-  margin-top: 35px;
-`;
 
 const NetworkPickerModal = ({onClose, showModal}: NetworkPickerModalParams) => {
   const { network, setNetwork } = useContext(GlobalContext);
@@ -52,32 +44,34 @@ const NetworkPickerModal = ({onClose, showModal}: NetworkPickerModalParams) => {
   };
 
   return (
-    <Modal
+    <WagyuModal
+      className="tw-w-[350px] tw-h-[444px]"
       open={showModal}
       onClose={onClose}
     >
       <div>
-        <Header>Network</Header>
+        <div className="tw-text-4xl tw-my-7">Network</div>
         <FormControl variant="standard" focused>
           <RadioGroup aria-label="gender" name="gender1" value={formNetwork} onChange={onNetworkChange}>
             <FormControlLabel value={Network.MAINNET} control={<Radio />} label={Network.MAINNET} />
             <Divider />
-            <SubHeader>Testnets</SubHeader>
+            <Typography className="tw-text-xl tw-mt-5 tw-mb-4">Testnets</Typography>
             <FormControlLabel value={Network.HOLESKY} control={<Radio />} label={Network.HOLESKY} />
             <FormControlLabel value={Network.GOERLI} control={<Radio />} label={Network.GOERLI} />
           </RadioGroup>
 
-          <Submit
+          <Button
+            className="tw-mt-9"
             color="primary"
             onClick={onSubmit}
             variant="contained"
             tabIndex={1}
           >
             OK
-          </Submit>
+          </Button>
         </FormControl>
       </div>
-    </Modal>
+    </WagyuModal>
   )
 };
 
