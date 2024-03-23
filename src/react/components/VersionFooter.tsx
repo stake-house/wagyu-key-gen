@@ -1,5 +1,4 @@
-import { Grid, Typography } from "@mui/material";
-import React from "react";
+import { Typography } from "@mui/material";
 import styled from "styled-components";
 
 declare var VERSION: string;
@@ -19,17 +18,13 @@ const Container = styled.div`
 
 /**
  * This component is a footer used to display the version and commit hash.
- * 
+ *
  * @returns the footer component containing the version and commit hash
  */
 const VersionFooter = () => {
   return(
     <Container>
-      <Grid container direction="column">
-        <Grid item xs={12}>
-          <SoftText>Version: {VERSION} - Commit Hash: {COMMITHASH}</SoftText>
-        </Grid>
-      </Grid>
+      <SoftText>Version: {VERSION} - Commit Hash: {COMMITHASH}</SoftText>
     </Container>
   )
 }
