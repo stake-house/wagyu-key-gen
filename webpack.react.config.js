@@ -30,8 +30,7 @@ module.exports = {
       // at the moment the only custom handling we have is for typescript files
       // .ts and .tsx files get passed to ts-loader
       {
-        test: /\.css$/,
-        exclude: /node_modules/,
+        test: /\.(scss|css)$/i,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       }, {
         test: /\.tsx?$/,

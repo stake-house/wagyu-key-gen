@@ -13,7 +13,6 @@
     "@types/styled-components": "^5.1.11",
     "@types/tmp": "^0.2.2",
     "autoprefixer": "^10.4.19",
-    "css-modules-typescript-loader": "^4.0.1",
     "electron": "^28.2.2",
     "electron-builder": "^24.9.1",
     "postcss": "^8.4.38",

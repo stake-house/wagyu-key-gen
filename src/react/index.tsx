@@ -1,5 +1,6 @@
 import * as ReactDOM from "react-dom";
 import App from "./App";
+import 'typeface-roboto';
 import './index.css';
 
 // We find our app DOM element as before
