@@ -1,11 +1,9 @@
 import { CssBaseline, ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
-import React, { FC, ReactElement, useState } from "react";
+import { FC, ReactElement } from "react";
 import { HashRouter, Route, Switch } from "react-router-dom";
 import styled from "styled-components";
-import 'typeface-roboto';
 import Home from "./pages/Home";
 import theme from "./theme";
-import NetworkHeader from "./components/NetworkHeader";
 import VersionFooter from "./components/VersionFooter";
 import GlobalContextWrapper from "./globalContext";
 

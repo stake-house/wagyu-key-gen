@@ -30,7 +30,7 @@ const Home = () => {
   return (
     <div>
       <NetworkContainer>
-        Select Network:{" "}
+        <span className="tw-text-xl">Select Network:</span>{" "}
         <Button color="primary" onClick={handleOpenNetworkModal} tabIndex={tabIndex}>{network}</Button>
       </NetworkContainer>
 
