@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Network } from "../types";
 import { useContext, useEffect, useState } from "react";
-import { GlobalContext } from "../globalContext";
+import { GlobalContext } from "../GlobalContext";
 import WagyuModal from "./WagyuModal";
 
 interface NetworkPickerModalParams {

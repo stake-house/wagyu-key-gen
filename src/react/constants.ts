@@ -47,3 +47,20 @@ export const stepLabels = {
   [StepKey.BTECGeneration]: 'Create Crendentials Change',
   [StepKey.FinishBTEC]: 'Finish'
 };
+
+export const CreateMnemonicFlow = [StepKey.MnemonicGeneration, StepKey.KeyConfiguration, StepKey.KeyGeneration, StepKey.Finish];
+export const ExistingMnemonicFlow = [StepKey.MnemonicImport, StepKey.KeyConfiguration, StepKey.KeyGeneration, StepKey.Finish];
+export const BTECFlow = [StepKey.MnemonicImport, StepKey.BTECConfiguration, StepKey.BTECGeneration, StepKey.FinishBTEC];
+
+export const CreatePath = "/create";
+export const ConfigureCreatePath = "/configure-create";
+export const CreateKeysCreatePath = "/create-keys";
+export const FinishCreatePath ="/finish-create";
+
+export const ExistingImportPath = "/import-existing";
+export const ConfigureExistingPath = "/configure-existing";
+export const CreateKeysExistingPath = "/create-existing-keys";
+export const FinishExistingPath = "/finish-existing";
+
+export const BTECImportPath = "/import-btec";
+export const ConfigureBTECPath = "/configure-btec";

@@ -4,7 +4,9 @@ module.exports = {
   content: ['./src/react/**/*.{ts,tsx,html}'],
   theme: {
     colors: {
-      gray: "#808080",
+      cyan: "cyan",
+      gray: "gray",
+      transparent: "transparent",
       gray1: "#F1F6FE",
       gray2: "#E3EBF7",
       gray3: "#d0dae8",
@@ -51,7 +53,11 @@ module.exports = {
             "height": "60px",
             "margin": "-30px"
           }
-        }
+        },
+      },
+      animation: {
+        LoaderSpin: "spin 2s linear infinite",
+        OnlinePulse: "OnlinePulse 3s infinite"
       }
     }
   },

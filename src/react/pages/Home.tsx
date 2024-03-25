@@ -1,9 +1,10 @@
 import { useContext, useMemo, useState } from "react";
-import { GlobalContext } from "../globalContext";
+import { useHistory } from "react-router-dom";
+import { GlobalContext } from "../GlobalContext";
 import { Button, Tooltip, Typography } from "@mui/material";
 import NetworkPickerModal from "../modals/NetworkPickerModal";
 import { KeyIcon } from "../icons/KeyIcon";
-import { tooltips } from "../constants";
+import { BTECImportPath, CreatePath, ExistingImportPath, tooltips } from "../constants";
 import ReuseMnemonicActionModal from "../modals/ReuseMnemonicActionModal";
 import { ReuseMnemonicAction } from "../types";
 
@@ -14,6 +15,8 @@ const Home = () => {
   const [showReuseMnemonicModal, setShowReuseMnemonicModal] = useState(false);
   const [createMnemonicSelected, setCreateMnemonicSelected] = useState(false);
   const [useExistingMnemonicSelected, setUseExistingMnemonicSelected] = useState(false);
+
+  let history = useHistory();
 
   const tabIndex = useMemo(() => showNetworkModal ? -1 : 1, [showNetworkModal]);
 
@@ -37,7 +40,7 @@ const Home = () => {
     if (!wasNetworkModalOpened) {
       handleOpenNetworkModal();
     } else {
-
+      history.push(CreatePath)
     }
   };
 
@@ -57,6 +60,13 @@ const Home = () => {
 
   const handleReuseMnemonicActionSubmit = (action: ReuseMnemonicAction) => {
     setShowReuseMnemonicModal(false);
+    if (action === ReuseMnemonicAction.RegenerateKeys) {
+
+      history.push(ExistingImportPath);
+    } else if (action === ReuseMnemonicAction.GenerateBLSToExecutionChange) {
+
+      history.push(BTECImportPath);
+    }
   };
 
   return (

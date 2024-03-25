@@ -10,6 +10,11 @@ const theme = createTheme({
       default: "#303030",
     },
   },
+  typography: {
+    h1: {
+      fontSize: "2.25rem"
+    }
+  }
 });
 
 
