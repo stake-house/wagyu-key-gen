@@ -53,17 +53,19 @@ export const CreateMnemonicFlow = [StepKey.MnemonicGeneration, StepKey.KeyConfig
 export const ExistingMnemonicFlow = [StepKey.MnemonicImport, StepKey.KeyConfiguration, StepKey.KeyGeneration, StepKey.Finish];
 export const BTECFlow = [StepKey.MnemonicImport, StepKey.BTECConfiguration, StepKey.BTECGeneration, StepKey.FinishBTEC];
 
-export const CreatePath = "/create";
-export const ConfigureCreatePath = "/configure-create";
-export const CreateKeysCreatePath = "/create-keys";
-export const FinishCreatePath ="/finish-create";
+export const paths = {
+	CREATE_MNEMONIC: "/create",
+	CONFIGURE_CREATE: "/configure-create",
+	CREATE_KEYS_CREATE: "/create-keys",
+	FINISH_CREATE:"/finish-create",
 
-export const ExistingImportPath = "/import-existing";
-export const ConfigureExistingPath = "/configure-existing";
-export const CreateKeysExistingPath = "/create-existing-keys";
-export const FinishExistingPath = "/finish-existing";
+	EXISTING_IMPORT: "/import-existing",
+	CONFIGURE_EXISTING: "/configure-existing",
+	CREATE_KEYS_EXISTING: "/create-existing-keys",
+	FINISH_EXISTING: "/finish-existing",
 
-export const BTECImportPath = "/import-btec";
-export const ConfigureBTECPath = "/configure-btec";
-export const CreateCredentialsPath = "/create-btec";
-export const FinishCredentialsPath = "/finish-btec";
+	BTEC_IMPORT: "/import-btec",
+	CONFIGURE_BTEC: "/configure-btec",
+	CREATE_CREDENTIALS: "/create-btec",
+	FINISH_CREDENTIALS: "/finish-btec",
+};

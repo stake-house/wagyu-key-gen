@@ -1,10 +1,16 @@
 import { Button, Link, Typography } from "@mui/material";
+import { useContext, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
+import { BTECContext } from "../BTECContext";
 import WizardWrapper from "../components/WizardWrapper";
 import { BTECFlow } from "../constants";
-import { useHistory } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import { BTECContext } from "../BTECContext";
 
+/**
+ * Final step of the credentials generation flow.
+ * Shows the user the location where the files were stored and provides
+ * some additional information.
+ */
 const FinishCredentialsGeneration = () => {
   const { folderLocation } = useContext(BTECContext);
   const history = useHistory();
@@ -15,6 +21,9 @@ const FinishCredentialsGeneration = () => {
     }
   }, []);
 
+  /**
+   * Will open a directory explorer where the credential change file was saved
+   */
   const openKeyLocation = () => {
     window.bashUtils.findFirstFile(folderLocation, "keystore")
       .then((keystoreFile) => {

@@ -1,23 +1,38 @@
 import { Button, TextField } from "@mui/material";
-import { useHistory } from "react-router-dom";
-import WizardWrapper from "../components/WizardWrapper";
 import { useContext, useState } from "react";
-import { cleanMnemonic } from "../helpers";
-import { BTECFlow, BTECImportPath, ConfigureBTECPath, ConfigureExistingPath, ExistingMnemonicFlow, MNEMONIC_ERROR_SEARCH, VALID_MNEMONIC_LENGTHS, errors } from "../constants";
-import Loader from "../components/Loader";
-import { KeyCreationContext } from "../KeyCreationContext";
-import { BTECContext } from "../BTECContext";
+import { useHistory } from "react-router-dom";
 
+import { BTECContext } from "../BTECContext";
+import Loader from "../components/Loader";
+import WizardWrapper from "../components/WizardWrapper";
+import {
+  BTECFlow,
+  ExistingMnemonicFlow,
+  MNEMONIC_ERROR_SEARCH,
+  VALID_MNEMONIC_LENGTHS,
+  errors,
+  paths,
+} from "../constants";
+import { cleanMnemonic } from "../helpers";
+import { KeyCreationContext } from "../KeyCreationContext";
+
+/**
+ * Allows the user to import an existing mnemonic to kickstart either the
+ * validator key creation or withdrawal credentials change flow
+ */
 const MnemonicImport = () => {
   const {mnemonic: btecMnemonic, setMnemonic: setBTECMnemonic} = useContext(BTECContext);
   const {mnemonic, setMnemonic} = useContext(KeyCreationContext);
   const history = useHistory();
-  const usingBTEC = history.location.pathname === BTECImportPath;
+  const usingBTEC = history.location.pathname === paths.BTEC_IMPORT;
 
   const [error, setError] = useState("");
   const [inputMnemonic, setInputMnemonic] = useState(usingBTEC ? btecMnemonic : mnemonic);
   const [validatingMnemonic, setValidatingMnemonic] = useState(false);
 
+  /**
+   * Verifies the mnemonic is valid and will notify the user if not
+   */
   const verifyMnemonic = () => {
     setError("");
 
@@ -37,7 +52,7 @@ const MnemonicImport = () => {
           setMnemonic(cleanedMnemonic);
         }
         setValidatingMnemonic(false);
-        history.push(usingBTEC ? ConfigureBTECPath : ConfigureExistingPath);
+        history.push(usingBTEC ? paths.CONFIGURE_BTEC : paths.CONFIGURE_EXISTING);
       }).catch((error) => {
         const errorMsg = ('stderr' in error) ? error.stderr : error.message;
 

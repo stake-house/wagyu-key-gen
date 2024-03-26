@@ -1,13 +1,19 @@
 import { Button, Typography } from "@mui/material";
-import WizardWrapper from "../components/WizardWrapper";
-import { BTECFlow, BTECImportPath, FinishCredentialsPath } from "../constants";
 import { useContext, useEffect, useState } from "react";
-import { GlobalContext } from "../GlobalContext";
-import { BTECContext } from "../BTECContext";
-import Loader from "../components/Loader";
-import FolderSelector from "../components/FolderSelector";
 import { useHistory } from "react-router-dom";
 
+import { BTECContext } from "../BTECContext";
+import FolderSelector from "../components/FolderSelector";
+import Loader from "../components/Loader";
+import WizardWrapper from "../components/WizardWrapper";
+import { BTECFlow, paths } from "../constants";
+import { GlobalContext } from "../GlobalContext";
+
+/**
+ * Allows the user to select a folder where the credentials will be saved
+ * and after which will attempt to generate the credential change and save
+ * to the specified folder
+ */
 const CreateCredentialsChange = () => {
   const { network } = useContext(GlobalContext);
   const {
@@ -26,7 +32,7 @@ const CreateCredentialsChange = () => {
 
   useEffect(() => {
     if (!mnemonic) {
-      history.replace(BTECImportPath);
+      history.replace(paths.BTEC_IMPORT);
     }
   }, []);
 
@@ -34,6 +40,10 @@ const CreateCredentialsChange = () => {
     setSelectedFolder(folder);
   };
 
+  /**
+   * Attempts to generate the credentials change and if successful send the user
+   * to the final step of the flow
+   */
   const handleBTECFileGeneration = () => {
     setCreatingCredentialsChange(true);
     let appendedWithdrawalAddress = withdrawalAddress;
@@ -52,7 +62,7 @@ const CreateCredentialsChange = () => {
       appendedWithdrawalAddress,
     ).then(() => {
       setFolderLocation(selectedFolder);
-      history.push(FinishCredentialsPath);
+      history.push(paths.FINISH_CREDENTIALS);
     }).catch((error) => {
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
       setGenerationError(errorMsg);

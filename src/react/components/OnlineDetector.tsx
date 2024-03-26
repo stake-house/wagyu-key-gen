@@ -1,25 +1,14 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import PermScanWifiIcon from "@mui/icons-material/PermScanWifi";
 import React from "react";
+
 import OnlineWarningModal from "../modals/OnlineWarningModal";
 
 /**
  * This will add an event listener to detect the users internet connectivity.
  * If active, a pulsing warning icon with text will appear on the screen that
- * when clicked will show a dialog warning the user of the danger of internet
+ * when clicked will show a modal to warn the user of the danger of internet
  * connectivity.
- *
- * @returns the warning and dialog component to render if necessary
  */
 export const OnlineDetector = () => {
   const [open, setOpen] = React.useState<boolean>(false);

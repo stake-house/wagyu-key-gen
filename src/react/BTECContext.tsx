@@ -30,6 +30,9 @@ export const BTECContext = createContext<BTECContextType>({
   setWithdrawalAddress: () => {},
 });
 
+/**
+ * Context for making the withdrawal credentials change
+ */
 const BTECContextWrapper = ({ children }: { children: React.ReactNode}) => {
   const [btecIndices, setBTECIndices] = useState<string>("");
   const [btecCredentials, setBTECCredentials] = useState<string>("");

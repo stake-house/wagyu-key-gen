@@ -1,12 +1,17 @@
 import { Button, TextField, Tooltip, Typography } from "@mui/material";
-import WizardWrapper from "../components/WizardWrapper";
-import { BTECFlow, BTECImportPath, CreateCredentialsPath, errors, tooltips } from "../constants";
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { BTECContext } from "../BTECContext";
-import { GlobalContext } from "../GlobalContext";
-import Loader from "../components/Loader";
 
+import { BTECContext } from "../BTECContext";
+import Loader from "../components/Loader";
+import WizardWrapper from "../components/WizardWrapper";
+import { BTECFlow, errors, paths, tooltips } from "../constants";
+import { GlobalContext } from "../GlobalContext";
+
+/**
+ * Form to provide start index, validator indices, current withdrawal credentials, and the
+ * desired withdrawal address to be set.
+ */
 const ConfigureWithdrawalAddress = () => {
   const {
     btecCredentials,
@@ -35,7 +40,7 @@ const ConfigureWithdrawalAddress = () => {
 
   useEffect(() => {
     if (!mnemonic) {
-      history.replace(BTECImportPath);
+      history.replace(paths.BTEC_IMPORT);
     }
   }, []);
 
@@ -56,6 +61,14 @@ const ConfigureWithdrawalAddress = () => {
     setInputWithdrawalAddress(e.target.value.trim());
   };
 
+  /**
+   * Three step function:
+   *  - Validate all inputs and make sure there are no errors
+   *  - If no errors, validate the provided BLS credentials
+   *  - If successful, send user to the creation step
+   *
+   * Any errors the user will be provided a corresponding error message
+   */
   const validateInputs = async () => {
     let isError = false;
 
@@ -139,7 +152,7 @@ const ConfigureWithdrawalAddress = () => {
         setIndex(inputIndex);
         setWithdrawalAddress(inputWithdrawalAddress);
 
-        history.push(CreateCredentialsPath);
+        history.push(paths.CREATE_CREDENTIALS);
       }).catch(() => {
         setValidatingCredentials(false);
         setCredentialsError(errors.BLS_CREDENTIALS_NO_MATCH);

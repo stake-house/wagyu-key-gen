@@ -1,15 +1,20 @@
-import { Button, Grid, IconButton, TextField, Tooltip, Typography } from "@mui/material";
-import WizardWrapper from "../components/WizardWrapper";
-import { StepKey } from "../types";
-import Loader from "../components/Loader";
-import { useContext, useEffect, useMemo, useState } from "react";
 import { FileCopy } from "@mui/icons-material";
-import VerifyMnemonic from "../components/VerifyMnemonic";
-import { cleanMnemonic } from '../helpers';
+import { Button, Grid, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { ConfigureCreatePath } from "../constants";
-import { KeyCreationContext } from "../KeyCreationContext";
 
+import Loader from "../components/Loader";
+import VerifyMnemonic from "../components/VerifyMnemonic";
+import WizardWrapper from "../components/WizardWrapper";
+import { paths } from "../constants";
+import { cleanMnemonic } from '../helpers';
+import { KeyCreationContext } from "../KeyCreationContext";
+import { StepKey } from "../types";
+
+/**
+ * Creates a new mnemonic for the user which will then be validated to make sure the
+ * user has stored it properly.
+ */
 const CreateMnemonic = () => {
   const {mnemonic, setMnemonic} = useContext(KeyCreationContext);
   const history = useHistory();
@@ -76,6 +81,9 @@ const CreateMnemonic = () => {
     }
   };
 
+  /**
+   * Creates an array of inputs that will display each word of the mnemonic
+   */
   const createMnemonicDisplay = () => {
     return(
       <Grid container item xs={10} spacing={2}>
@@ -124,7 +132,7 @@ const CreateMnemonic = () => {
 
     if (cleanedMnemonic.localeCompare(cleanedMnemonicToVerify) === 0) {
       setMnemonicValidationError(false);
-      history.push(ConfigureCreatePath);
+      history.push(paths.CONFIGURE_CREATE);
     } else {
       setMnemonicValidationError(true);
     }

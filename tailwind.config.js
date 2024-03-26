@@ -34,6 +34,9 @@ module.exports = {
       orange: "#F2994A",
     },
     extend: {
+      fontSize: {
+        xxs: ".625rem",
+      },
       keyframes: {
         OnlinePulse: {
           "0%": {

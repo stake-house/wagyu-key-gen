@@ -1,13 +1,19 @@
+import { Button, Tooltip, Typography } from "@mui/material";
 import { useContext, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
+
+import { paths, tooltips } from "../constants";
 import { GlobalContext } from "../GlobalContext";
-import { Button, Tooltip, Typography } from "@mui/material";
-import NetworkPickerModal from "../modals/NetworkPickerModal";
 import { KeyIcon } from "../icons/KeyIcon";
-import { BTECImportPath, CreatePath, ExistingImportPath, tooltips } from "../constants";
+import NetworkPickerModal from "../modals/NetworkPickerModal";
 import ReuseMnemonicActionModal from "../modals/ReuseMnemonicActionModal";
 import { ReuseMnemonicAction } from "../types";
 
+/**
+ * Landed page of the application.
+ * The user will be able to select a network and choose the primary action
+ * they wish to make.
+ */
 const Home = () => {
   const { network } = useContext(GlobalContext);
   const [wasNetworkModalOpened, setWasNetworkModalOpened] = useState(false);
@@ -40,7 +46,7 @@ const Home = () => {
     if (!wasNetworkModalOpened) {
       handleOpenNetworkModal();
     } else {
-      history.push(CreatePath)
+      history.push(paths.CREATE_MNEMONIC)
     }
   };
 
@@ -62,10 +68,10 @@ const Home = () => {
     setShowReuseMnemonicModal(false);
     if (action === ReuseMnemonicAction.RegenerateKeys) {
 
-      history.push(ExistingImportPath);
+      history.push(paths.EXISTING_IMPORT);
     } else if (action === ReuseMnemonicAction.GenerateBLSToExecutionChange) {
 
-      history.push(BTECImportPath);
+      history.push(paths.BTEC_IMPORT);
     }
   };
 

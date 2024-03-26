@@ -1,13 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import WizardWrapper from "../components/WizardWrapper";
 import { Button, Typography } from "@mui/material";
-import { CreateKeysExistingPath, CreateMnemonicFlow, CreatePath, ExistingImportPath, ExistingMnemonicFlow, FinishCreatePath, FinishExistingPath } from "../constants";
-import { KeyCreationContext } from "../KeyCreationContext";
+
 import FolderSelector from "../components/FolderSelector";
 import Loader from "../components/Loader";
+import WizardWrapper from "../components/WizardWrapper";
+import { CreateMnemonicFlow, ExistingMnemonicFlow, paths } from "../constants";
 import { GlobalContext } from "../GlobalContext";
+import { KeyCreationContext } from "../KeyCreationContext";
 
+/**
+ * Allows the user to select a destination folder for the validator keys.
+ * After which the user can attempt to generate the keys.
+ */
 const CreateValidatorKeys = () => {
   const {
     setFolderLocation,
@@ -19,7 +24,7 @@ const CreateValidatorKeys = () => {
   } = useContext(KeyCreationContext);
   const { network } = useContext(GlobalContext);
   const history = useHistory();
-  const usingExistingFlow = history.location.pathname === CreateKeysExistingPath;
+  const usingExistingFlow = history.location.pathname === paths.CREATE_KEYS_EXISTING;
 
   const [creatingKeys, setCreatingKeys] = useState(false);
   const [generationError, setGenerationError] = useState("");
@@ -27,7 +32,7 @@ const CreateValidatorKeys = () => {
 
   useEffect(() => {
     if (!mnemonic) {
-      history.replace(usingExistingFlow ? ExistingImportPath : CreatePath);
+      history.replace(usingExistingFlow ? paths.EXISTING_IMPORT : paths.CREATE_MNEMONIC);
     }
   }, []);
 
@@ -35,6 +40,10 @@ const CreateValidatorKeys = () => {
     setSelectedFolder(folder);
   };
 
+  /**
+   * Will attempt to generate the validator keys with the provided folder and if successful
+   * will send the user to the final step of the flow
+   */
   const createKeys = () => {
     setCreatingKeys(true);
 
@@ -54,7 +63,7 @@ const CreateValidatorKeys = () => {
       selectedFolder,
     ).then(() => {
       setFolderLocation(selectedFolder);
-      history.push(usingExistingFlow ? FinishExistingPath : FinishCreatePath);
+      history.push(usingExistingFlow ? paths.FINISH_EXISTING : paths.FINISH_CREATE);
     }).catch((error) => {
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
       setGenerationError(errorMsg);

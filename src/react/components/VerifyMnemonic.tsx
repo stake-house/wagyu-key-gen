@@ -1,8 +1,10 @@
 import { Grid, TextField } from "@mui/material";
-import { Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { GlobalContext } from "../GlobalContext";
-import { Network } from "../types";
+import { Dispatch,  SetStateAction, useContext, useRef, useState } from "react";
+
 import { errors } from "../constants";
+import { GlobalContext } from "../GlobalContext";
+import { KeyCreationContext } from "../KeyCreationContext";
+import { Network } from "../types";
 
 interface VerifyMnemonicParams {
   hasError: boolean;
@@ -11,13 +13,22 @@ interface VerifyMnemonicParams {
   onVerifyMnemonic: () => void;
 }
 
+/**
+ * Creates a grid of inputs if on mainnet or a single textbox for ease of testing.
+ * The user fills the form with the mnemonic and the input will be provided to the
+ * onVerifyMnemonic for futher action
+ *
+ * mnemonicToVerify is provided as a param instead of existing only in this component
+ * so the parent can fill the value if the user goes back in navigation
+ */
 const VerifyMnemonic = ({
   hasError = false,
   mnemonicToVerify,
   setMnemonicToVerify,
   onVerifyMnemonic,
 }: VerifyMnemonicParams) => {
-  const { mnemonic, network } = useContext(GlobalContext);
+  const { mnemonic } = useContext(KeyCreationContext);
+  const { network } = useContext(GlobalContext);
   const [mnemonicToVerifyArray, setMnemonicToVerifyArray] = useState<string[]>(
     mnemonicToVerify ? mnemonicToVerify.split(' ') : Array(24).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
@@ -41,8 +52,11 @@ const VerifyMnemonic = ({
     }
   };
 
+  /**
+   * Will focus on a new input depending on the pressed key
+   * @param index the current input index
+   */
   const handleKeysForWord = (index: number) => (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Navigate phrase confirmation with spacebar or arrowkeys
     let nextFocus = index;
     const currentTextFieldValue = mnemonicToVerifyArray[index];
 

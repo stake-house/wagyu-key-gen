@@ -1,10 +1,18 @@
 import { Button, TextField, Tooltip, Typography } from "@mui/material";
-import WizardWrapper from "../components/WizardWrapper";
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { ConfigureExistingPath, CreateKeysCreatePath, CreateKeysExistingPath, CreateMnemonicFlow, CreatePath, ExistingImportPath, ExistingMnemonicFlow, errors, tooltips } from "../constants";
+
+import WizardWrapper from "../components/WizardWrapper";
+import { CreateMnemonicFlow, ExistingMnemonicFlow, errors, paths, tooltips } from "../constants";
 import { KeyCreationContext } from "../KeyCreationContext";
 
+/**
+ * Form to provide number of keys, index, password, and optional withdrawal address necessary to
+ * complete the validator key creation process.
+ *
+ * User will provide the necessary inputs and a verification of the password will be done before
+ * they can continue the flow
+ */
 const ConfigureValidatorKeys = () => {
   const {
     mnemonic,
@@ -14,7 +22,7 @@ const ConfigureValidatorKeys = () => {
     setWithdrawalAddress,
   } = useContext(KeyCreationContext);
   const history = useHistory();
-  const usingExistingFlow = history.location.pathname === ConfigureExistingPath;
+  const usingExistingFlow = history.location.pathname === paths.CONFIGURE_EXISTING;
 
   const [passwordToVerify, setPasswordToVerify] = useState("");
   const [verifyPassword, setVerifyPassword] = useState(false);
@@ -34,7 +42,7 @@ const ConfigureValidatorKeys = () => {
 
   useEffect(() => {
     if (!mnemonic) {
-      history.replace(usingExistingFlow ? ExistingImportPath : CreatePath);
+      history.replace(usingExistingFlow ? paths.EXISTING_IMPORT : paths.CREATE_MNEMONIC);
     }
   }, []);
 
@@ -56,6 +64,10 @@ const ConfigureValidatorKeys = () => {
     setInputWithdrawalAddress(e.target.value.trim());
   };
 
+  /**
+   * Validates each value simultaneously and if there are no errors will show the
+   * user the password verification input
+   */
   const validateInputs = async () => {
     let isError = false;
 
@@ -103,6 +115,9 @@ const ConfigureValidatorKeys = () => {
     }
   };
 
+  /**
+   * Verifies the passwords match and will move the user to the next step in the flow if so
+   */
   const checkPassword = () => {
     if (inputPassword.localeCompare(passwordToVerify) == 0) {
       setPasswordVerifyError(false);
@@ -113,7 +128,7 @@ const ConfigureValidatorKeys = () => {
       setPassword(inputPassword);
       setWithdrawalAddress(inputWithdrawalAddress);
 
-      history.push(usingExistingFlow ? CreateKeysExistingPath : CreateKeysCreatePath);
+      history.push(usingExistingFlow ? paths.CREATE_KEYS_EXISTING : paths.CREATE_KEYS_CREATE);
     } else {
       setPasswordVerifyError(true);
     }

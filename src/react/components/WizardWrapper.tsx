@@ -1,7 +1,8 @@
 import { ReactNode, useContext } from "react";
-import { GlobalContext } from "../GlobalContext";
 import { Step, StepLabel, Stepper, Typography } from "@mui/material";
+
 import { stepLabels } from "../constants";
+import { GlobalContext } from "../GlobalContext";
 import { StepKey } from "../types";
 
 interface WizardWrapperParams {
@@ -12,6 +13,15 @@ interface WizardWrapperParams {
   title: string;
 }
 
+/**
+ * Wrapper of a page to display the network, title, stepper, and action bar buttons.
+ *
+ * @param actionBarItems A list of buttons to display
+ * @param activeTimelineIndex The index of the timelineItems array that is active
+ * @param children The inner content of the page
+ * @param timelineItems A list of steps to display
+ * @param title The title to appear at the top of the page
+ */
 const WizardWrapper = ({
   actionBarItems,
   activeTimelineIndex,

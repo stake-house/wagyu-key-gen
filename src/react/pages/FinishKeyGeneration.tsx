@@ -1,14 +1,19 @@
-import { useHistory } from "react-router-dom";
-import { CreateMnemonicFlow, ExistingMnemonicFlow, FinishExistingPath } from "../constants";
-import { useContext, useEffect } from "react";
-import { KeyCreationContext } from "../KeyCreationContext";
-import WizardWrapper from "../components/WizardWrapper";
 import { Button, Link, Typography } from "@mui/material";
+import { useContext, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
+import WizardWrapper from "../components/WizardWrapper";
+import { CreateMnemonicFlow, ExistingMnemonicFlow, paths } from "../constants";
+import { KeyCreationContext } from "../KeyCreationContext";
+
+/**
+ * Final step of creating validator keys. Will show the folder of where
+ * the keys were created and additional information
+ */
 const FinishKeyGeneration = () => {
   const { folderLocation } = useContext(KeyCreationContext);
   const history = useHistory();
-  const usingExistingFlow = history.location.pathname === FinishExistingPath;
+  const usingExistingFlow = history.location.pathname === paths.FINISH_EXISTING;
 
   useEffect(() => {
     if (!folderLocation) {
@@ -16,6 +21,9 @@ const FinishKeyGeneration = () => {
     }
   }, []);
 
+  /**
+   * Will open a directory explorer where the validator keys were saved
+   */
   const openKeyLocation = () => {
     window.bashUtils.findFirstFile(folderLocation, "keystore")
       .then((keystoreFile) => {
@@ -38,7 +46,7 @@ const FinishKeyGeneration = () => {
       timelineItems={usingExistingFlow ? ExistingMnemonicFlow : CreateMnemonicFlow}
       title="Create Keys"
     >
-      <div className="tw-flex tw-flex-col tw-gap-2 tw-ml-28">
+      <div className="tw-flex tw-flex-col tw-gap-2 tw-mx-28">
         <Typography variant="body1">
           Your keys have been created here:{" "}
           <Link

@@ -1,16 +1,26 @@
 import { Button, Typography } from "@mui/material";
 import { OpenDialogOptions, OpenDialogReturnValue } from 'electron';
 import { useState } from "react";
+
 import { errors } from "../constants";
 
 interface FolderSelectorParams {
   onFolderSelect: (folder: string) => void;
 }
 
+/**
+ * Component to select a folder and will use onFolderSelect param to provide
+ * selected folder to parent
+ * @param onFolderSelect callback to provide selected folder
+ */
 const FolderSelector = ({ onFolderSelect }: FolderSelectorParams) => {
   const [displayFolderPicker, setDisplayFolderPicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  /**
+   * Called upon selecting a folder. Will verify the folder exists and is writable
+   * @param folderPath the path of the folder to verify
+   */
   const verifyFolder = (folderPath: string) => {
     window.bashUtils.doesDirectoryExist(folderPath)
       .then((exists) => {
@@ -30,6 +40,9 @@ const FolderSelector = ({ onFolderSelect }: FolderSelectorParams) => {
       });
   };
 
+  /**
+   * Will open a dialog to allow the user to select a folder
+   */
   const chooseFolder = () => {
     const options: OpenDialogOptions = {
       properties: ['openDirectory']

@@ -30,6 +30,9 @@ export const KeyCreationContext = createContext<KeyCreationContextType>({
   setWithdrawalAddress: () => {},
 });
 
+/**
+ * Context for generating a validator key for both using an existing mnemonic or a new one
+ */
 const KeyCreationContextWrapper = ({ children }: { children: React.ReactNode}) => {
   const [folderLocation, setFolderLocation] = useState<string>("");
   const [index, setIndex] = useState<number>(0);

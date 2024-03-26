@@ -7,9 +7,10 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { Network } from "../types";
 import { useContext, useEffect, useState } from "react";
+
 import { GlobalContext } from "../GlobalContext";
+import { Network } from "../types";
 import WagyuModal from "./WagyuModal";
 
 interface NetworkPickerModalParams {
@@ -17,6 +18,9 @@ interface NetworkPickerModalParams {
   showModal: boolean;
 }
 
+/**
+ * Modal to allow the user to pick the Ethereum Network
+ */
 const NetworkPickerModal = ({onClose, showModal}: NetworkPickerModalParams) => {
   const { network, setNetwork } = useContext(GlobalContext);
   const [formNetwork, setFormNetwork] = useState<Network>(Network.MAINNET);
