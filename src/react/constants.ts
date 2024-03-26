@@ -13,6 +13,7 @@ export const errors = {
 	PASSWORD_STRENGTH: "Password must be at least 8 characters.",
 	PASSWORD_MATCH: "Passwords don't match.",
 	STARTING_INDEX: "Please input start index.",
+	NON_NEGATIVE_INDEX: "Start index can not be a negative number",
 	INDICES: "Please input indices.",
 	INDICES_FORMAT: "Please input indices with digits only.",
 	INDICES_LENGTH: "The amount of indices must match the amount of BLS credentials",
@@ -64,3 +65,5 @@ export const FinishExistingPath = "/finish-existing";
 
 export const BTECImportPath = "/import-btec";
 export const ConfigureBTECPath = "/configure-btec";
+export const CreateCredentialsPath = "/create-btec";
+export const FinishCredentialsPath = "/finish-btec";

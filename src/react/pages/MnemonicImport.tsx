@@ -66,16 +66,15 @@ const MnemonicImport = () => {
     verifyMnemonic();
   };
 
-
   return (
     <WizardWrapper
       actionBarItems={[
         <Button variant="contained" color="primary" disabled={validatingMnemonic} onClick={() => onBackClick()} tabIndex={3}>Back</Button>,
-        <Button variant="contained" color="primary" disabled={validatingMnemonic} onClick={() => onNextClick()} tabIndex={2}>Next</Button>,
+        <Button variant="contained" color="primary" disabled={validatingMnemonic} onClick={() => onNextClick()} tabIndex={2}>Import</Button>,
       ]}
       activeTimelineIndex={0}
       timelineItems={usingBTEC ? BTECFlow : ExistingMnemonicFlow}
-      title="Create Keys"
+      title="Import Secret Recovery Phrase"
     >
       <div className="tw-px-20">
         { validatingMnemonic ? (

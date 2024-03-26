@@ -44,8 +44,6 @@ const CreateValidatorKeys = () => {
       appendedWithdrawalAddress = "0x" + withdrawalAddress;
     }
 
-    setFolderLocation(selectedFolder);
-
     window.eth2Deposit.generateKeys(
       mnemonic,
       index,
@@ -55,19 +53,18 @@ const CreateValidatorKeys = () => {
       appendedWithdrawalAddress,
       selectedFolder,
     ).then(() => {
-      setCreatingKeys(false);
-
+      setFolderLocation(selectedFolder);
       history.push(usingExistingFlow ? FinishExistingPath : FinishCreatePath);
     }).catch((error) => {
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
       setGenerationError(errorMsg);
       setCreatingKeys(false);
-      setFolderLocation("");
     })
   };
 
   const onBackClick = () => {
-
+    setFolderLocation("");
+    history.goBack();
   };
 
   const onNextClick = () => {

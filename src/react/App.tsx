@@ -10,11 +10,13 @@ import theme from "./theme";
 import ConfigureValidatorKeys from "./pages/ConfigureValidatorKeys";
 import MnemonicImport from "./pages/MnemonicImport";
 import ConfigureWithdrawalAddress from "./pages/ConfigureWithdrawalAddress";
-import { BTECImportPath, ConfigureBTECPath, ConfigureCreatePath, ConfigureExistingPath, CreateKeysCreatePath, CreateKeysExistingPath, CreatePath, ExistingImportPath, FinishCreatePath, FinishExistingPath } from "./constants";
+import { BTECImportPath, ConfigureBTECPath, ConfigureCreatePath, ConfigureExistingPath, CreateCredentialsPath, CreateKeysCreatePath, CreateKeysExistingPath, CreatePath, ExistingImportPath, FinishCreatePath, FinishCredentialsPath, FinishExistingPath } from "./constants";
 import CreateValidatorKeys from "./pages/CreateValidatorKeys";
 import KeyCreationContextWrapper from "./KeyCreationContext";
 import BTECContextWrapper from "./BTECContext";
 import FinishKeyGeneration from "./pages/FinishKeyGeneration";
+import CreateCredentialsChange from "./pages/CreateCredentialsChange";
+import FinishCredentialsGeneration from "./pages/FinishCredentialsGeneration";
 
 /**
  * The React app top level including theme and routing.
@@ -62,6 +64,8 @@ const App: FC = (): ReactElement => {
                     <Switch>
                       <Route path={BTECImportPath} render={() => <MnemonicImport />} />
                       <Route path={ConfigureBTECPath} render={() => <ConfigureWithdrawalAddress />} />
+                      <Route path={CreateCredentialsPath} render={() => <CreateCredentialsChange />} />
+                      <Route path={FinishCredentialsPath} render={() => <FinishCredentialsGeneration />} />
                     </Switch>
                   </BTECContextWrapper>
                 </Route>

@@ -14,7 +14,7 @@ const FinishKeyGeneration = () => {
     if (!folderLocation) {
       history.replace("/");
     }
-  }, [])
+  }, []);
 
   const openKeyLocation = () => {
     window.bashUtils.findFirstFile(folderLocation, "keystore")
@@ -33,7 +33,7 @@ const FinishKeyGeneration = () => {
 
   return (
     <WizardWrapper
-      actionBarItems={[<Button variant="contained" color="primary" onClick={() => onClose()} tabIndex={3}>Close</Button>]}
+      actionBarItems={[<Button variant="contained" color="primary" onClick={() => onClose()} tabIndex={2}>Close</Button>]}
       activeTimelineIndex={3}
       timelineItems={usingExistingFlow ? ExistingMnemonicFlow : CreateMnemonicFlow}
       title="Create Keys"
