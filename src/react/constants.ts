@@ -13,6 +13,7 @@ export const errors = {
 	PASSWORD_STRENGTH: "Password must be at least 8 characters.",
 	PASSWORD_MATCH: "Passwords don't match.",
 	STARTING_INDEX: "Please input start index.",
+	NON_NEGATIVE_INDEX: "Start index can not be a negative number",
 	INDICES: "Please input indices.",
 	INDICES_FORMAT: "Please input indices with digits only.",
 	INDICES_LENGTH: "The amount of indices must match the amount of BLS credentials",
@@ -46,4 +47,25 @@ export const stepLabels = {
 	[StepKey.BTECConfiguration]: 'Configure Withdrawal Address',
   [StepKey.BTECGeneration]: 'Create Crendentials Change',
   [StepKey.FinishBTEC]: 'Finish'
+};
+
+export const CreateMnemonicFlow = [StepKey.MnemonicGeneration, StepKey.KeyConfiguration, StepKey.KeyGeneration, StepKey.Finish];
+export const ExistingMnemonicFlow = [StepKey.MnemonicImport, StepKey.KeyConfiguration, StepKey.KeyGeneration, StepKey.Finish];
+export const BTECFlow = [StepKey.MnemonicImport, StepKey.BTECConfiguration, StepKey.BTECGeneration, StepKey.FinishBTEC];
+
+export const paths = {
+	CREATE_MNEMONIC: "/create",
+	CONFIGURE_CREATE: "/configure-create",
+	CREATE_KEYS_CREATE: "/create-keys",
+	FINISH_CREATE:"/finish-create",
+
+	EXISTING_IMPORT: "/import-existing",
+	CONFIGURE_EXISTING: "/configure-existing",
+	CREATE_KEYS_EXISTING: "/create-existing-keys",
+	FINISH_EXISTING: "/finish-existing",
+
+	BTEC_IMPORT: "/import-btec",
+	CONFIGURE_BTEC: "/configure-btec",
+	CREATE_CREDENTIALS: "/create-btec",
+	FINISH_CREDENTIALS: "/finish-btec",
 };
