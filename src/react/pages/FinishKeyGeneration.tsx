@@ -19,6 +19,12 @@ const FinishKeyGeneration = () => {
     if (!folderLocation) {
       history.replace("/");
     }
+
+    // Redirect browser back to home page to reset
+    const unblock = history.block(() => {
+      unblock();
+      history.push("/");
+    });
   }, []);
 
   /**

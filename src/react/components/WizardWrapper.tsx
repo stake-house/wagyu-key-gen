@@ -33,13 +33,13 @@ const WizardWrapper = ({
 
   return (
     <div className="tw-flex tw-flex-col tw-w-full tw-h-full">
-      <div className="tw-mt-2 tw-mb-4 tw-text-right">
+      <div className="tw-mt-2 tw-mb-8 tw-text-right">
         <Typography variant="caption" className="tw-text-gray tw-mr-6">
           Network: {network}
         </Typography>
       </div>
 
-      <div className="tw-px-28 tw-mb-10">
+      <div className="tw-px-28 tw-mb-8">
         <Typography className="tw-text-center" variant="h1">
           {title}
         </Typography>

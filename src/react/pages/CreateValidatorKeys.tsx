@@ -63,7 +63,7 @@ const CreateValidatorKeys = () => {
       selectedFolder,
     ).then(() => {
       setFolderLocation(selectedFolder);
-      history.push(usingExistingFlow ? paths.FINISH_EXISTING : paths.FINISH_CREATE);
+      history.replace(usingExistingFlow ? paths.FINISH_EXISTING : paths.FINISH_CREATE);
     }).catch((error) => {
       const errorMsg = ('stderr' in error) ? error.stderr : error.message;
       setGenerationError(errorMsg);

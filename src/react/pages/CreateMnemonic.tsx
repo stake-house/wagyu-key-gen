@@ -28,7 +28,8 @@ const CreateMnemonic = () => {
   const [showLoader, setShowLoader] = useState(false);
   const [verifyNext, setVerifyNext] = useState(false);
 
-  const nextText = useMemo(() => verifyNext ? "I'm Sure" : mnemonic ? "Next" : "Create", [verifyNext, mnemonic]);
+  // Text to show for the Next button based on the state
+  const nextText = useMemo(() => confirmMnemonic ? "Check" : verifyNext ? "I'm Sure" : mnemonic ? "Next" : "Create", [confirmMnemonic, mnemonic, verifyNext]);
 
   useEffect(() => {
     // page loaded with mnemonic known. Can only happen when the user backs up from configure
@@ -186,7 +187,7 @@ const CreateMnemonic = () => {
       ) : showLoader ? (
         <Loader message="Generating your secret recovery phrase. May take up to 30 seconds." />
       ) : (
-        <div className="tw-flex tw-flex-col tw-gap-4 tw-px-24">
+        <div className="tw-flex tw-flex-col tw-gap-4 tw-px-24 tw-mt-4">
           <Typography className="tw-text-left" variant="body1">
             In this step, we'll generate a Secret Recovery Phrase (traditionally referred to as a "mnemonic") and a set of validator keys for you. For more information, visit: https://kb.beaconcha.in/ethereum-2-keys
           </Typography>

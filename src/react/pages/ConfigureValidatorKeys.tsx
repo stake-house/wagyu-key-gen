@@ -16,9 +16,13 @@ import { KeyCreationContext } from "../KeyCreationContext";
 const ConfigureValidatorKeys = () => {
   const {
     mnemonic,
+    index,
     setIndex,
+    numberOfKeys,
     setNumberOfKeys,
+    password,
     setPassword,
+    withdrawalAddress,
     setWithdrawalAddress,
   } = useContext(KeyCreationContext);
   const history = useHistory();
@@ -28,16 +32,16 @@ const ConfigureValidatorKeys = () => {
   const [verifyPassword, setVerifyPassword] = useState(false);
   const [passwordVerifyError, setPasswordVerifyError] = useState(false);
 
-  const [inputNumberOfKeys, setInputNumberOfKeys] = useState(1);
+  const [inputNumberOfKeys, setInputNumberOfKeys] = useState(numberOfKeys);
   const [inputNumberOfKeysError, setInputNumberOfKeysError] = useState(false);
 
-  const [inputIndex, setInputIndex] = useState(0);
+  const [inputIndex, setInputIndex] = useState(index);
   const [inputIndexError, setInputIndexError] = useState(false);
 
-  const [inputPassword, setInputPassword] = useState("");
+  const [inputPassword, setInputPassword] = useState(password);
   const [inputPasswordStrengthError, setInputPasswordStrengthError] = useState(false);
 
-  const [inputWithdrawalAddress, setInputWithdrawalAddress] = useState("");
+  const [inputWithdrawalAddress, setInputWithdrawalAddress] = useState(withdrawalAddress);
   const [inputWithdrawalAddressFormatError, setInputWithdrawalAddressFormatError] = useState(false);
 
   useEffect(() => {
@@ -136,21 +140,23 @@ const ConfigureValidatorKeys = () => {
 
   const onBackClick = () => {
     if (verifyPassword) {
-      // Reset form
+      // Only reset password of configure form so the user can see index, number of keys, and address
       setPasswordToVerify("");
       setVerifyPassword(false);
       setPasswordVerifyError(false);
-      setInputNumberOfKeys(1);
-      setInputIndex(0);
       setInputPassword("");
-      setInputWithdrawalAddress("");
-
+    } else {
       // Reset context
       setIndex(0);
       setNumberOfKeys(1);
-      setPassword("");
       setWithdrawalAddress("");
-    } else {
+      setPassword("");
+
+      // Reset form
+      setInputNumberOfKeys(1);
+      setInputIndex(0);
+      setInputWithdrawalAddress("");
+      setInputPassword("");
       history.goBack();
     }
   };
@@ -179,7 +185,7 @@ const ConfigureValidatorKeys = () => {
           <div>Just to be sure...</div>
 
           <TextField
-            className="tw-mt-12 tw-w-[300px]"
+            className="tw-mt-8 tw-w-[300px]"
             id="password"
             label="Retype Password"
             type="password"

@@ -19,6 +19,11 @@ const FinishCredentialsGeneration = () => {
     if (!folderLocation) {
       history.replace("/");
     }
+
+    // Redirect browser back to home page to reset
+    history.block(() => {
+      history.push("/");
+    });
   }, []);
 
   /**
