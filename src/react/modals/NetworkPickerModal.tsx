@@ -51,7 +51,6 @@ const NetworkPickerModal = ({onClose, showModal}: NetworkPickerModalParams) => {
     <WagyuModal
       className="tw-w-[350px] tw-h-[444px]"
       open={showModal}
-      onClose={onClose}
     >
       <div>
         <div className="tw-text-4xl tw-my-7">Network</div>

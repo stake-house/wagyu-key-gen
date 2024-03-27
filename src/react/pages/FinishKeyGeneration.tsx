@@ -20,10 +20,11 @@ const FinishKeyGeneration = () => {
       history.replace("/");
     }
 
-    // Redirect browser back to home page to reset
+    // On browser back, go back to main page and refresh to clear navigation history
     const unblock = history.block(() => {
       unblock();
       history.push("/");
+      window.location.reload();
     });
   }, []);
 
@@ -34,7 +35,7 @@ const FinishKeyGeneration = () => {
     window.bashUtils.findFirstFile(folderLocation, "keystore")
       .then((keystoreFile) => {
         let fileToLocate = folderLocation;
-        if (keystoreFile != "") {
+        if (keystoreFile !== "") {
           fileToLocate = keystoreFile;
         }
         window.electronAPI.shellShowItemInFolder(fileToLocate);

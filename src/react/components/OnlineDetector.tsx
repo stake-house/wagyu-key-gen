@@ -42,7 +42,7 @@ export const OnlineDetector = () => {
   return (
     <>
       {showWarning && (
-        <Button className="tw-w-[210px] tw-h-[50px] tw-fixed tw-top-6 tw-l-2 tw-cursor-pointer tw-text-orange" onClick={() => setOpen(true)}>
+        <Button className="tw-w-[210px] tw-h-[50px] tw-fixed tw-top-6 tw-left-2 tw-cursor-pointer tw-text-orange" onClick={() => setOpen(true)}>
           <div className="tw-absolute tw-w-0 tw-h-0 tw-left-6 tw-bg-[rgba(250, 30, 14, 0)] tw-animate-OnlinePulse tw-rounded-full" />
           <PermScanWifiIcon className="tw-mr-1 tw-z-10"/>
           <Typography variant="body1">Internet Detected</Typography>

@@ -85,7 +85,7 @@ const MnemonicImport = () => {
     <WizardWrapper
       actionBarItems={[
         <Button variant="contained" color="primary" disabled={validatingMnemonic} onClick={() => onBackClick()} tabIndex={3}>Back</Button>,
-        <Button variant="contained" color="primary" disabled={validatingMnemonic} onClick={() => onNextClick()} tabIndex={2}>Import</Button>,
+        <Button variant="contained" color="primary" disabled={validatingMnemonic || !inputMnemonic} onClick={() => onNextClick()} tabIndex={2}>Import</Button>,
       ]}
       activeTimelineIndex={0}
       timelineItems={usingBTEC ? BTECFlow : ExistingMnemonicFlow}

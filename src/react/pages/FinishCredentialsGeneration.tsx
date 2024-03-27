@@ -20,9 +20,11 @@ const FinishCredentialsGeneration = () => {
       history.replace("/");
     }
 
-    // Redirect browser back to home page to reset
-    history.block(() => {
+    // On browser back, go back to main page and refresh to clear navigation history
+    const unblock = history.block(() => {
+      unblock();
       history.push("/");
+      window.location.reload();
     });
   }, []);
 
@@ -30,11 +32,11 @@ const FinishCredentialsGeneration = () => {
    * Will open a directory explorer where the credential change file was saved
    */
   const openKeyLocation = () => {
-    window.bashUtils.findFirstFile(folderLocation, "keystore")
-      .then((keystoreFile) => {
+    window.bashUtils.findFirstFile(folderLocation, "bls_to_execution_change")
+      .then((changeFile) => {
         let fileToLocate = folderLocation;
-        if (keystoreFile != "") {
-          fileToLocate = keystoreFile;
+        if (changeFile !== "") {
+          fileToLocate = changeFile;
         }
         window.electronAPI.shellShowItemInFolder(fileToLocate);
     });
