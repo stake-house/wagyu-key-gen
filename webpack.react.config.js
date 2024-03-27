@@ -30,24 +30,25 @@ module.exports = {
       // at the moment the only custom handling we have is for typescript files
       // .ts and .tsx files get passed to ts-loader
       {
+        test: /\.(scss|css)$/i,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      }, {
         test: /\.tsx?$/,
         loader: 'ts-loader',
       }, {
         test: /node_modules\/JSONStream\/index\.js$/,
         loader: 'shebang-loader'
       }, {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      }, {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
         loader: 'file-loader',
-      },
+        options: { name: '[name].[ext]', outputPath: 'fonts/', }
+      }
     ],
   },
   resolve: {
     // specify certain file extensions to get automatically appended to imports
     // ie we can write `import 'index'` instead of `import 'index.ts'`
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.css'],
   },
   plugins: [
     new HtmlWebpackPlugin({
