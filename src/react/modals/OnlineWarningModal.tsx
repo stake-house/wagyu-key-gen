@@ -2,7 +2,7 @@ import { Button, Typography } from "@mui/material";
 
 import WagyuModal from "./WagyuModal";
 
-interface OlineWarningModalParams {
+interface OnlineWarningModalParams {
   onClose: () => void;
   onHideWarning: () => void;
   open: boolean;
@@ -11,7 +11,7 @@ interface OlineWarningModalParams {
 /**
  * Modal to display to the user to explain the risks of using this tool with network connectivity
  */
-const OnlineWarningModal = ({ onClose, onHideWarning, open }: OlineWarningModalParams) => (
+const OnlineWarningModal = ({ onClose, onHideWarning, open }: OnlineWarningModalParams) => (
   <WagyuModal
     className="tw-w-[600px]"
     open={open}

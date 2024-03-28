@@ -50,12 +50,12 @@ const ConfigureValidatorKeys = () => {
     }
   }, []);
 
-  const updateinputNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateNumberOfKeys = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
     setInputNumberOfKeys(num);
   };
 
-  const updateinputIndex = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateIndex = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = parseInt(e.target.value);
     setInputIndex(num);
   };
@@ -205,13 +205,13 @@ const ConfigureValidatorKeys = () => {
             <Tooltip title={tooltips.NUMBER_OF_KEYS}>
               <TextField
                 autoFocus
-                className="tw-flex-grow"
+                className="tw-flex-1"
                 id="number-of-keys"
                 label="Number of New Keys"
                 variant="outlined"
                 type="number"
                 value={inputNumberOfKeys}
-                onChange={updateinputNumberOfKeys}
+                onChange={updateNumberOfKeys}
                 InputProps={{ inputProps: { min: 1, max: 1000 } }}
                 error={inputNumberOfKeysError}
                 helperText={ inputNumberOfKeysError ? errors.NUMBER_OF_KEYS : ""}
@@ -221,13 +221,13 @@ const ConfigureValidatorKeys = () => {
             {usingExistingFlow && (
               <Tooltip title={tooltips.STARTING_INDEX}>
                 <TextField
-                  className="tw-flex-grow"
-                  id="inputindex"
-                  label="Amount of Existing (starting inputindex)"
+                  className="tw-flex-1"
+                  id="input"
+                  label="Amount of Existing (starting input)"
                   variant="outlined"
                   type="number"
                   value={inputIndex}
-                  onChange={updateinputIndex}
+                  onChange={updateIndex}
                   InputProps={{ inputProps: { min: 1, max: 1000 } }}
                   error={inputIndexError}
                   helperText={inputIndexError ? errors.STARTING_INDEX : ""}
@@ -237,7 +237,7 @@ const ConfigureValidatorKeys = () => {
 
             <Tooltip title={tooltips.PASSWORD}>
               <TextField
-                className="tw-flex-grow"
+                className="tw-flex-1"
                 id="password"
                 label="Password"
                 type="password"

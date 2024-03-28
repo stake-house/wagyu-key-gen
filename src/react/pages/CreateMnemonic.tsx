@@ -19,7 +19,7 @@ const CreateMnemonic = () => {
   const {mnemonic, setMnemonic} = useContext(KeyCreationContext);
   const history = useHistory();
 
-  const [confirmMnemonic, setConfirmnMnemonic] = useState(false);
+  const [confirmMnemonic, setConfirmMnemonic] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copyTooltipOpen, setCopyTooltipOpen] = useState(false);
   const [generateErrorMessage, setGenerateErrorMessage] = useState<string>("");
@@ -34,7 +34,7 @@ const CreateMnemonic = () => {
   useEffect(() => {
     // page loaded with mnemonic known. Can only happen when the user backs up from configure
     if (mnemonic) {
-      setConfirmnMnemonic(true);
+      setConfirmMnemonic(true);
       setMnemonicToVerify(mnemonic);
       setMnemonicValidationError(false);
     }
@@ -56,7 +56,7 @@ const CreateMnemonic = () => {
 
   const onBackClick = () => {
     if (confirmMnemonic) {
-      setConfirmnMnemonic(false);
+      setConfirmMnemonic(false);
       setMnemonicToVerify("");
       setMnemonicValidationError(false);
     } else if (verifyNext) {
@@ -72,7 +72,7 @@ const CreateMnemonic = () => {
     if (confirmMnemonic) {
       verifyMnemonic();
     } else if (verifyNext) {
-      setConfirmnMnemonic(true);
+      setConfirmMnemonic(true);
       setMnemonicToVerify("");
     } else if (mnemonic) {
       setVerifyNext(true);

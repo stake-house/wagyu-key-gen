@@ -16,7 +16,7 @@ interface VerifyMnemonicParams {
 /**
  * Creates a grid of inputs if on mainnet or a single textbox for ease of testing.
  * The user fills the form with the mnemonic and the input will be provided to the
- * onVerifyMnemonic for futher action
+ * onVerifyMnemonic for further action
  *
  * mnemonicToVerify is provided as a param instead of existing only in this component
  * so the parent can fill the value if the user goes back in navigation

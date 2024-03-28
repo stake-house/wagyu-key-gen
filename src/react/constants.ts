@@ -45,7 +45,7 @@ export const stepLabels = {
 	[StepKey.KeyGeneration]: 'Create Validator Key Files',
 	[StepKey.Finish]: 'Finish',
 	[StepKey.BTECConfiguration]: 'Configure Withdrawal Address',
-  [StepKey.BTECGeneration]: 'Create Crendentials Change',
+  [StepKey.BTECGeneration]: 'Create Credentials Change',
   [StepKey.FinishBTEC]: 'Finish'
 };
 

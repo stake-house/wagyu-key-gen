@@ -89,7 +89,7 @@ const Home = () => {
       </div>
 
       <div className="tw-flex tw-flex-col tw-items-center tw-mt-4">
-        <Typography className="tw-text-4xl tw-mb-5" variant="h1">Weclome!</Typography>
+        <Typography className="tw-text-4xl tw-mb-5" variant="h1">Welcome!</Typography>
 
         <KeyIcon />
 
