@@ -222,8 +222,8 @@ const ConfigureValidatorKeys = () => {
               <Tooltip title={tooltips.STARTING_INDEX}>
                 <TextField
                   className="tw-flex-1"
-                  id="input"
-                  label="Amount of Existing (starting input)"
+                  id="index"
+                  label="Amount of Existing (starting index)"
                   variant="outlined"
                   type="number"
                   value={inputIndex}
