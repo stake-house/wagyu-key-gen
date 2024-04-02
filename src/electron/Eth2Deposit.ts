@@ -135,7 +135,7 @@ const createMnemonic = async (language: string): Promise<string> => {
     executable = SFE_PATH;
     args = [CREATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, "--language", language]
   } else {
-    if (!await requireDepositPackages()) {
+    if (!(await requireDepositPackages())) {
       throw new Error("Failed to create mnemonic, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
@@ -203,7 +203,7 @@ const generateKeys = async (
     args = args.concat([DIST_WORD_LIST_PATH, mnemonic, index.toString(), count.toString(), folder,
       network.toLowerCase(), password]);
   } else {
-    if(!await requireDepositPackages()) {
+    if(!(await requireDepositPackages())) {
       throw new Error("Failed to generate keys, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
@@ -244,7 +244,7 @@ const validateMnemonic = async (
     executable = SFE_PATH;
     args = [VALIDATE_MNEMONIC_SUBCOMMAND, DIST_WORD_LIST_PATH, mnemonic];
   } else {
-    if(!await requireDepositPackages()) {
+    if(!(await requireDepositPackages())) {
       throw new Error("Failed to validate mnemonic, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
@@ -286,7 +286,7 @@ const validateBLSCredentials = async (
     executable = SFE_PATH;
     args = [VALIDATE_BLS_CREDENTIALS_SUBCOMMAND, chain.toLowerCase(), mnemonic, index.toString(), withdrawal_credentials];
   } else {
-    if(!await requireDepositPackages()) {
+    if(!(await requireDepositPackages())) {
       throw new Error("Failed to validate BLS credentials, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
@@ -341,7 +341,7 @@ if (await doesFileExist(BUNDLED_SFE_PATH)) {
   args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
     withdrawal_credentials, execution_address]);
 } else {
-  if(!await requireDepositPackages()) {
+  if(!(await requireDepositPackages())) {
     throw new Error("Failed to generate BTEC, don't have the required packages.");
   }
   env.PYTHONPATH = await getPythonPath();

@@ -1,17 +1,18 @@
-import { createTheme } from "@material-ui/core";
-import { amber, blue } from "@material-ui/core/colors";
-
-
+import { createTheme} from "@mui/material";
+import { amber, blue } from "@mui/material/colors";
 
 const theme = createTheme({
   palette: {
-    type: "dark",
+    mode: "dark",
     primary: amber,
     secondary: blue,
+    background: {
+      default: "#303030",
+    },
   },
   typography: {
     h1: {
-      fontSize: "36px"
+      fontSize: "2.25rem"
     }
   }
 });
