@@ -30,7 +30,7 @@
     "buildcliwin": "src/scripts/bundle_proxy_win.bat",
     "start": "electron ./build/electron/index.js",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder -p never"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",

@@ -1,5 +1,5 @@
 name: ci-build
-run-name: ${{ github.actor }} is building binaries, building the docker image and drafting a release
+run-name: ${{ github.actor }} is building binaries and drafting a release
 on:
   workflow_dispatch:
   push:
