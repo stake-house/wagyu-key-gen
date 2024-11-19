@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["ethstaker_deposit"]
+
+[tool.setuptools.dynamic]
+version = {attr = "ethstaker_deposit.__version__"}
+
+[tool.pip-tools]
+generate-hashes = true
+no-annotate = true
+
+[project]
+name = "ethstaker_deposit"
+description = "Secure key generation for deposits"
+readme = "README.md"
+dependencies = [
+    "click",
+    "eth-typing",
+    "eth-utils",
+    "pycryptodome",
+    "pyperclip",
+    "py-ecc",
+    "ssz"
+]
+requires-python = ">=3.9,<4"
+dynamic = ["version"]
+
+[project.optional-dependencies]
+test = [
+    "exceptiongroup", # pip-compile did not pick up from mypy
+    "flake8",
+    "jsonschema",
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "coverage",
+    "tomli" # pip-compile did not pick up from mypy
+]
+
+[project.urls]
+"Homepage" = "https://github.com/eth-educators/ethstaker-deposit-cli"

@@ -1,0 +1,8 @@
+{
+    "check_python_version": {
+        "err_python_version": "Your python version is insufficient, please install version 3.9 or greater."
+    },
+    "check_connectivity": {
+        "connectivity_warning": "\n*** Internet connectivity detected ***\n\nTo mitigate the risk of unauthorized access and safeguard generated key material, it is strongly advised to run this tool in an offline, airgapped environment. Operating online increases susceptibility to potential theft or compromise.\n\nBy continuing, you are accepting responsibility for the risk.\n\nPress any key to continue..."
+    }
+}

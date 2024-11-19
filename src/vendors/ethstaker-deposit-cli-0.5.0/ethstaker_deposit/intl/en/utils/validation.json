@@ -1,0 +1,62 @@
+{
+    "verify_deposit_data_json": {
+        "msg_deposit_verification": "Verifying your deposit_data-*.json file(s):\t"
+    },
+    "validate_password_strength": {
+        "msg_password_length": "The password length should be at least 12. Please retype.",
+        "msg_password_utf8_win32": "Your terminal is not UTF-8 encoded. To ensure the keystore file can be imported on Linux, the password should contain only English-language characters. Please retype.",
+        "msg_password_utf8": "Your terminal is not UTF-8 encoded. To ensure the keystore file can be imported on Linux, the password should contain only English-language characters. Please retype.\nAlternatively, you can quit this program and relaunch it from a UTF-8 encoded terminal."
+    },
+    "validate_int_range": {
+        "err_not_positive_integer": "That is not a positive integer. Please retype."
+    },
+    "validate_choice": {
+        "err_invalid_choice": "That is not one of the valid choices. Please retype your choice."
+    },
+    "validate_withdrawal_address": {
+        "err_invalid_ECDSA_hex_addr": "The given withdrawal address is not in hexadecimal encoded form.",
+        "err_invalid_ECDSA_hex_addr_checksum": "The given withdrawal address is not in checksum form.",
+        "err_missing_address": "An address must be provided",
+        "msg_ECDSA_hex_addr_withdrawal": "**[Warning] you are setting a withdrawal address. Please ensure that you have full control over this address.**"
+    },
+    "validate_yesno": {
+        "err_invalid_bool_value": "This is an invalid value for a yes/no question."
+    },
+    "validate_deposit_amount": {
+        "err_invalid_amount": "Invalid amount provided. Please provide a value of at least 1 ether of how much you wish to deposit.",
+        "err_not_gwei_denomination": "Invalid amount provided. Please provide a value can not have precision beyond 1 gwei.",
+        "err_min_deposit": "Invalid amount provided. Please provide a value of at least 1 ether.",
+        "err_max_deposit": "Invalid amount provided. The max deposit amount is 2048 ether. Please provide a lesser or equal amount."
+    },
+    "validate_bls_withdrawal_credentials": {
+        "err_is_already_01_form": "The given withdrawal credentials is already in 0x01 form. Have you already set the withdrawal address?",
+        "err_not_bls_form": "The given withdrawal credentials is not in BLS_WITHDRAWAL_PREFIX form."
+    },
+    "validate_bls_withdrawal_credentials_matching": {
+        "err_not_matching": "The given withdrawal credentials does not match the old BLS withdrawal credentials that mnemonic generated."
+    },
+    "verify_bls_to_execution_change_json": {
+        "msg_bls_to_execution_change_verification": "Verifying your BLSToExecutionChange file:\t"
+    },
+    "normalize_bls_withdrawal_credentials_to_bytes" :{
+        "err_incorrect_hex_form": "The given input is not in hexadecimal encoded form."
+    },
+    "normalize_input_list": {
+        "err_incorrect_list": "The given input should be a list of the old BLS withdrawal credentials of your validator(s). Split multiple items with whitespaces or commas."
+    },
+    "validate_keystore_file": {
+        "err_file_not_found": "No file was found. Please verify the provided path and try again.",
+        "err_invalid_keystore_file": "The discovered file is not the correct keystore file format. Please verify the provided path is to a keystore file and try again."
+    },
+    "validate_devnet_chain_setting": {
+        "err_invalid_devnet_chain_setting": "Invalid JSON string for devnet_chain_setting. It should be a valide JSON object that contains at least the following keys: network_name, genesis_fork_version and exit_fork_version.",
+        "arg_devnet_chain_setting_warning": "**[Warning] Using devnet chain setting with this command.**"
+    },
+    "validate_devnet_chain_setting_json": {
+        "err_devnet_chain_setting_not_object": "Invalid JSON string for devnet_chain_setting. The JSON string does not contain an object at root.",
+        "err_devnet_chain_setting_missing_keys": "Invalid JSON string for devnet_chain_setting. It is missing one or more of these key in the root object: network_name, genesis_fork_version or exit_fork_version.",
+        "err_devnet_chain_setting_invalid_json": "Invalid JSON string for devnet_chain_setting. Decoding the JSON string was impossible. Make sure to pass a valid JSON string.",
+        "err_devnet_chain_setting_key_length": "Invalid JSON string for devnet_chain_setting. The root object should only contain 3 or 4 keys.",
+        "err_devnet_chain_setting_invalid_fourth_key": "Invalid JSON string for devnet_chain_setting. The root object is missing the genesis_validator_root key."
+    }
+}

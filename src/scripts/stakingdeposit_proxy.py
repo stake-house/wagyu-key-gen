@@ -1,7 +1,7 @@
 """The stakingdeposit_proxy application.
 
-This application is used as a proxy between our electron application and the staking-deposit-cli
-internals. It exposes some staking-deposit-cli functions as easy to use commands that can be called
+This application is used as a proxy between our electron application and the ethstaker-deposit-cli
+internals. It exposes some ethstaker-deposit-cli functions as easy to use commands that can be called
 on the CLI.
 """
 
@@ -16,32 +16,32 @@ from typing import (
 
 from eth_typing import HexAddress
 
-from staking_deposit.key_handling.key_derivation.mnemonic import (
+from ethstaker_deposit.key_handling.key_derivation.mnemonic import (
     get_mnemonic,
     reconstruct_mnemonic
 )
 
 from eth_utils import is_hex_address, to_normalized_address
 
-from staking_deposit.credentials import (
+from ethstaker_deposit.credentials import (
     CredentialList,
     Credential
 )
 
-from staking_deposit.exceptions import ValidationError
-from staking_deposit.utils.validation import (
+from ethstaker_deposit.exceptions import ValidationError
+from ethstaker_deposit.utils.validation import (
     validate_deposit,
     validate_bls_to_execution_change
 )
-from staking_deposit.utils.constants import (
+from ethstaker_deposit.utils.constants import (
     MAX_DEPOSIT_AMOUNT,
 )
 
-from staking_deposit.settings import (
+from ethstaker_deposit.settings import (
     get_chain_setting,
 )
 
-from staking_deposit.utils.crypto import SHA256
+from ethstaker_deposit.utils.crypto import SHA256
 
 def generate_bls_to_execution_change(
         folder: str,
@@ -116,7 +116,7 @@ def generate_bls_to_execution_change(
     with open(filefolder, 'w') as f:
         json.dump(bls_to_execution_changes, f)
     if os.name == 'posix':
-        os.chmod(filefolder, int('440', 8))  # Read for owner & group
+        os.chmod(filefolder, int('400', 8))  # Read for owner & group
     btec_file = filefolder
 
     with open(btec_file, 'r') as f:
@@ -173,7 +173,7 @@ def validate_bls_credentials(
 
 
 def validate_mnemonic(mnemonic: str, word_lists_path: str) -> str:
-    """Validate a mnemonic using the staking-deposit-cli logic and returns the mnemonic.
+    """Validate a mnemonic using the ethstaker-deposit-cli logic and returns the mnemonic.
 
     Keyword arguments:
     mnemonic -- the mnemonic to validate
@@ -253,7 +253,7 @@ def generate_keys(args):
     with open(filefolder, 'w') as f:
         json.dump(deposit_data, f, default=lambda x: x.hex())
     if os.name == 'posix':
-        os.chmod(filefolder, int('440', 8))  # Read for owner & group
+        os.chmod(filefolder, int('400', 8))  # Read for owner & group
     deposits_file = filefolder
 
     items = zip(credentials.credentials, keystore_filefolders)

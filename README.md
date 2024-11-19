@@ -1,7 +1,7 @@
 # Wagyu Key Gen
 [![gitpoap badge](https://public-api.gitpoap.io/v1/repo/stake-house/wagyu-key-gen/badge)](https://www.gitpoap.io/gh/stake-house/wagyu-key-gen)
 
-Wagyu Key Gen is a GUI application providing functionality to the [staking-deposit-cli](https://github.com/ethereum/staking-deposit-cli). It is a React app running in Electron.  See `src/electron/` for the simple electron app and `src/react/` for where the magic happens.
+Wagyu Key Gen is a GUI application providing functionality to the [ethstaker-deposit-cli](https://github.com/eth-educators/ethstaker-deposit-cli). It is a React app running in Electron.  See `src/electron/` for the simple electron app and `src/react/` for where the magic happens.
 
 ### Download wagyu at [https://wagyu.gg](https://wagyu.gg)
 

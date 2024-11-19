@@ -1,0 +1,10 @@
+# requirements_test.in
+exceptiongroup # pip-compile did not pick up from mypy
+flake8
+jsonschema
+mypy
+pytest
+pytest-asyncio
+coverage
+tomli # pip-compile did not pick up from mypy
+
