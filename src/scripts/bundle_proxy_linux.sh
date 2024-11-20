@@ -31,7 +31,6 @@ python3 -m pip install -r $ETH2REQUIREMENTSPATH --target $TARGETPACKAGESPATH
 
 # Getting packages metadata
 PYECCDATA=$(python3 -c "from PyInstaller.utils.hooks import copy_metadata;print(':'.join(copy_metadata('py_ecc')[0]))")
-SSZDATA=$(python3 -c "from PyInstaller.utils.hooks import copy_metadata;print(':'.join(copy_metadata('ssz')[0]))")
 
 # Bundling Python stakingdeposit_proxy
 PYTHONPATH=$PYTHONPATH pyinstaller \
@@ -39,7 +38,6 @@ PYTHONPATH=$PYTHONPATH pyinstaller \
     --distpath $DISTBINPATH \
     --add-data "$SRCINTLPATH:ethstaker_deposit/intl" \
     --add-data "$PYECCDATA" \
-    --add-data "$SSZDATA" \
     -p $PYTHONPATH \
     $SCRIPTPATH/stakingdeposit_proxy.py
 
