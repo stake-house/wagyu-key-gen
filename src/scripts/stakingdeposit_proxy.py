@@ -8,10 +8,13 @@ on the CLI.
 import os
 import argparse
 import json
+import concurrent.futures
 import sys
 import time
 from typing import (
     Sequence,
+    Dict,
+    Any,
 )
 
 from eth_typing import HexAddress
@@ -36,6 +39,7 @@ from ethstaker_deposit.utils.validation import (
 from ethstaker_deposit.utils.constants import (
     MAX_DEPOSIT_AMOUNT,
 )
+from ethstaker_deposit.utils.deposit import export_deposit_data_json as export_deposit_data_json_util
 
 from ethstaker_deposit.settings import (
     get_chain_setting,
@@ -90,7 +94,7 @@ def generate_bls_to_execution_change(
 
     num_keys = num_validators
     start_index = validator_start_index
-    hex_eth1_withdrawal_address = execution_address
+    hex_withdrawal_address = execution_address
 
     if len(amounts) != num_keys:
         raise ValueError(
@@ -100,7 +104,7 @@ def generate_bls_to_execution_change(
     credentials = CredentialList(
         [Credential(mnemonic=mnemonic, mnemonic_password=mnemonic_password,
             index=index, amount=amounts[index - start_index], chain_setting=chain_setting,
-            hex_eth1_withdrawal_address=hex_eth1_withdrawal_address)
+            hex_withdrawal_address=hex_withdrawal_address)
         for index in key_indices])
 
     # Check if the given old bls_withdrawal_credentials is as same as the mnemonic generated
@@ -162,7 +166,7 @@ def validate_bls_credentials(
     credentials = CredentialList(
         [Credential(mnemonic=mnemonic, mnemonic_password=mnemonic_password,
             index=index, amount=amounts[index - start_index], chain_setting=chain_setting,
-            hex_eth1_withdrawal_address=None)
+            hex_withdrawal_address=None)
         for index in key_indices])
 
     # Check if the given old bls_withdrawal_credentials is as same as the mnemonic generated
@@ -196,6 +200,20 @@ def create_mnemonic(word_list, language='english'):
                 'spanish' (default 'english')
     """
     return get_mnemonic(language=language, words_path=word_list)
+
+def _credential_builder(kwargs: Dict[str, Any]) -> Credential:
+    return Credential(**kwargs)
+
+def _keystore_exporter(kwargs: Dict[str, Any]) -> str:
+    credential: Credential = kwargs.pop('credential')
+    return credential.save_signing_keystore(**kwargs)
+
+def _deposit_data_builder(credential: Credential) -> Dict[str, bytes]:
+    return credential.deposit_datum_dict
+
+def _keystore_verifier(kwargs: Dict[str, Any]) -> bool:
+    credential: Credential = kwargs.pop('credential')
+    return credential.verify_keystore(**kwargs)
 
 def generate_keys(args):
     """Generate validator keys.
@@ -232,40 +250,85 @@ def generate_keys(args):
 
     start_index = args.index
     num_keys=args.count
-    hex_eth1_withdrawal_address=eth1_withdrawal_address
+    hex_withdrawal_address=eth1_withdrawal_address
     password=args.password
 
     if len(amounts) != num_keys:
         raise ValueError(
             f"The number of keys ({num_keys}) doesn't equal to the corresponding deposit amounts ({len(amounts)})."
         )
+
+    timestamp = time.time()
+    compounding = False
+    use_pbkdf2 = False
+    
     key_indices = range(start_index, start_index + num_keys)
-    credentials = CredentialList(
-        [Credential(mnemonic=mnemonic, mnemonic_password=mnemonic_password,
-            index=index, amount=amounts[index - start_index], chain_setting=chain_setting,
-            hex_eth1_withdrawal_address=hex_eth1_withdrawal_address)
-        for index in key_indices])
 
-    keystore_filefolders = [credential.save_signing_keystore(password=password, folder=folder) for credential in credentials.credentials]
+    credentials: list[Credential] = []
+    executor_kwargs = [{
+        'mnemonic': mnemonic,
+        'mnemonic_password': mnemonic_password,
+        'index': index,
+        'amount': amounts[index - start_index],
+        'chain_setting': chain_setting,
+        'hex_withdrawal_address': hex_withdrawal_address,
+        'compounding': compounding,
+        'use_pbkdf2': use_pbkdf2,
+    } for index in key_indices]
 
-    deposit_data = [cred.deposit_datum_dict for cred in credentials.credentials]
-    filefolder = os.path.join(folder, 'deposit_data-%i.json' % time.time())
-    with open(filefolder, 'w') as f:
-        json.dump(deposit_data, f, default=lambda x: x.hex())
-    if os.name == 'posix':
-        os.chmod(filefolder, int('400', 8))  # Read for owner & group
-    deposits_file = filefolder
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for credential in executor.map(_credential_builder, executor_kwargs):
+            credentials.append(credential)
+
+    credentials = CredentialList(credentials)
+
+    keystore_filefolders: list[str] = []
+    executor_kwargs = [{
+        'credential': credential,
+        'password': password,
+        'folder': folder,
+        'timestamp': timestamp,
+    } for credential in credentials.credentials]
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for filefolder in executor.map(_keystore_exporter, executor_kwargs):
+            keystore_filefolders.append(filefolder)
+
+    deposit_data = []
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for datum_dict in executor.map(_deposit_data_builder, credentials.credentials):
+            deposit_data.append(datum_dict)
+
+    deposits_file = export_deposit_data_json_util(folder, timestamp, deposit_data)
 
     items = zip(credentials.credentials, keystore_filefolders)
 
-    if not all(credential.verify_keystore(keystore_filefolder=filefolder, password=password)
-        for credential, filefolder in items):
+    all_valid_keystores = True
+    executor_kwargs = [{
+        'credential': credential,
+        'keystore_filefolder': fileholder,
+        'password': password,
+    } for credential, fileholder in zip(credentials.credentials, keystore_filefolders)]
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for valid_keystore in executor.map(_keystore_verifier, executor_kwargs):
+            all_valid_keystores &= valid_keystore
+
+    if not all_valid_keystores:
         raise ValidationError("Failed to verify the keystores.")
 
-    with open(deposits_file, 'r') as f:
+    all_valid_deposits = True
+    deposit_json = []
+    with open(deposits_file, 'r', encoding='utf-8') as f:
         deposit_json = json.load(f)
-        if not all([validate_deposit(deposit, credential) for deposit, credential in zip(deposit_json, credentials.credentials)]):
-            raise ValidationError("Failed to verify the deposit data JSON files.")
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for valid_deposit in executor.map(validate_deposit, deposit_json, credentials.credentials):
+            all_valid_deposits &= valid_deposit
+
+    if not all_valid_deposits:
+        raise ValidationError("Failed to verify the deposit data JSON files.")
 
 def decode_bytes(value):
     if value.startswith('0x'):
