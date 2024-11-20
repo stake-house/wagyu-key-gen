@@ -15,6 +15,7 @@ from typing import (
     Sequence,
     Dict,
     Any,
+    Optional,
 )
 
 from eth_typing import HexAddress
@@ -34,7 +35,8 @@ from ethstaker_deposit.credentials import (
 from ethstaker_deposit.exceptions import ValidationError
 from ethstaker_deposit.utils.validation import (
     validate_deposit,
-    validate_bls_to_execution_change
+    validate_bls_to_execution_change,
+    validate_bls_withdrawal_credentials_matching,
 )
 from ethstaker_deposit.utils.constants import (
     MAX_DEPOSIT_AMOUNT,
@@ -45,7 +47,28 @@ from ethstaker_deposit.settings import (
     get_chain_setting,
 )
 
+from ethstaker_deposit.utils.file_handling import (
+    sensitive_opener,
+)
+
 from ethstaker_deposit.utils.crypto import SHA256
+
+def _validate_credentials_match(kwargs: Dict[str, Any]) -> Optional[ValidationError]:
+    credential: Credential = kwargs.pop('credential')
+    bls_withdrawal_credentials: bytes = kwargs.pop('bls_withdrawal_credentials')
+
+    try:
+        validate_bls_withdrawal_credentials_matching(bls_withdrawal_credentials, credential)
+    except ValidationError as e:
+        return e
+    return None
+
+def _bls_to_execution_change_builder(kwargs: Dict[str, Any]) -> Dict[str, bytes]:
+    credential: Credential = kwargs.pop('credential')
+    return credential.get_bls_to_execution_change_dict(**kwargs)
+
+def _bls_to_execution_change_validator(kwargs: Dict[str, Any]) -> bool:
+    return validate_bls_to_execution_change(**kwargs)
 
 def generate_bls_to_execution_change(
         folder: str,
@@ -73,7 +96,7 @@ def generate_bls_to_execution_change(
     
     eth1_withdrawal_address = execution_address
     if not is_hex_address(eth1_withdrawal_address):
-        raise ValueError("The given Eth1 address is not in hexadecimal encoded form.")
+        raise ValueError("The given withdrawal address is not in hexadecimal encoded form.")
 
     eth1_withdrawal_address = to_normalized_address(eth1_withdrawal_address)
     execution_address = eth1_withdrawal_address
@@ -100,40 +123,76 @@ def generate_bls_to_execution_change(
         raise ValueError(
             f"The number of keys ({num_keys}) doesn't equal to the corresponding deposit amounts ({len(amounts)})."
         )
+    
+    compounding = False
+    use_pbkdf2 = False
+
     key_indices = range(start_index, start_index + num_keys)
-    credentials = CredentialList(
-        [Credential(mnemonic=mnemonic, mnemonic_password=mnemonic_password,
-            index=index, amount=amounts[index - start_index], chain_setting=chain_setting,
-            hex_withdrawal_address=hex_withdrawal_address)
-        for index in key_indices])
+
+    credentials: list[Credential] = []
+    executor_kwargs = [{
+        'mnemonic': mnemonic,
+        'mnemonic_password': mnemonic_password,
+        'index': index,
+        'amount': amounts[index - start_index],
+        'chain_setting': chain_setting,
+        'hex_withdrawal_address': hex_withdrawal_address,
+        'compounding': compounding,
+        'use_pbkdf2': use_pbkdf2,
+    } for index in key_indices]
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for credential in executor.map(_credential_builder, executor_kwargs):
+            credentials.append(credential)
+
+    credentials = CredentialList(credentials)
 
     # Check if the given old bls_withdrawal_credentials is as same as the mnemonic generated
-    for i, credential in enumerate(credentials.credentials):
-        bls_withdrawal_credentials = bls_withdrawal_credentials_list[i]
-        if bls_withdrawal_credentials[1:] != SHA256(credential.withdrawal_pk)[1:]:
-            raise ValidationError('err_not_matching')
+    executor_kwargs = [{
+        'credential': credential,
+        'bls_withdrawal_credentials': bls_withdrawal_credentials_list[i],
+    } for i, credential in enumerate(credentials.credentials)]
 
-    bls_to_execution_changes = [cred.get_bls_to_execution_change_dict(validator_indices[i])
-        for i, cred in enumerate(credentials.credentials)]
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for e in executor.map(_validate_credentials_match, executor_kwargs):
+            if e is not None:
+                raise ValidationError('err_not_matching')
+
+    bls_to_execution_changes = []
+
+    executor_kwargs = [{
+        'credential': credential,
+        'validator_index': validator_indices[i],
+    } for i, credential in enumerate(credentials.credentials)]
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for bls_to_execution_change in executor.map(_bls_to_execution_change_builder, executor_kwargs):
+            bls_to_execution_changes.append(bls_to_execution_change)
 
     filefolder = os.path.join(folder, 'bls_to_execution_change-%i.json' % time.time())
-    with open(filefolder, 'w') as f:
+    with open(filefolder, 'w', encoding='utf-8', opener=sensitive_opener) as f:
         json.dump(bls_to_execution_changes, f)
-    if os.name == 'posix':
-        os.chmod(filefolder, int('400', 8))  # Read for owner & group
     btec_file = filefolder
 
-    with open(btec_file, 'r') as f:
+    btec_json = []
+    with open(btec_file, 'r', encoding='utf-8') as f:
         btec_json = json.load(f)
-        json_file_validation_result = all([
-            validate_bls_to_execution_change(
-                btec, credential,
-                input_validator_index=input_validator_index,
-                input_execution_address=execution_address,
-                chain_setting=chain_setting)
-            for btec, credential, input_validator_index in zip(btec_json, credentials.credentials, validator_indices)
-        ])
-    if not json_file_validation_result:
+
+    all_valid_bls_changes = True
+
+    executor_kwargs = [{
+        'btec_dict': btec,
+        'credential': credential,
+        'input_validator_index': input_validator_index,
+        'input_withdrawal_address': hex_withdrawal_address,
+        'chain_setting': chain_setting,
+    } for btec, credential, input_validator_index in zip(btec_json, credentials.credentials, validator_indices)]
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for valid_bls_change in executor.map(_bls_to_execution_change_validator, executor_kwargs):
+            all_valid_bls_changes &= valid_bls_change
+
+    if not all_valid_bls_changes:
         raise ValidationError('err_verify_btec')
 
 def validate_bls_credentials(
@@ -162,21 +221,42 @@ def validate_bls_credentials(
     num_keys = num_validators
     start_index = validator_start_index
 
+    compounding = False
+    use_pbkdf2 = False
+
     key_indices = range(start_index, start_index + num_keys)
-    credentials = CredentialList(
-        [Credential(mnemonic=mnemonic, mnemonic_password=mnemonic_password,
-            index=index, amount=amounts[index - start_index], chain_setting=chain_setting,
-            hex_withdrawal_address=None)
-        for index in key_indices])
+
+    credentials: list[Credential] = []
+    executor_kwargs = [{
+        'mnemonic': mnemonic,
+        'mnemonic_password': mnemonic_password,
+        'index': index,
+        'amount': amounts[index - start_index],
+        'chain_setting': chain_setting,
+        'hex_withdrawal_address': None,
+        'compounding': compounding,
+        'use_pbkdf2': use_pbkdf2,
+    } for index in key_indices]
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for credential in executor.map(_credential_builder, executor_kwargs):
+            credentials.append(credential)
+
+    credentials = CredentialList(credentials)
 
     # Check if the given old bls_withdrawal_credentials is as same as the mnemonic generated
-    for i, credential in enumerate(credentials.credentials):
-        bls_withdrawal_credentials = bls_withdrawal_credentials_list[i]
-        if bls_withdrawal_credentials[1:] != SHA256(credential.withdrawal_pk)[1:]:
-            raise ValidationError('err_not_matching')
+    executor_kwargs = [{
+        'credential': credential,
+        'bls_withdrawal_credentials': bls_withdrawal_credentials_list[i],
+    } for i, credential in enumerate(credentials.credentials)]
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for e in executor.map(_validate_credentials_match, executor_kwargs):
+            if e is not None:
+                raise ValidationError('err_not_matching')
 
 
-def validate_mnemonic(mnemonic: str, word_lists_path: str) -> str:
+def validate_mnemonic(mnemonic: str, word_lists_path: str, language: Optional[str] = 'english') -> str:
     """Validate a mnemonic using the ethstaker-deposit-cli logic and returns the mnemonic.
 
     Keyword arguments:
@@ -184,7 +264,7 @@ def validate_mnemonic(mnemonic: str, word_lists_path: str) -> str:
     word_lists_path -- path to the word lists directory
     """
 
-    mnemonic = reconstruct_mnemonic(mnemonic, word_lists_path)
+    mnemonic = reconstruct_mnemonic(mnemonic, word_lists_path, language)
     if mnemonic is not None:
         return mnemonic
     else:
