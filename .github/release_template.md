@@ -17,6 +17,36 @@
 
 `[GENERATED-RELEASE-NOTES]`
 
+# How to use
+
+## On Windows
+
+Download and run the `Wagyu.Key.Gen.X.X.X.exe` asset.
+
+## On macOS
+
+Download and run the `Wagyu.Key.Gen-X.X.X.dmg` asset.  Run the `Wagyu Key Gen` app from within `Applications` by right clicking and clicking `Open`.  You will get a warning stating `macOS cannot verify the developer of “Wagyu Key Gen.app”. Are you sure you want to open it?`.  Click `Open` and the app will open.
+
+## On Linux
+
+Download the `Wagyu.Key.Gen-X.X.X.AppImage` asset, [make it executable](https://itsfoss.com/use-appimage-linux/) and launch it from your desktop environment, often by double clicking on it, or from your terminal.
+
+On Ubuntu 22.04 or later, you might need [to install libfuse2](https://github.com/AppImage/AppImageKit/wiki/FUSE) first before running the AppImage asset with something like:
+
+```
+sudo add-apt-repository universe
+sudo apt install libfuse2
+```
+
+As an alternative to having FUSE, you can manually extract the AppImage asset and run it. In a Terminal, it would look like:
+
+```
+chmod 777 Wagyu.Key.Gen-1.10.0.AppImage
+./Wagyu.Key.Gen-1.10.0.AppImage --appimage-extract
+cd squashfs-root
+./AppRun
+```
+
 # Building process
 
 Release assets were built using Github Actions and [this workflow run](`[WORKFLOW-RUN-URL]`). You can establish the provenance of this build using [our artifact attestations](https://github.com/stake-house/wagyu-key-gen/attestations).
