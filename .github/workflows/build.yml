@@ -79,7 +79,7 @@ jobs:
           yarn run build
           yarn run buildcli
           yarn run dist
-          mv -v dist/* "${BUILD_FILE_NAME}"
+          mv -v dist/Wagyu* "${BUILD_FILE_NAME}"
           export ARCHIVE_FILE_NAME="${BUILD_FILE_NAME}".tar.gz
           echo "ARCHIVE_FILE_NAME=${ARCHIVE_FILE_NAME}" >> "$GITHUB_ENV"
           tar -zcvf "${ARCHIVE_FILE_NAME}" ./"${BUILD_FILE_NAME}"
@@ -95,7 +95,7 @@ jobs:
           yarn run build
           yarn run buildcliwin
           yarn run dist
-          Move-Item -Path dist\* -Destination $env:BUILD_FILE_NAME
+          Move-Item -Path dist\Wagyu* -Destination $env:BUILD_FILE_NAME
           $env:ZIP_FILE_NAME = ($env:BUILD_FILE_NAME + ".zip")
           echo ("ZIP_FILE_NAME=" + $env:ZIP_FILE_NAME) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Compress-Archive -Path $env:BUILD_FILE_NAME_PATH -DestinationPath $env:ZIP_FILE_NAME

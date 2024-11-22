@@ -20,7 +20,6 @@ PYTHONPATH=$TARGETPACKAGESPATH:$ETH2DEPOSITCLIPATH:$(python3 -c "import sys;prin
 DISTBINPATH=$SCRIPTPATH/../../build/bin
 DISTWORDSPATH=$SCRIPTPATH/../../build/word_lists
 SRCWORDSPATH=$SCRIPTPATH/../vendors/$EDCDIR/ethstaker_deposit/key_handling/key_derivation/word_lists
-SRCINTLPATH=$SCRIPTPATH/../vendors/$EDCDIR/ethstaker_deposit/intl
 
 mkdir -p $DISTBINPATH
 mkdir -p $DISTWORDSPATH
@@ -29,17 +28,10 @@ mkdir -p $TARGETPACKAGESPATH
 # Getting all the requirements
 python3 -m pip install -r $ETH2REQUIREMENTSPATH --target $TARGETPACKAGESPATH
 
-# Getting packages metadata
-PYECCDATA=$(python3 -c "from PyInstaller.utils.hooks import copy_metadata;print(':'.join(copy_metadata('py_ecc')[0]))")
-
 # Bundling Python stakingdeposit_proxy
 PYTHONPATH=$PYTHONPATH pyinstaller \
-    --onefile \
     --distpath $DISTBINPATH \
-    --add-data "$SRCINTLPATH:ethstaker_deposit/intl" \
-    --add-data "$PYECCDATA" \
-    -p $PYTHONPATH \
-    $SCRIPTPATH/stakingdeposit_proxy.py
+    $SCRIPTPATH/stakingdeposit_proxy.spec
 
 # Adding word list
 cp $SRCWORDSPATH/* $DISTWORDSPATH

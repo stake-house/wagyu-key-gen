@@ -11,6 +11,7 @@ import json
 import concurrent.futures
 import sys
 import time
+from multiprocessing import freeze_support
 from typing import (
     Sequence,
     Dict,
@@ -462,6 +463,7 @@ def parse_validate_mnemonic(args):
 def main():
     """The application starting point.
     """
+    freeze_support()  # Needed when running under Windows in a frozen bundle
     main_parser = argparse.ArgumentParser()
 
     subparsers = main_parser.add_subparsers(title="subcommands")
