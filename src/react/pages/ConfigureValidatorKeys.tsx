@@ -82,7 +82,7 @@ const ConfigureValidatorKeys = () => {
       setInputNumberOfKeysError(false);
     }
 
-    if (inputPassword.length < 8) {
+    if (inputPassword.length < 12) {
       setInputPasswordStrengthError(true);
       isError = true;
     } else {
