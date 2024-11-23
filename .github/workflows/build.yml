@@ -81,8 +81,9 @@ jobs:
           yarn run dist
           mkdir -p output/artifacts
           distfile=$(find dist/ -maxdepth 1 -type f \( -iname \*.AppImage -o -iname \*.dmg \))
+          distfilename=$(basename "${distfile}")
           mv "${distfile}" output/artifacts
-          sha256sum output/artifacts/"$(basename ${distfile})" | head -c 64 > output/artifacts/"$(basename ${distfile})".sha256
+          sha256sum "output/artifacts/${distfilename}" | head -c 64 > "output/artifacts/${distfilename}.sha256"
       - name: Build on Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
         run: |
@@ -93,9 +94,10 @@ jobs:
           yarn run buildcliwin
           yarn run dist
           mkdir output\artifacts
-          Move-Item -Path dist\Wagyu*.exe -Destination output\artifacts
-          $env:CHECKSUM_FILE_NAME_PATH = ("output\artifacts\" + (Get-ChildItem -Path "output\artifacts\" -Name)[0] + ".sha256")
-          certUtil -hashfile ("output\artifacts\" + (Get-ChildItem -Path "output\artifacts\" -Name)[0]) SHA256 | findstr /i /v "SHA256" | findstr /i /v "CertUtil" > $env:CHECKSUM_FILE_NAME_PATH
+          Move-Item -Path dist\Wagyu* -Destination output\artifacts
+          $env:BINANY_FILE_NAME = (Get-ChildItem -Path "output\artifacts\" -Name)[0]
+          $env:CHECKSUM_FILE_NAME_PATH = ("output\artifacts\" + $env:BINANY_FILE_NAME + ".sha256")
+          certUtil -hashfile ("output\artifacts\" + $env:BINANY_FILE_NAME) SHA256 | findstr /i /v "SHA256" | findstr /i /v "CertUtil" > $env:CHECKSUM_FILE_NAME_PATH
       - name: Generate artifacts attestation
         uses: actions/attest-build-provenance@v1
         with:
