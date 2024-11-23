@@ -82,7 +82,8 @@ jobs:
           mkdir -p output/artifacts
           distfile=$(find dist/ -maxdepth 1 -type f \( -iname \*.AppImage -o -iname \*.dmg \))
           distfilename=$(basename "${distfile}")
-          mv "${distfile}" output/artifacts
+          distfilename="${distfilename// /.}"
+          mv "${distfile}" "output/artifacts/${distfilename}"
           sha256sum "output/artifacts/${distfilename}" | head -c 64 > "output/artifacts/${distfilename}.sha256"
       - name: Build on Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
@@ -96,6 +97,8 @@ jobs:
           mkdir output\artifacts
           $env:BINANY_FILE_NAME = (Get-ChildItem -Path "dist\" -Name -Filter *.exe)
           Move-Item -Path ("dist\" + $env:BINANY_FILE_NAME) -Destination output\artifacts
+          Rename-Item -Path ("output\artifacts\" + $env:BINANY_FILE_NAME) -NewName ($env:BINANY_FILE_NAME.Replace(' ', '.'))
+          $env:BINANY_FILE_NAME = $env:BINANY_FILE_NAME.Replace(' ', '.')
           $env:CHECKSUM_FILE_NAME_PATH = ("output\artifacts\" + $env:BINANY_FILE_NAME + ".sha256")
           certUtil -hashfile ("output\artifacts\" + $env:BINANY_FILE_NAME) SHA256 | findstr /i /v "SHA256" | findstr /i /v "CertUtil" > $env:CHECKSUM_FILE_NAME_PATH
       - name: Generate artifacts attestation
@@ -264,7 +267,7 @@ jobs:
               ) {
                 const system = details.system;
                 const architecture = details.architecture;
-                const binaryName = details.binary_archive.replace(' ', '.');
+                const binaryName = details.binary_archive;
                 const binaryUrl = details.binary_archive_download_url;
                 const checksumName = details.binary_checksum;
                 const checksumUrl = details.binary_checksum_download_url;
