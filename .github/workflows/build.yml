@@ -79,13 +79,10 @@ jobs:
           yarn run build
           yarn run buildcli
           yarn run dist
-          mv -v dist/Wagyu* "${BUILD_FILE_NAME}"
-          export ARCHIVE_FILE_NAME="${BUILD_FILE_NAME}".tar.gz
-          echo "ARCHIVE_FILE_NAME=${ARCHIVE_FILE_NAME}" >> "$GITHUB_ENV"
-          tar -zcvf "${ARCHIVE_FILE_NAME}" ./"${BUILD_FILE_NAME}"
           mkdir -p output/artifacts
-          cp "${ARCHIVE_FILE_NAME}" output/artifacts
-          sha256sum "${ARCHIVE_FILE_NAME}" | head -c 64 > output/artifacts/"${ARCHIVE_FILE_NAME}".sha256
+          distfile=$(find dist/ -maxdepth 1 -type f \( -iname \*.AppImage -o -iname \*.dmg \))
+          mv "${distfile}" output/artifacts
+          sha256sum output/artifacts/"$(basename ${distfile})" | head -c 64 > output/artifacts/"$(basename ${distfile})".sha256
       - name: Build on Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
         run: |
@@ -95,14 +92,10 @@ jobs:
           yarn run build
           yarn run buildcliwin
           yarn run dist
-          Move-Item -Path dist\Wagyu* -Destination $env:BUILD_FILE_NAME
-          $env:ZIP_FILE_NAME = ($env:BUILD_FILE_NAME + ".zip")
-          echo ("ZIP_FILE_NAME=" + $env:ZIP_FILE_NAME) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          Compress-Archive -Path $env:BUILD_FILE_NAME_PATH -DestinationPath $env:ZIP_FILE_NAME
           mkdir output\artifacts
-          copy $env:ZIP_FILE_NAME output\artifacts
-          $env:CHECKSUM_FILE_NAME_PATH = ("output\artifacts\" + $env:ZIP_FILE_NAME + ".sha256")
-          certUtil -hashfile $env:ZIP_FILE_NAME SHA256 | findstr /i /v "SHA256" | findstr /i /v "CertUtil" > $env:CHECKSUM_FILE_NAME_PATH
+          Move-Item -Path dist\Wagyu*.exe -Destination output\artifacts
+          $env:CHECKSUM_FILE_NAME_PATH = ("output\artifacts\" + (Get-ChildItem -Path "output\artifacts\" -Name)[0] + ".sha256")
+          certUtil -hashfile ("output\artifacts\" + (Get-ChildItem -Path "output\artifacts\" -Name)[0]) SHA256 | findstr /i /v "SHA256" | findstr /i /v "CertUtil" > $env:CHECKSUM_FILE_NAME_PATH
       - name: Generate artifacts attestation
         uses: actions/attest-build-provenance@v1
         with:
