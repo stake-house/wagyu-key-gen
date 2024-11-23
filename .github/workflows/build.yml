@@ -94,8 +94,8 @@ jobs:
           yarn run buildcliwin
           yarn run dist
           mkdir output\artifacts
-          Move-Item -Path dist\Wagyu* -Destination output\artifacts
-          $env:BINANY_FILE_NAME = (Get-ChildItem -Path "output\artifacts\" -Name)[0]
+          $env:BINANY_FILE_NAME = (Get-ChildItem -Path "dist\" -Name -Filter *.exe)
+          Move-Item -Path ("dist\" + $env:BINANY_FILE_NAME) -Destination output\artifacts
           $env:CHECKSUM_FILE_NAME_PATH = ("output\artifacts\" + $env:BINANY_FILE_NAME + ".sha256")
           certUtil -hashfile ("output\artifacts\" + $env:BINANY_FILE_NAME) SHA256 | findstr /i /v "SHA256" | findstr /i /v "CertUtil" > $env:CHECKSUM_FILE_NAME_PATH
       - name: Generate artifacts attestation
