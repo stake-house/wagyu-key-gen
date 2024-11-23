@@ -207,8 +207,6 @@ jobs:
 
             console.log('Uploading release assets...');
 
-            const binaryPlatformRegex = /(\w+)-(\w+)(?=\.(?:zip|tar\.gz)(.sha256)?$)/;
-
             const archivesGlobber = await glob.create('assets/*/*')
             for await (const file of archivesGlobber.globGenerator()) {
               console.log(`Uploading ${path.basename(file)} to the release ${release.id}`);
@@ -224,23 +222,31 @@ jobs:
                 data: fileContent,
               });
 
-              const match = fileName.match(binaryPlatformRegex);
-              if (match) {
-                const platform = `${match[1]}-${match[2]}`;
 
-                const binaryDetails = binariesMap.get(platform);
+              let platform = '';
 
-                if (fileName.endsWith('.sha256')) {
-                  binariesMap.set(platform, Object.assign({}, binaryDetails, {
-                    binary_checksum: fileName,
-                    binary_checksum_download_url: asset.browser_download_url,
-                  }));
-                } else {
-                  binariesMap.set(platform, Object.assign({}, binaryDetails, {
-                    binary_archive: fileName,
-                    binary_archive_download_url: asset.browser_download_url,
-                  }));
-                }
+              if (fileName.endsWith('.exe') || fileName.endsWith('.exe.sha256')) {
+                platform = 'windows-amd64';
+              } else if (fileName.endsWith('.AppImage') || fileName.endsWith('.AppImage.sha256')) {
+                platform = 'linux-amd64';
+              } else if (fileName.endsWith('-arm64.dmg') || fileName.endsWith('-arm64.dmg.sha256')) {
+                platform = 'darwin-arm64';
+              } else if (fileName.endsWith('.dmg') || fileName.endsWith('.dmg.sha256')) {
+                platform = 'darwin-amd64';
+              }
+
+              const binaryDetails = binariesMap.get(platform);
+
+              if (fileName.endsWith('.sha256')) {
+                binariesMap.set(platform, Object.assign({}, binaryDetails, {
+                  binary_checksum: fileName,
+                  binary_checksum_download_url: asset.browser_download_url,
+                }));
+              } else {
+                binariesMap.set(platform, Object.assign({}, binaryDetails, {
+                  binary_archive: fileName,
+                  binary_archive_download_url: asset.browser_download_url,
+                }));
               }
             }
 
@@ -258,7 +264,7 @@ jobs:
               ) {
                 const system = details.system;
                 const architecture = details.architecture;
-                const binaryName = details.binary_archive;
+                const binaryName = details.binary_archive.replace(' ', '.');
                 const binaryUrl = details.binary_archive_download_url;
                 const checksumName = details.binary_checksum;
                 const checksumUrl = details.binary_checksum_download_url;
