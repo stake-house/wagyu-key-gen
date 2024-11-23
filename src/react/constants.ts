@@ -10,7 +10,7 @@ export const errors = {
 	NUMBER_OF_KEYS: "Please input a number between 1 and 1000.",
 	ADDRESS_FORMAT_ERROR: "Please enter a valid Ethereum address.",
 	WITHDRAW_ADDRESS_REQUIRED: "Please enter an Ethereum address.",
-	PASSWORD_STRENGTH: "Password must be at least 8 characters.",
+	PASSWORD_STRENGTH: "Password must be at least 12 characters.",
 	PASSWORD_MATCH: "Passwords don't match.",
 	STARTING_INDEX: "Please input start index.",
 	NON_NEGATIVE_INDEX: "Start index can not be a negative number",
@@ -28,7 +28,7 @@ export const errors = {
 export const tooltips = {
 	IMPORT_MNEMONIC: "If you've already created a Secret Recovery Phrase, you can use it to regenerate your original keys, create more keys, or generate a BLS to execution change by importing the phrase here.",
 	NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to create.",
-	PASSWORD: "Pick a strong password (at least 8 characters) that will be used to protect your keys.",
+	PASSWORD: "Pick a strong password (at least 12 characters) that will be used to protect your keys.",
 	STARTING_INDEX: "Each key is created sequentially, so we need to know how many you've created with this Secret Recovery Phrase in the past in order to create some new ones for you.",
 	ETH1_WITHDRAW_ADDRESS: "An optional Ethereum address for the withdrawal credentials.",
 	BTEC_WITHDRAW_ADDRESS: "An Ethereum address for withdrawal. There is where your validator balance and rewards will go.",

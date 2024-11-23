@@ -1,0 +1,7 @@
+# Windows binary build requirements
+# Only use this to get new hashes, don't upgrade requirements.txt directly with pip-compile:
+# It can't find pywin32
+future
+pefile
+pywin32-ctypes
+#pywin32 is not found by pip-compile

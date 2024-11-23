@@ -33,7 +33,7 @@ import { doesFileExist } from './BashUtils';
  */
 const execFileProm = promisify(execFile);
 
-const ETH2_DEPOSIT_DIR_NAME = "staking-deposit-cli-2.7.0";
+const ETH2_DEPOSIT_DIR_NAME = "ethstaker-deposit-cli-0.5.0";
 
 /**
  * Paths needed to call the stakingdeposit_proxy application using the Python 3 version installed on
@@ -42,7 +42,7 @@ const ETH2_DEPOSIT_DIR_NAME = "staking-deposit-cli-2.7.0";
 const ETH2_DEPOSIT_CLI_PATH = path.join("src", "vendors", ETH2_DEPOSIT_DIR_NAME);
 const SCRIPTS_PATH = path.join("src", "scripts");
 const REQUIREMENTS_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "requirements.txt");
-const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "staking_deposit", "key_handling",
+const WORD_LIST_PATH = path.join(ETH2_DEPOSIT_CLI_PATH, "ethstaker_deposit", "key_handling",
   "key_derivation", "word_lists");
 const REQUIREMENT_PACKAGES_PATH = path.join("dist", "packages");
 const STAKINGDEPOSIT_PROXY_PATH = path.join(SCRIPTS_PATH, "stakingdeposit_proxy.py");
@@ -222,7 +222,7 @@ const generateKeys = async (
 }
 
 /**
- * Validate a mnemonic using the staking-deposit-cli logic by calling the validate_mnemonic function
+ * Validate a mnemonic using the ethstaker-deposit-cli logic by calling the validate_mnemonic function
  * from the stakingdeposit_proxy application.
  *
  * @param mnemonic The mnemonic to be validated.

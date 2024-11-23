@@ -1,0 +1,20 @@
+bls_to_execution_changes
+bls_to_execution_changes_keystore
+exit_transactions
+partial_deposits
+validator_keys
+
+# Python testing & linting:
+build/
+docs/book
+dist/
+venv/
+.venv/
+*.pytest_cache
+*.hypothesis
+*.mypy_cache
+*.egg-info
+*.egg
+__pycache__
+.DS_Store
+.coverage

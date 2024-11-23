@@ -1,0 +1,314 @@
+name: ci-build
+run-name: ${{ github.actor }} is building binaries and drafting a release
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build-binaries:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, macos-13, macos-latest, windows-latest]
+        python-version: ["3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+      - name: Setup variables (Linux & macOS)
+        if: ${{ startsWith(matrix.os, 'ubuntu-') || startsWith(matrix.os, 'macos-') }}
+        env:
+          MATRIX_OS: '${{ matrix.os }}'
+        run: |
+          echo "PYTHONHASHSEED=42" >> "$GITHUB_ENV"
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c -7)
+          echo "SHORT_SHA=${SHORT_SHA}" >> "$GITHUB_ENV"
+          if [[ $MATRIX_OS == ubuntu-* ]] ;
+          then
+            BUILD_SYSTEM=linux
+          fi
+          if [[ $MATRIX_OS == macos-* ]] ;
+          then
+            BUILD_SYSTEM=darwin
+            brew install coreutils
+          fi
+          BUILD_ARCHITECTURE=amd64
+          if [[ $MATRIX_OS == *arm* ]] || [[ $MATRIX_OS == macos-latest ]] ;
+          then
+            BUILD_ARCHITECTURE=arm64
+          fi
+          BUILD_FILE_NAME=wagyu-key-gen-${SHORT_SHA}-${BUILD_SYSTEM}-${BUILD_ARCHITECTURE}
+          mkdir "${BUILD_FILE_NAME}"
+          echo "BUILD_FILE_NAME=${BUILD_FILE_NAME}" >> "$GITHUB_ENV"
+          echo "BUILD_CONFIGS_PATH=${BUILD_CONFIGS_PATH}" >> "$GITHUB_ENV"
+      - name: Setup variables (Windows)
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        env:
+          MATRIX_OS: '${{ matrix.os }}'
+        run: |
+          echo "PYTHONHASHSEED=42" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          $env:SHORT_SHA = "${{ github.sha }}".Substring(0, 7)
+          echo ("SHORT_SHA=" + $env:SHORT_SHA) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          if ($env:MATRIX_OS.Contains("arm")) {
+            $env:BUILD_ARCHITECTURE = "arm64"
+          }
+          else {
+            $env:BUILD_ARCHITECTURE = "amd64"
+          }
+          $env:BUILD_FILE_NAME = ("wagyu-key-gen-" + $env:SHORT_SHA + "-windows-" + $env:BUILD_ARCHITECTURE)
+          echo ("BUILD_FILE_NAME=" + $env:BUILD_FILE_NAME) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          mkdir $env:BUILD_FILE_NAME
+          $env:BUILD_FILE_NAME_PATH = (".\" + $env:BUILD_FILE_NAME)
+          echo ("BUILD_FILE_NAME_PATH=" + $env:BUILD_FILE_NAME_PATH) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Build on Linux & macOS
+        if: ${{ startsWith(matrix.os, 'ubuntu-') || startsWith(matrix.os, 'macos-') }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          yarn install
+          yarn run build
+          yarn run buildcli
+          yarn run dist
+          mkdir -p output/artifacts
+          distfile=$(find dist/ -maxdepth 1 -type f \( -iname \*.AppImage -o -iname \*.dmg \))
+          distfilename=$(basename "${distfile}")
+          distfilename="${distfilename// /.}"
+          distfilename=$(echo "$distfilename" | sed -r "s/([0-9]+.[0-9]+.[0-9])/\1-$SHORT_SHA/")
+          mv "${distfile}" "output/artifacts/${distfilename}"
+          sha256sum "output/artifacts/${distfilename}" | head -c 64 > "output/artifacts/${distfilename}.sha256"
+      - name: Build on Windows
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          yarn install
+          yarn run build
+          yarn run buildcliwin
+          yarn run dist
+          mkdir output\artifacts
+          $env:BINANY_FILE_NAME = (Get-ChildItem -Path "dist\" -Name -Filter *.exe)
+          Move-Item -Path ("dist\" + $env:BINANY_FILE_NAME) -Destination output\artifacts
+          $env:BINANY_NEW_FILE_NAME = $env:BINANY_FILE_NAME.Replace(' ', '.')
+          $env:BINANY_NEW_FILE_NAME = ($env:BINANY_NEW_FILE_NAME -replace '(\d+\.\d+\.\d+)',('$1-' + $env:SHORT_SHA))
+          Rename-Item -Path ("output\artifacts\" + $env:BINANY_FILE_NAME) -NewName $env:BINANY_NEW_FILE_NAME
+          $env:CHECKSUM_FILE_NAME_PATH = ("output\artifacts\" + $env:BINANY_NEW_FILE_NAME + ".sha256")
+          certUtil -hashfile ("output\artifacts\" + $env:BINANY_NEW_FILE_NAME) SHA256 | findstr /i /v "SHA256" | findstr /i /v "CertUtil" > $env:CHECKSUM_FILE_NAME_PATH
+      - name: Generate artifacts attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: output/artifacts/*
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.os }}-${{ github.sha }}-${{ github.run_id }}
+          path: output/artifacts
+  create-release:
+    needs: [build-binaries]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download build binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: assets/
+          pattern: binary-*
+      - name: Create draft release
+        uses: actions/github-script@v7
+        env:
+          DOCKER_IMAGE_METADATA: '${{ needs.build-and-push-docker.outputs.metadata }}'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var path = require('path');
+            var fs = require('fs');
+
+            var tagName = '';
+            if (context.eventName == 'push') {
+              const tagRegex = /(?:refs\/tags\/)?(v\d+\.\d+\.\d+)$/;
+
+              const match = context.ref.match(tagRegex);
+              if (match) {
+                tagName = match[1];
+              } else {
+                core.setFailed(`Cannot extract the tag version from ref value '${context.ref}'.`);
+              }
+
+            } else if (context.eventName == 'workflow_dispatch') {
+              tagName = `dev-${context.actor}-${context.sha.substring(0, 7)}-${context.runId}`;
+            } else {
+              core.setFailed(`Unhandled triggering event.`);
+            }
+
+            console.log(`Creating draft release for tag ${tagName}...`)
+
+            console.log(`tagName: ${tagName}`);
+            console.log(`context.sha: ${context.sha}`);
+
+            const { data: release } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              target_commitish: context.sha,
+              draft: true,
+              generate_release_notes: true,
+            });
+
+            console.log(`Release ${release.id} created.`);
+
+            let binariesMap = new Map();
+            const emptyBinaryObject = {
+              system: null,
+              architecture: null,
+              binary_archive: null,
+              binary_archive_download_url: null,
+              binary_checksum: null,
+              binary_checksum_download_url: null,
+              attestation: null,
+            };
+
+            const windowsSystem = 'Windows';
+            const macOSSystem = 'macOS';
+            const linuxSystem = 'Linux';
+
+            const amd64Architecture = 'x86_64';
+            const arm64Architecture = 'aarch64';
+
+            binariesMap.set('windows-amd64', Object.assign({}, emptyBinaryObject, {
+              system: windowsSystem,
+              architecture: amd64Architecture,
+            }));
+            binariesMap.set('windows-arm64', Object.assign({}, emptyBinaryObject, {
+              system: windowsSystem,
+              architecture: arm64Architecture,
+            }));
+            binariesMap.set('darwin-amd64', Object.assign({}, emptyBinaryObject, {
+              system: macOSSystem,
+              architecture: amd64Architecture,
+            }));
+            binariesMap.set('darwin-arm64', Object.assign({}, emptyBinaryObject, {
+              system: macOSSystem,
+              architecture: arm64Architecture,
+            }));
+            binariesMap.set('linux-amd64', Object.assign({}, emptyBinaryObject, {
+              system: linuxSystem,
+              architecture: amd64Architecture,
+            }));
+            binariesMap.set('linux-arm64', Object.assign({}, emptyBinaryObject, {
+              system: linuxSystem,
+              architecture: arm64Architecture,
+            }));
+
+            console.log('Uploading release assets...');
+
+            const archivesGlobber = await glob.create('assets/*/*')
+            for await (const file of archivesGlobber.globGenerator()) {
+              console.log(`Uploading ${path.basename(file)} to the release ${release.id}`);
+
+              const fileName = path.basename(file);
+              const fileContent = fs.readFileSync(file);
+
+              const { data: asset } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id,
+                name: fileName,
+                data: fileContent,
+              });
+
+
+              let platform = '';
+
+              if (fileName.endsWith('.exe') || fileName.endsWith('.exe.sha256')) {
+                platform = 'windows-amd64';
+              } else if (fileName.endsWith('.AppImage') || fileName.endsWith('.AppImage.sha256')) {
+                platform = 'linux-amd64';
+              } else if (fileName.endsWith('-arm64.dmg') || fileName.endsWith('-arm64.dmg.sha256')) {
+                platform = 'darwin-arm64';
+              } else if (fileName.endsWith('.dmg') || fileName.endsWith('.dmg.sha256')) {
+                platform = 'darwin-amd64';
+              }
+
+              const binaryDetails = binariesMap.get(platform);
+
+              if (fileName.endsWith('.sha256')) {
+                binariesMap.set(platform, Object.assign({}, binaryDetails, {
+                  binary_checksum: fileName,
+                  binary_checksum_download_url: asset.browser_download_url,
+                }));
+              } else {
+                binariesMap.set(platform, Object.assign({}, binaryDetails, {
+                  binary_archive: fileName,
+                  binary_archive_download_url: asset.browser_download_url,
+                }));
+              }
+            }
+
+            const binariesTable = [
+              '| System  | Architecture | Binary             | Checksum               |',
+              '|---------|--------------|--------------------|------------------------|'
+            ];
+
+            binariesMap.forEach((details, platform) => {
+              if (
+                details.binary_archive !== null &&
+                details.binary_archive_download_url !== null &&
+                details.binary_checksum !== null &&
+                details.binary_checksum_download_url !== null
+              ) {
+                const system = details.system;
+                const architecture = details.architecture;
+                const binaryName = details.binary_archive;
+                const binaryUrl = details.binary_archive_download_url;
+                const checksumName = details.binary_checksum;
+                const checksumUrl = details.binary_checksum_download_url;
+
+                const binaryAssetUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/download/${tagName}/${binaryName}`;
+                const checksumAssetUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/download/${tagName}/${checksumName}`;
+
+                binariesTable.push(`| ${system} | ${architecture}       | [${binaryName}](${binaryAssetUrl}) | [sha256](${checksumAssetUrl}) |`);
+              }
+            });
+
+            const binariesTableContent = binariesTable.join('\n');
+
+            const { data: workflowRun } = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+            });
+
+            let releaseBodyTemplate = fs.readFileSync('.github/release_template.md', { encoding: 'utf8'});
+
+            console.log('Removing comments in release template...');
+
+            releaseBodyTemplate = releaseBodyTemplate.replaceAll(/^\[comment\]:\s*<>\s*\((.*?)\)\s*$/gm, '');
+            releaseBodyTemplate = releaseBodyTemplate.trim();
+
+            let releaseBody = releaseBodyTemplate.replaceAll('`[GENERATED-RELEASE-NOTES]`', release.body);
+            releaseBody = releaseBody.replaceAll('`[BINARIES-TABLE]`', binariesTableContent);
+            releaseBody = releaseBody.replaceAll('`[WORKFLOW-RUN-URL]`', workflowRun.html_url);
+
+            console.log('Updating release body with generated content and template...');
+
+            const { data: updatedRelease } = await github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.id,
+              tag_name: tagName,
+              target_commitish: context.sha,
+              body: releaseBody,
+            });
+
+            console.log(`Release ${updatedRelease.id} updated. Explore it on ${updatedRelease.html_url}`);

@@ -1,8 +1,0 @@
-{
-    "verify_deposit_data_json": {
-        "msg_deposit_verification": "Verifica dei tuoi depositi:\t"
-    },
-    "validate_password_strength": {
-        "msg_password_length": "La lunghezza della password deve essere almeno di 8 caratteri. Ripetila"
-    }
-}

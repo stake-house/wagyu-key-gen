@@ -1,0 +1,28 @@
+name: docs
+run-name: ${{ github.actor }} is running docs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup mdBook
+        # This pinned action came from peaceiris/actions-mdbook@v2, releases can be found on https://github.com/peaceiris/actions-mdbook/releases
+        uses: peaceiris/actions-mdbook@ee69d230fe19748b7abf22df32acaa93833fad08
+        with:
+          mdbook-version: '0.4.40'
+
+      - run: mdbook build ./docs
+
+      - name: Deploy
+        # This pinned action came from peaceiris/actions-gh-pages@v4, releases can be found on https://github.com/peaceiris/actions-gh-pages/releases
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/book

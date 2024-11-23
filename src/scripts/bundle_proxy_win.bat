@@ -5,7 +5,7 @@ rem Windows.
 
 SET BATDIR=%~dp0
 
-SET EDCDIR=staking-deposit-cli-2.7.0
+SET EDCDIR=ethstaker-deposit-cli-0.5.0
 
 SET TARGETPACKAGESPATH=%BATDIR%..\..\dist\packages
 
@@ -17,8 +17,7 @@ FOR /F "tokens=* USEBACKQ delims=;" %%F IN (`python -c "import sys;print(';'.joi
 
 SET DISTBINPATH=%BATDIR%..\..\build\bin
 SET DISTWORDSPATH=%BATDIR%..\..\build\word_lists
-SET SRCWORDSPATH=%BATDIR%..\vendors\%EDCDIR%\staking_deposit\key_handling\key_derivation\word_lists
-SET SRCINTLPATH=%BATDIR%..\vendors\%EDCDIR%\staking_deposit\intl
+SET SRCWORDSPATH=%BATDIR%..\vendors\%EDCDIR%\ethstaker_deposit\key_handling\key_derivation\word_lists
 
 mkdir %DISTBINPATH% > nul 2> nul
 mkdir %DISTWORDSPATH% > nul 2> nul
@@ -28,7 +27,7 @@ rem Getting all the requirements
 python -m pip install -r %ETH2REQUIREMENTSPATH% --target %TARGETPACKAGESPATH%
 
 rem Bundling Python stakingdeposit_proxy
-pyinstaller --onefile --distpath %DISTBINPATH% --add-data "%SRCINTLPATH%;staking_deposit\intl" -p %PYTHONPATH% %BATDIR%stakingdeposit_proxy.py
+pyinstaller --distpath %DISTBINPATH% %BATDIR%stakingdeposit_proxy.spec
 
 rem Adding word list
 copy /Y %SRCWORDSPATH%\* %DISTWORDSPATH%
