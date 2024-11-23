@@ -83,7 +83,7 @@ jobs:
           distfile=$(find dist/ -maxdepth 1 -type f \( -iname \*.AppImage -o -iname \*.dmg \))
           distfilename=$(basename "${distfile}")
           distfilename="${distfilename// /.}"
-          distfilename=$(echo "$distfilename" | sed -r "s/([0-9]+.[0-9]+.[0-9])+/\1-$SHORT_SHA/")
+          distfilename=$(echo "$distfilename" | sed -r "s/([0-9]+.[0-9]+.[0-9])/\1-$SHORT_SHA/")
           mv "${distfile}" "output/artifacts/${distfilename}"
           sha256sum "output/artifacts/${distfilename}" | head -c 64 > "output/artifacts/${distfilename}.sha256"
       - name: Build on Windows
