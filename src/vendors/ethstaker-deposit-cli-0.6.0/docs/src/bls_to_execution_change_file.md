@@ -2,7 +2,7 @@
 
 A BLS to execution change file is created when calling the **[generate-bls-to-execution-change](generate_bls_to_execution_change.md)** command.
 
-The BLS to execution change file is a JSON file. It contains a list of messages to change the withdrawal credentials for one or many validators. The format of the BLS to execution change file is loosly based on the input for the POST `/eth/v1/beacon/pool/bls_to_execution_changes` [API endpoint](https://ethereum.github.io/beacon-APIs/#/Beacon/submitPoolBLSToExecutionChange) as defined by [the Ethereum Beacon APIs](https://github.com/ethereum/beacon-APIs). Part of this content is based on the [SignedBLSToExecutionChange](https://github.com/ethereum/consensus-specs/blob/dev/specs/capella/beacon-chain.md#signedblstoexecutionchange) container as defined in the [Ethereum Consensus Specifications](https://github.com/ethereum/consensus-specs/).
+The BLS to execution change file is a JSON file. It contains a list of messages to change the withdrawal credentials for one or many validators. The format of the BLS to execution change file is loosely based on the input for the POST `/eth/v1/beacon/pool/bls_to_execution_changes` [API endpoint](https://ethereum.github.io/beacon-APIs/#/Beacon/submitPoolBLSToExecutionChange) as defined by [the Ethereum Beacon APIs](https://github.com/ethereum/beacon-APIs). Part of this content is based on the [SignedBLSToExecutionChange](https://github.com/ethereum/consensus-specs/blob/dev/specs/capella/beacon-chain.md#signedblstoexecutionchange) container as defined in the [Ethereum Consensus Specifications](https://github.com/ethereum/consensus-specs/).
 
 ## Broadcasting
 

@@ -42,11 +42,11 @@ This step requires you to be online. If you want to perform this offline, follow
 
 **Windows users:** You should replace `./deposit` with `deposit.exe` to run properly.
 
-**MacOS users:** In order to run from the terminal, you must first open the file to bypass MacOS code signing issues. Do so by right clicking the `deposit` file and then selecting `Open`.
+**MacOS users:** In order to run from the terminal, you must first open the file to bypass MacOS code signing issues. Do so by right-clicking the `deposit` file and then selecting `Open`.
 
 **Linux users:** On Unix-based systems, keystores and the deposit_data*.json have 440/-r--r----- file permissions (user & group read only). This improves security by limiting which users and processes that have access to these files. If you are getting permission denied errors when handling your keystores, consider changing which user/group owns the file (with chown) or, if need be, change the file permissions with chmod.
 
-Determine which command best suites what you would like to accomplish:
+Determine which command best suits what you would like to accomplish:
 
 - **[new-mnemonic](new_mnemonic.md)**: Used to generate a new mnemonic, validator keys, and deposit file. It is not recommended to use this command if you have existing validators.
 
