@@ -5,7 +5,12 @@ import { Button, Typography } from "@mui/material";
 import FolderSelector from "../components/FolderSelector";
 import Loader from "../components/Loader";
 import WizardWrapper from "../components/WizardWrapper";
-import { CreateMnemonicFlow, ExistingMnemonicFlow, paths } from "../constants";
+import {
+  CreateMnemonicFlow,
+  ETH_TO_GWEI,
+  ExistingMnemonicFlow,
+  paths,
+} from "../constants";
 import { GlobalContext } from "../GlobalContext";
 import { KeyCreationContext } from "../KeyCreationContext";
 
@@ -16,11 +21,13 @@ import { KeyCreationContext } from "../KeyCreationContext";
 const CreateValidatorKeys = () => {
   const {
     setFolderLocation,
+    amount,
     index,
     numberOfKeys,
     mnemonic,
     password,
     withdrawalAddress,
+    compounding,
   } = useContext(KeyCreationContext);
   const { network } = useContext(GlobalContext);
   const history = useHistory();
@@ -53,13 +60,18 @@ const CreateValidatorKeys = () => {
       appendedWithdrawalAddress = "0x" + withdrawalAddress;
     }
 
+    // Convert user provided amount to integer representation of gwei
+    const gweiAmount = parseInt((amount * ETH_TO_GWEI).toString());
+
     window.eth2Deposit.generateKeys(
       mnemonic,
       index,
+      gweiAmount,
       numberOfKeys,
       network,
       password,
       appendedWithdrawalAddress,
+      compounding,
       selectedFolder,
     ).then(() => {
       setFolderLocation(selectedFolder);

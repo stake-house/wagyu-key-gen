@@ -33,8 +33,8 @@ export interface IElectronAPI {
 export interface IEth2DepositAPI {
   createMnemonic: (language: string) => Promise<string>,
   generateBLSChange: (folder: string, chain: string, mnemonic: string, index: number, indices: string, withdrawal_credentials: string, execution_address: string) => Promise<void>,
-  generateKeys: (mnemonic: string, index: number, count: number, network: string,
-    password: string, eth1_withdrawal_address: string, folder: string) => Promise<void>,
+  generateKeys: (mnemonic: string, index: number, amount: number, count: number, network: string,
+    password: string, eth1_withdrawal_address: string, compounding: boolean, folder: string) => Promise<void>,
   validateBLSCredentials: (chain: string, mnemonic: string, index: number, withdrawal_credentials: string) => Promise<void>,
   validateMnemonic: (mnemonic: string) => Promise<void>,
 }
