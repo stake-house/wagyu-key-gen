@@ -40,7 +40,7 @@ from ethstaker_deposit.utils.validation import (
     validate_bls_withdrawal_credentials_matching,
 )
 from ethstaker_deposit.utils.constants import (
-    MAX_DEPOSIT_AMOUNT,
+    MIN_ACTIVATION_AMOUNT,
 )
 from ethstaker_deposit.utils.deposit import export_deposit_data_json as export_deposit_data_json_util
 
@@ -94,14 +94,14 @@ def generate_bls_to_execution_change(
     """
     if not os.path.exists(folder):
         os.mkdir(folder)
-    
+
     eth1_withdrawal_address = execution_address
     if not is_hex_address(eth1_withdrawal_address):
         raise ValueError("The given withdrawal address is not in hexadecimal encoded form.")
 
     eth1_withdrawal_address = to_normalized_address(eth1_withdrawal_address)
     execution_address = eth1_withdrawal_address
-    
+
     # Get chain setting
     chain_setting = get_chain_setting(chain)
 
@@ -112,7 +112,7 @@ def generate_bls_to_execution_change(
         )
 
     num_validators = len(validator_indices)
-    amounts = [MAX_DEPOSIT_AMOUNT] * num_validators
+    amounts = [MIN_ACTIVATION_AMOUNT] * num_validators
 
     mnemonic_password = ''
 
@@ -124,7 +124,7 @@ def generate_bls_to_execution_change(
         raise ValueError(
             f"The number of keys ({num_keys}) doesn't equal to the corresponding deposit amounts ({len(amounts)})."
         )
-    
+
     compounding = False
     use_pbkdf2 = False
 
@@ -215,7 +215,7 @@ def validate_bls_credentials(
     chain_setting = get_chain_setting(chain)
 
     num_validators = len(bls_withdrawal_credentials_list)
-    amounts = [MAX_DEPOSIT_AMOUNT] * num_validators
+    amounts = [MIN_ACTIVATION_AMOUNT] * num_validators
 
     mnemonic_password = ''
 
@@ -312,7 +312,7 @@ def generate_keys(args):
             - eth1_withdrawal_address: (Optional) eth1 address that will be used to create the
                                        withdrawal credentials
     """
-    
+
     eth1_withdrawal_address = None
     if args.eth1_withdrawal_address:
         eth1_withdrawal_address = args.eth1_withdrawal_address
@@ -323,7 +323,7 @@ def generate_keys(args):
 
     mnemonic = validate_mnemonic(args.mnemonic, args.wordlist)
     mnemonic_password = ''
-    amounts = [MAX_DEPOSIT_AMOUNT] * args.count
+    amounts = [MIN_ACTIVATION_AMOUNT] * args.count
     folder = args.folder
     chain_setting = get_chain_setting(args.network)
     if not os.path.exists(folder):
@@ -342,7 +342,7 @@ def generate_keys(args):
     timestamp = time.time()
     compounding = False
     use_pbkdf2 = False
-    
+
     key_indices = range(start_index, start_index + num_keys)
 
     credentials: list[Credential] = []
@@ -467,7 +467,7 @@ def main():
     main_parser = argparse.ArgumentParser()
 
     subparsers = main_parser.add_subparsers(title="subcommands")
-    
+
     create_parser = subparsers.add_parser("create_mnemonic")
     create_parser.add_argument("wordlist", help="Path to word list directory", type=str)
     create_parser.add_argument("--language", help="Language", type=str)
