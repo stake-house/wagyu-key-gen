@@ -9,10 +9,14 @@ interface KeyCreationContextType {
   setMnemonic: Dispatch<SetStateAction<string>>;
   numberOfKeys: number;
   setNumberOfKeys: Dispatch<SetStateAction<number>>;
+  amount: number;
+  setAmount: Dispatch<SetStateAction<number>>;
   password: string;
   setPassword: Dispatch<SetStateAction<string>>;
   withdrawalAddress: string;
   setWithdrawalAddress: Dispatch<SetStateAction<string>>;
+  compounding: boolean;
+  setCompounding: Dispatch<SetStateAction<boolean>>;
 }
 
 export const KeyCreationContext = createContext<KeyCreationContextType>({
@@ -24,10 +28,14 @@ export const KeyCreationContext = createContext<KeyCreationContextType>({
   setMnemonic: () => {},
   numberOfKeys: 1,
   setNumberOfKeys: () => {},
+  amount: 32,
+  setAmount: () => {},
   password: "",
   setPassword: () => {},
   withdrawalAddress: "",
   setWithdrawalAddress: () => {},
+  compounding: false,
+  setCompounding: () => {},
 });
 
 /**
@@ -38,8 +46,10 @@ const KeyCreationContextWrapper = ({ children }: { children: React.ReactNode}) =
   const [index, setIndex] = useState<number>(0);
   const [mnemonic, setMnemonic] = useState<string>("");
   const [numberOfKeys, setNumberOfKeys] = useState<number>(1);
+  const [amount, setAmount] = useState<number>(32);
   const [password, setPassword] = useState<string>("");
   const [withdrawalAddress, setWithdrawalAddress] = useState<string>("");
+  const [compounding, setCompounding] = useState<boolean>(false);
 
   return (
     <KeyCreationContext.Provider value={{
@@ -51,10 +61,14 @@ const KeyCreationContextWrapper = ({ children }: { children: React.ReactNode}) =
       setMnemonic,
       numberOfKeys,
       setNumberOfKeys,
+      amount,
+      setAmount,
       password,
       setPassword,
       withdrawalAddress,
       setWithdrawalAddress,
+      compounding,
+      setCompounding,
     }}>
       {children}
     </KeyCreationContext.Provider>
