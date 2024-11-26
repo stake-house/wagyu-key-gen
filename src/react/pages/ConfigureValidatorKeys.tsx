@@ -1,9 +1,22 @@
-import { Button, TextField, Tooltip, Typography } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import WizardWrapper from "../components/WizardWrapper";
-import { CreateMnemonicFlow, ExistingMnemonicFlow, errors, paths, tooltips } from "../constants";
+import {
+  CreateMnemonicFlow,
+  ExistingMnemonicFlow,
+  errors,
+  paths,
+  tooltips,
+} from "../constants";
 import { KeyCreationContext } from "../KeyCreationContext";
 
 /**
@@ -20,10 +33,14 @@ const ConfigureValidatorKeys = () => {
     setIndex,
     numberOfKeys,
     setNumberOfKeys,
+    amount,
+    setAmount,
     password,
     setPassword,
     withdrawalAddress,
     setWithdrawalAddress,
+    compounding,
+    setCompounding,
   } = useContext(KeyCreationContext);
   const history = useHistory();
   const usingExistingFlow = history.location.pathname === paths.CONFIGURE_EXISTING;
@@ -38,11 +55,16 @@ const ConfigureValidatorKeys = () => {
   const [inputIndex, setInputIndex] = useState(index);
   const [inputIndexError, setInputIndexError] = useState(false);
 
+  const [inputAmount, setInputAmount] = useState(amount);
+  const [inputAmountError, setInputAmountError] = useState(false);
+
   const [inputPassword, setInputPassword] = useState(password);
   const [inputPasswordStrengthError, setInputPasswordStrengthError] = useState(false);
 
   const [inputWithdrawalAddress, setInputWithdrawalAddress] = useState(withdrawalAddress);
   const [inputWithdrawalAddressFormatError, setInputWithdrawalAddressFormatError] = useState(false);
+
+  const [inputCompounding, setInputCompounding] = useState(compounding);
 
   useEffect(() => {
     if (!mnemonic) {
@@ -60,12 +82,37 @@ const ConfigureValidatorKeys = () => {
     setInputIndex(num);
   };
 
+  const updateAmount = ({ target: { value }}: React.FocusEvent<HTMLInputElement>) => {
+    let trimmedValue = value;
+    const splitValue = value.split('.');
+    if (splitValue.length > 1) {
+      // Keep precision to 1 Gwei
+      trimmedValue = `${splitValue[0]}.${splitValue[1].substring(0, 9)}`;
+    }
+
+    const num = parseFloat(trimmedValue);
+    setInputAmount(num);
+  };
+
   const updatePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputPassword(e.target.value);
   };
 
   const updateEth1WithdrawAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputWithdrawalAddress(e.target.value.trim());
+    const address = e.target.value.trim();
+    setInputWithdrawalAddress(address);
+    if (!address) {
+      setInputCompounding(false);
+      setInputAmount(32);
+    }
+  };
+
+  const updateCompounding = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.checked) {
+      setInputAmount(32);
+    }
+
+    setInputCompounding(e.target.checked);
   };
 
   /**
@@ -82,13 +129,6 @@ const ConfigureValidatorKeys = () => {
       setInputNumberOfKeysError(false);
     }
 
-    if (inputPassword.length < 12) {
-      setInputPasswordStrengthError(true);
-      isError = true;
-    } else {
-      setInputPasswordStrengthError(false);
-    }
-
     if (inputIndex < 0) {
       setInputIndexError(true);
       isError = true;
@@ -96,7 +136,21 @@ const ConfigureValidatorKeys = () => {
       setInputIndexError(false);
     }
 
-    if (inputWithdrawalAddress != "") {
+    if (inputAmount < 1 || inputAmount > 2048) {
+      setInputAmountError(true);
+      isError = true;
+    } else {
+      setInputAmountError(false);
+    }
+
+    if (inputPassword.length < 12) {
+      setInputPasswordStrengthError(true);
+      isError = true;
+    } else {
+      setInputPasswordStrengthError(false);
+    }
+
+    if (inputWithdrawalAddress !== "") {
       const isValidAddress = await window.web3Utils.isAddress(inputWithdrawalAddress);
       if (!isValidAddress) {
         setInputWithdrawalAddressFormatError(true);
@@ -129,8 +183,10 @@ const ConfigureValidatorKeys = () => {
       // Set context
       setIndex(inputIndex);
       setNumberOfKeys(inputNumberOfKeys);
+      setAmount(inputAmount);
       setPassword(inputPassword);
       setWithdrawalAddress(inputWithdrawalAddress);
+      setCompounding(inputCompounding)
 
       history.push(usingExistingFlow ? paths.CREATE_KEYS_EXISTING : paths.CREATE_KEYS_CREATE);
     } else {
@@ -149,14 +205,18 @@ const ConfigureValidatorKeys = () => {
       // Reset context
       setIndex(0);
       setNumberOfKeys(1);
+      setAmount(32);
       setWithdrawalAddress("");
       setPassword("");
+      setCompounding(false);
 
       // Reset form
       setInputNumberOfKeys(1);
       setInputIndex(0);
+      setInputAmount(32);
       setInputWithdrawalAddress("");
       setInputPassword("");
+      setInputCompounding(false);
       history.goBack();
     }
   };
@@ -223,7 +283,7 @@ const ConfigureValidatorKeys = () => {
                 <TextField
                   className="tw-flex-1"
                   id="index"
-                  label="Amount of Existing (starting index)"
+                  label="Amount of Existing Keys (starting index)"
                   variant="outlined"
                   type="number"
                   value={inputIndex}
@@ -235,6 +295,23 @@ const ConfigureValidatorKeys = () => {
             </Tooltip>
             )}
 
+            <Tooltip title={tooltips.AMOUNT}>
+              <TextField
+                className="tw-flex-1"
+                disabled={!inputCompounding}
+                id="amount"
+                label="Deposit Amount"
+                type="number"
+                variant="outlined"
+                value={inputAmount}
+                onChange={updateAmount}
+                error={inputAmountError}
+                helperText={inputAmountError ? errors.DEPOSIT_AMOUNT : ""}
+              />
+            </Tooltip>
+          </div>
+
+          <div className="tw-w-full tw-flex tw-flex-row tw-gap-4 tw-mt-8 ">
             <Tooltip title={tooltips.PASSWORD}>
               <TextField
                 className="tw-flex-1"
@@ -248,20 +325,34 @@ const ConfigureValidatorKeys = () => {
                 helperText={inputPasswordStrengthError ? errors.PASSWORD_STRENGTH : ""}
               />
             </Tooltip>
+
+            <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
+              <TextField
+                className="tw-w-[440px]"
+                id="eth1-withdraw-address"
+                label="Ethereum Withdrawal Address (Optional)"
+                variant="outlined"
+                value={inputWithdrawalAddress}
+                onChange={updateEth1WithdrawAddress}
+                error={inputWithdrawalAddressFormatError}
+                helperText={ inputWithdrawalAddressFormatError ? errors.ADDRESS_FORMAT_ERROR : ""}
+              />
+            </Tooltip>
           </div>
 
-          <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
-            <TextField
-              className="tw-mt-8 tw-w-[440px]"
-              id="eth1-withdraw-address"
-              label="Ethereum Withdrawal Address (Optional)"
-              variant="outlined"
-              value={inputWithdrawalAddress}
-              onChange={updateEth1WithdrawAddress}
-              error={inputWithdrawalAddressFormatError}
-              helperText={ inputWithdrawalAddressFormatError ? errors.ADDRESS_FORMAT_ERROR : ""}
+          <div>
+            <FormControlLabel
+              label="Compounding Credentials (0x02) - Must have valid withdrawal credentials"
+              control={
+                <Checkbox
+                  checked={inputCompounding}
+                  disabled={!inputWithdrawalAddress}
+                  onChange={updateCompounding}
+                />
+              }
             />
-          </Tooltip>
+          </div>
+
           <Typography className="tw-text-center tw-mx-4" variant="body1">
             Please ensure that you have control over this address. If you do not add a withdrawal address now, you will be able to add one later with your 24 words secret recovery phrase.
           </Typography>

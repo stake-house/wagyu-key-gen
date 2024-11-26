@@ -2,12 +2,14 @@ import { StepKey } from './types';
 
 export const MNEMONIC_ERROR_SEARCH = "That is not a valid mnemonic";
 export const VALID_MNEMONIC_LENGTHS = [12, 15, 18, 21, 24];
+export const ETH_TO_GWEI = 10 ** 9;
 
 export const errors = {
 	MNEMONIC_LENGTH_ERROR: `The Secret Recovery Phrase must be ${VALID_MNEMONIC_LENGTHS.slice(0, -1).join(", ")}, or ${VALID_MNEMONIC_LENGTHS.slice(-1)} words in length. Please verify each word and try again.`,
 	INVALID_MNEMONIC_ERROR: "The Secret Recovery Phrase provided is invalid. Please double check each word for any spelling errors.",
 	MNEMONICS_DONT_MATCH: "The Secret Recovery Phrase you entered does not match what was given to you. Please try again.",
 	NUMBER_OF_KEYS: "Please input a number between 1 and 1000.",
+  DEPOSIT_AMOUNT: "Amount must be between 1 and 2048.",
 	ADDRESS_FORMAT_ERROR: "Please enter a valid Ethereum address.",
 	WITHDRAW_ADDRESS_REQUIRED: "Please enter an Ethereum address.",
 	PASSWORD_STRENGTH: "Password must be at least 12 characters.",
@@ -28,6 +30,7 @@ export const errors = {
 export const tooltips = {
 	IMPORT_MNEMONIC: "If you've already created a Secret Recovery Phrase, you can use it to regenerate your original keys, create more keys, or generate a BLS to execution change by importing the phrase here.",
 	NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to create.",
+  AMOUNT: "Enter the amount you would like to deposit for each validator. This value must be between 1 and 2048 and can not have greater precision than 1 gwei. You must have withdrawal credentials defined and set \"compounding\".",
 	PASSWORD: "Pick a strong password (at least 12 characters) that will be used to protect your keys.",
 	STARTING_INDEX: "Each key is created sequentially, so we need to know how many you've created with this Secret Recovery Phrase in the past in order to create some new ones for you.",
 	ETH1_WITHDRAW_ADDRESS: "An optional Ethereum address for the withdrawal credentials.",
