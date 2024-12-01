@@ -262,9 +262,53 @@ const ConfigureValidatorKeys = () => {
           <div className="tw-mb-4">Nice! Your Secret Recovery Phrase is verified. Now let's collect some info about the keys to create:</div>
 
           <div className="tw-w-full tw-flex tw-flex-row tw-gap-4">
+            <div className="tw-flex tw-flex-col">
+              <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
+                <TextField
+                  autoFocus
+                  className="tw-w-[580px]"
+                  id="eth1-withdraw-address"
+                  label="Ethereum Withdrawal Address (Optional)"
+                  variant="outlined"
+                  value={inputWithdrawalAddress}
+                  onChange={updateEth1WithdrawAddress}
+                  error={inputWithdrawalAddressFormatError}
+                  helperText={ inputWithdrawalAddressFormatError ? errors.ADDRESS_FORMAT_ERROR : ""}
+                />
+              </Tooltip>
+
+              <Tooltip title={tooltips.COMPOUNDING}>
+                <FormControlLabel
+                  label="Compounding Credentials (0x02) - Must set a valid Withdrawal Address"
+                  control={
+                    <Checkbox
+                      checked={inputCompounding}
+                      disabled={!inputWithdrawalAddress}
+                      onChange={updateCompounding}
+                    />
+                  }
+                />
+              </Tooltip>
+            </div>
+            <Tooltip title={tooltips.AMOUNT}>
+              <TextField
+                className="tw-flex-1"
+                disabled={!inputCompounding}
+                id="amount"
+                label="Deposit Amount"
+                type="number"
+                variant="outlined"
+                value={inputAmount}
+                onChange={updateAmount}
+                error={inputAmountError}
+                helperText={inputAmountError ? errors.DEPOSIT_AMOUNT : ""}
+              />
+            </Tooltip>
+          </div>
+
+          <div className="tw-w-full tw-flex tw-flex-row tw-gap-4">
             <Tooltip title={tooltips.NUMBER_OF_KEYS}>
               <TextField
-                autoFocus
                 className="tw-flex-1"
                 id="number-of-keys"
                 label="Number of New Keys"
@@ -295,23 +339,6 @@ const ConfigureValidatorKeys = () => {
             </Tooltip>
             )}
 
-            <Tooltip title={tooltips.AMOUNT}>
-              <TextField
-                className="tw-flex-1"
-                disabled={!inputCompounding}
-                id="amount"
-                label="Deposit Amount"
-                type="number"
-                variant="outlined"
-                value={inputAmount}
-                onChange={updateAmount}
-                error={inputAmountError}
-                helperText={inputAmountError ? errors.DEPOSIT_AMOUNT : ""}
-              />
-            </Tooltip>
-          </div>
-
-          <div className="tw-w-full tw-flex tw-flex-row tw-gap-4 tw-mt-8 ">
             <Tooltip title={tooltips.PASSWORD}>
               <TextField
                 className="tw-flex-1"
@@ -325,32 +352,6 @@ const ConfigureValidatorKeys = () => {
                 helperText={inputPasswordStrengthError ? errors.PASSWORD_STRENGTH : ""}
               />
             </Tooltip>
-
-            <Tooltip title={tooltips.ETH1_WITHDRAW_ADDRESS}>
-              <TextField
-                className="tw-w-[440px]"
-                id="eth1-withdraw-address"
-                label="Ethereum Withdrawal Address (Optional)"
-                variant="outlined"
-                value={inputWithdrawalAddress}
-                onChange={updateEth1WithdrawAddress}
-                error={inputWithdrawalAddressFormatError}
-                helperText={ inputWithdrawalAddressFormatError ? errors.ADDRESS_FORMAT_ERROR : ""}
-              />
-            </Tooltip>
-          </div>
-
-          <div>
-            <FormControlLabel
-              label="Compounding Credentials (0x02) - Must have valid withdrawal credentials"
-              control={
-                <Checkbox
-                  checked={inputCompounding}
-                  disabled={!inputWithdrawalAddress}
-                  onChange={updateCompounding}
-                />
-              }
-            />
           </div>
 
           <Typography className="tw-text-center tw-mx-4" variant="body1">
