@@ -10,10 +10,10 @@
  *    running application is not bundled.
  * 3. Using the Python 3 version installed on the current machine and the version available
  *    in the current environment.
- * 
+ *
  * When we want to call the stakingdeposit_proxy application, it will detect which way can be called
  * in order and use the first one available.
- * 
+ *
  * @module
  */
 
@@ -75,7 +75,7 @@ const PATH_DELIM = (process.platform == "win32" ? ";" : ":");
 /**
  * Install the required Python packages needed to call the stakingdeposit_proxy application using the
  * Python 3 version installed on the current machine.
- * 
+ *
  * @returns Returns a Promise<boolean> that includes a true value if the required Python packages
  *          are present or have been installed correctly.
  */
@@ -98,7 +98,7 @@ const requireDepositPackages = async (): Promise<boolean> => {
 
 /**
  * Obtains the Python paths from the current available python executable in the environment.
- * 
+ *
  * @returns Returns a Promise<string> that includes the Python paths separated by the system path
  *          delimiter.
  */
@@ -115,11 +115,11 @@ const getPythonPath = async (): Promise<string> => {
 /**
  * Create a new mnemonic by calling the create_mnemonic function from the stakingdeposit_proxy
  * application.
- * 
+ *
  * @param language The mnemonic language. Possible values are `chinese_simplified`,
  *                 `chinese_traditional`, `czech`, `english`, `italian`, `korean`, `portuguese` or
  *                 `spanish`.
- * 
+ *
  * @returns Returns a Promise<string> that includes the mnemonic.
  */
 const createMnemonic = async (language: string): Promise<string> => {
@@ -139,7 +139,7 @@ const createMnemonic = async (language: string): Promise<string> => {
       throw new Error("Failed to create mnemonic, don't have the required packages.");
     }
     env.PYTHONPATH = await getPythonPath();
-  
+
     executable = PYTHON_EXE;
     args = [STAKINGDEPOSIT_PROXY_PATH, CREATE_MNEMONIC_SUBCOMMAND, WORD_LIST_PATH, "--language",
       language];
@@ -155,9 +155,10 @@ const createMnemonic = async (language: string): Promise<string> => {
 /**
  * Generate validator keys by calling the generate_keys function from the stakingdeposit_proxy
  * application.
- * 
+ *
  * @param mnemonic The mnemonic to be used as the seed for generating the keys.
  * @param index The index of the first validator's keys you wish to generate.
+ * @param amount The amount to deposit for each validator
  * @param count The number of signing keys you want to generate.
  * @param network The network setting for the signing domain. Possible values are `mainnet`,
  *                `prater`, `kintsugi`, `kiln`.
@@ -166,42 +167,43 @@ const createMnemonic = async (language: string): Promise<string> => {
  *                                be used to create the withdrawal credentials. Otherwise, it will
  *                                generate withdrawal credentials with the mnemonic-derived
  *                                withdrawal public key in [EIP-2334 format](https://eips.ethereum.org/EIPS/eip-2334#eth2-specific-parameters).
+ * @param compounding If the user wants compounding (0x02) credentials. This is only possible if eth1_withdrawal_address is defined.
  * @param folder The folder path for the resulting keystore(s) and deposit(s) files.
- * 
+ *
  * @returns Returns a Promise<void> that will resolve when the generation is done.
  */
 const generateKeys = async (
     mnemonic: string,
     index: number,
+    amount: number,
     count: number,
     network: string,
     password: string,
     eth1_withdrawal_address: string,
+    compounding: boolean,
     folder: string,
   ): Promise<void> => {
-  
+
   let executable:string = "";
   let args:string[] = [];
   let env = process.env;
-  
+
+  let subArgs = [mnemonic, index.toString(), amount.toString(), count.toString(), folder, network.toLowerCase(), password];
+
+  if (eth1_withdrawal_address !== "") {
+    subArgs = subArgs.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
+
+    if (compounding) {
+      subArgs = subArgs.concat(["--compounding"])
+    }
+  }
+
   if (await doesFileExist(BUNDLED_SFE_PATH)) {
     executable = BUNDLED_SFE_PATH;
-    args = [GENERATE_KEYS_SUBCOMMAND];
-    if ( eth1_withdrawal_address != "" ) {
-      args = args.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
-    }
-    
-    args = args.concat([BUNDLED_DIST_WORD_LIST_PATH, mnemonic, index.toString(), count.toString(),
-      folder, network.toLowerCase(), password]);
+    args = [GENERATE_KEYS_SUBCOMMAND, BUNDLED_DIST_WORD_LIST_PATH, ...subArgs];
   } else if (await doesFileExist(SFE_PATH)) {
     executable = SFE_PATH;
-    args = [GENERATE_KEYS_SUBCOMMAND];
-    if ( eth1_withdrawal_address != "" ) {
-      args = args.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
-    }
-    
-    args = args.concat([DIST_WORD_LIST_PATH, mnemonic, index.toString(), count.toString(), folder,
-      network.toLowerCase(), password]);
+    args = [GENERATE_KEYS_SUBCOMMAND, DIST_WORD_LIST_PATH, ...subArgs];
   } else {
     if(!(await requireDepositPackages())) {
       throw new Error("Failed to generate keys, don't have the required packages.");
@@ -209,15 +211,9 @@ const generateKeys = async (
     env.PYTHONPATH = await getPythonPath();
 
     executable = PYTHON_EXE;
-    args = [STAKINGDEPOSIT_PROXY_PATH, GENERATE_KEYS_SUBCOMMAND];
-    if ( eth1_withdrawal_address != "" ) {
-      args = args.concat(["--eth1_withdrawal_address", eth1_withdrawal_address]);
-    }
-
-    args = args.concat([WORD_LIST_PATH, mnemonic, index.toString(), count.toString(), folder,
-      network.toLowerCase(), password]);
+    args = [STAKINGDEPOSIT_PROXY_PATH, GENERATE_KEYS_SUBCOMMAND, WORD_LIST_PATH, ...subArgs];
   }
-  
+
   await execFileProm(executable, args, {env: env});
 }
 
@@ -226,7 +222,7 @@ const generateKeys = async (
  * from the stakingdeposit_proxy application.
  *
  * @param mnemonic The mnemonic to be validated.
- * 
+ *
  * @returns Returns a Promise<void> that will resolve when the validation is done.
  */
 const validateMnemonic = async (
@@ -259,13 +255,13 @@ const validateMnemonic = async (
 /**
  * Validate BLS credentials by calling the validate_bls_credentials function
  * from the stakingdeposit_proxy application.
- * 
+ *
  * @param chain The network setting for the signing domain. Possible values are `mainnet`,
  *              `goerli`, `holesky`.
  * @param mnemonic The mnemonic from which the BLS credentials are derived.
  * @param index The index of the first validator's keys.
  * @param withdrawal_credentials A list of the old BLS withdrawal credentials of the given validator(s), comma separated.
- * 
+ *
  * @returns Returns a Promise<void> that will resolve when the validation is done.
  */
 const validateBLSCredentials = async (
@@ -301,7 +297,7 @@ const validateBLSCredentials = async (
 /**
  * Generate BTEC file by calling the bls_change function from the stakingdeposit_proxy
  * application.
- * 
+ *
  * @param folder The folder path for the resulting BTEC file.
  * @param chain The network setting for the signing domain. Possible values are `mainnet`,
  *              `goerli`, `holesky`.
@@ -310,7 +306,7 @@ const validateBLSCredentials = async (
  * @param indices The validator index number(s) as identified on the beacon chain (comma separated).
  * @param withdrawal_credentials A list of the old BLS withdrawal credentials of the given validator(s), comma separated.
  * @param execution_address The withdrawal address.
- * 
+ *
  * @returns Returns a Promise<void> that will resolve when the generation is done.
  */
 const generateBLSChange = async (
@@ -321,7 +317,7 @@ const generateBLSChange = async (
   indices: string,
   withdrawal_credentials: string,
   execution_address: string
-  
+
 ): Promise<void> => {
 
 let executable:string = "";
@@ -331,13 +327,13 @@ let env = process.env;
 if (await doesFileExist(BUNDLED_SFE_PATH)) {
   executable = BUNDLED_SFE_PATH;
   args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
-  
+
   args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
     withdrawal_credentials, execution_address]);
 } else if (await doesFileExist(SFE_PATH)) {
   executable = SFE_PATH;
   args = [VALIDATE_BLS_CHANGE_SUBCOMMAND];
-  
+
   args = args.concat([folder, chain.toLowerCase(), mnemonic, index.toString(), indices,
     withdrawal_credentials, execution_address]);
 } else {

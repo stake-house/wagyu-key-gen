@@ -304,6 +304,7 @@ def generate_keys(args):
             - wordlist: path to the word lists directory
             - mnemonic: mnemonic to be used as the seed for generating the keys
             - index: index of the first validator's keys you wish to generate
+            - amount: deposit amount for each validator
             - count: number of signing keys you want to generate
             - folder: folder path for the resulting keystore(s) and deposit(s) files
             - network: network setting for the signing domain, possible values are 'mainnet',
@@ -311,6 +312,8 @@ def generate_keys(args):
             - password: password that will protect the resulting keystore(s)
             - eth1_withdrawal_address: (Optional) eth1 address that will be used to create the
                                        withdrawal credentials
+            - compounding: (Optional) if the user wants compounding (0x02) credentials. Requires
+                                       withdrawal address to be defined
     """
 
     eth1_withdrawal_address = None
@@ -323,7 +326,7 @@ def generate_keys(args):
 
     mnemonic = validate_mnemonic(args.mnemonic, args.wordlist)
     mnemonic_password = ''
-    amounts = [MIN_ACTIVATION_AMOUNT] * args.count
+    amounts = [args.amount] * args.count
     folder = args.folder
     chain_setting = get_chain_setting(args.network)
     if not os.path.exists(folder):
@@ -340,7 +343,6 @@ def generate_keys(args):
         )
 
     timestamp = time.time()
-    compounding = False
     use_pbkdf2 = False
 
     key_indices = range(start_index, start_index + num_keys)
@@ -353,7 +355,7 @@ def generate_keys(args):
         'amount': amounts[index - start_index],
         'chain_setting': chain_setting,
         'hex_withdrawal_address': hex_withdrawal_address,
-        'compounding': compounding,
+        'compounding': args.compounding,
         'use_pbkdf2': use_pbkdf2,
     } for index in key_indices]
 
@@ -390,7 +392,7 @@ def generate_keys(args):
         'credential': credential,
         'keystore_filefolder': fileholder,
         'password': password,
-    } for credential, fileholder in zip(credentials.credentials, keystore_filefolders)]
+    } for credential, fileholder in items]
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for valid_keystore in executor.map(_keystore_verifier, executor_kwargs):
@@ -477,11 +479,13 @@ def main():
     generate_parser.add_argument("wordlist", help="Path to word list directory", type=str)
     generate_parser.add_argument("mnemonic", help="Mnemonic", type=str)
     generate_parser.add_argument("index", help="Validator start index", type=int)
+    generate_parser.add_argument("amount", help="Validator deposit amount", type=int)
     generate_parser.add_argument("count", help="Validator count", type=int)
     generate_parser.add_argument("folder", help="Where to put the deposit data and keystore files", type=str)
     generate_parser.add_argument("network", help="For which network to create these keys for", type=str)
     generate_parser.add_argument("password", help="Password for the keystore files", type=str)
     generate_parser.add_argument("--eth1_withdrawal_address", help="Optional eth1 withdrawal address", type=str)
+    generate_parser.add_argument("--compounding", action="store_true", help="Optional compounding argument")
     generate_parser.set_defaults(func=parse_generate_keys)
 
     validate_parser = subparsers.add_parser("validate_mnemonic")
