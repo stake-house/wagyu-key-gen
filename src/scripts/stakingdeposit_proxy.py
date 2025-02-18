@@ -85,7 +85,7 @@ def generate_bls_to_execution_change(
     Keyword arguments:
     folder -- folder path for the resulting bls to execution change files
     chain -- chain setting for the signing domain, possible values are 'mainnet',
-                'goerli', 'holesky'
+                'mekong', 'holesky'
     mnemonic -- mnemonic to be used as the seed for generating the keys
     validator_start_index -- index position for the keys to start generating withdrawal credentials
     validator_indices -- a list of the chosen validator index number(s) as identified on the beacon chain
@@ -206,7 +206,7 @@ def validate_bls_credentials(
 
     Keyword arguments:
     chain -- chain setting for the signing domain, possible values are 'mainnet',
-                'goerli', 'holesky'
+                'mekong', 'holesky'
     mnemonic -- mnemonic to be used as the seed for generating the keys
     validator_start_index -- index position for the keys to start generating withdrawal credentials
     bls_withdrawal_credentials_list -- a list of the old BLS withdrawal credentials of the given validator(s)
