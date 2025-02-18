@@ -257,7 +257,7 @@ const validateMnemonic = async (
  * from the stakingdeposit_proxy application.
  *
  * @param chain The network setting for the signing domain. Possible values are `mainnet`,
- *              `goerli`, `holesky`.
+ *              `mekong`, `holesky`.
  * @param mnemonic The mnemonic from which the BLS credentials are derived.
  * @param index The index of the first validator's keys.
  * @param withdrawal_credentials A list of the old BLS withdrawal credentials of the given validator(s), comma separated.
@@ -300,7 +300,7 @@ const validateBLSCredentials = async (
  *
  * @param folder The folder path for the resulting BTEC file.
  * @param chain The network setting for the signing domain. Possible values are `mainnet`,
- *              `goerli`, `holesky`.
+ *              `mekong`, `holesky`.
  * @param mnemonic The mnemonic to be used as the seed for generating the BTEC.
  * @param index The index of the first validator's keys.
  * @param indices The validator index number(s) as identified on the beacon chain (comma separated).
