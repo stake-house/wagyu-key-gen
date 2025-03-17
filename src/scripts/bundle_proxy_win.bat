@@ -5,7 +5,7 @@ rem Windows.
 
 SET BATDIR=%~dp0
 
-SET EDCDIR=ethstaker-deposit-cli-0.6.0
+SET EDCDIR=ethstaker-deposit-cli-1.1.0
 
 SET TARGETPACKAGESPATH=%BATDIR%..\..\dist\packages
 
