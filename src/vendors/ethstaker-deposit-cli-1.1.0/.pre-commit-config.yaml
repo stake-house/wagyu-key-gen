@@ -1,0 +1,23 @@
+repos:
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.2
+    hooks:
+    - id: ruff
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+    - id: mypy
+      additional_dependencies: 
+        - click==8.1.8
+        - eth-typing==5.1.0
+        - eth-utils==5.1.0
+        - pycryptodome==3.21.0
+        - py-ecc==7.0.1
+        - ssz==0.5.1
+      files: ^ethstaker_deposit/
+      args: [--config-file, mypy.ini]
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    - id: check-json
+      files: ^ethstaker_deposit/intl
