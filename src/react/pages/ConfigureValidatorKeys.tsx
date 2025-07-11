@@ -19,6 +19,7 @@ import {
   getDepositAmountLimits,
   formatDepositAmountError,
   formatAmountTooltip,
+  formatCompoundingTooltip,
 } from "../constants";
 import { GlobalContext } from "../GlobalContext";
 import { KeyCreationContext } from "../KeyCreationContext";
@@ -285,7 +286,7 @@ const ConfigureValidatorKeys = () => {
                 />
               </Tooltip>
 
-            <Tooltip title={tooltips.COMPOUNDING}>
+            <Tooltip title={formatCompoundingTooltip(network)}>
               <FormControlLabel
                 label="Compounding Credentials (0x02) - Must set a valid Withdrawal Address"
                 control={
