@@ -1,15 +1,33 @@
 import { StepKey } from './types';
+import { Network, NetworkConfig } from './types';
 
 export const MNEMONIC_ERROR_SEARCH = "That is not a valid mnemonic";
 export const VALID_MNEMONIC_LENGTHS = [12, 15, 18, 21, 24];
 export const ETH_TO_GWEI = 10 ** 9;
+
+export const getDepositAmountLimits = (network: Network) => {
+  const multiplier = NetworkConfig[network].multiplier;
+  return {
+    min: 1 / multiplier,
+    max: 2048 / multiplier,
+  };
+};
+
+export const formatDepositAmountError = (network: Network): string => {
+  const { min, max } = getDepositAmountLimits(network);
+  return `Amount must be between ${min} and ${max}.`;
+};
+
+export const formatAmountTooltip = (network: Network): string => {
+  const { min, max } = getDepositAmountLimits(network);
+  return `Enter the amount you would like to deposit for each validator. This value must be between ${min} and ${max} and can not have greater precision than 1 gwei. You must have withdrawal credentials defined and set "compounding".`;
+};
 
 export const errors = {
 	MNEMONIC_LENGTH_ERROR: `The Secret Recovery Phrase must be ${VALID_MNEMONIC_LENGTHS.slice(0, -1).join(", ")}, or ${VALID_MNEMONIC_LENGTHS.slice(-1)} words in length. Please verify each word and try again.`,
 	INVALID_MNEMONIC_ERROR: "The Secret Recovery Phrase provided is invalid. Please double check each word for any spelling errors.",
 	MNEMONICS_DONT_MATCH: "The Secret Recovery Phrase you entered does not match what was given to you. Please try again.",
 	NUMBER_OF_KEYS: "Please input a number between 1 and 1000.",
-  DEPOSIT_AMOUNT: "Amount must be between 1 and 2048.",
 	ADDRESS_FORMAT_ERROR: "Please enter a valid Ethereum address.",
 	WITHDRAW_ADDRESS_REQUIRED: "Please enter an Ethereum address.",
 	PASSWORD_STRENGTH: "Password must be at least 12 characters.",
@@ -30,7 +48,6 @@ export const errors = {
 export const tooltips = {
 	IMPORT_MNEMONIC: "If you've already created a Secret Recovery Phrase, you can use it to regenerate your original keys, create more keys, or generate a BLS to execution change by importing the phrase here.",
 	NUMBER_OF_KEYS: "Enter how many new validator keys you'd like to create.",
-  AMOUNT: "Enter the amount you would like to deposit for each validator. This value must be between 1 and 2048 and can not have greater precision than 1 gwei. You must have withdrawal credentials defined and set \"compounding\".",
 	PASSWORD: "Pick a strong password (at least 12 characters) that will be used to protect your keys.",
 	STARTING_INDEX: "Each key is created sequentially, so we need to know how many you've created with this Secret Recovery Phrase in the past in order to create some new ones for you.",
 	ETH1_WITHDRAW_ADDRESS: "An optional Ethereum address for the withdrawal credentials.",
@@ -39,7 +56,7 @@ export const tooltips = {
 	BTEC_START_INDEX: "The index position for the keys to start generating withdrawal credentials. If you only created 1 validator key using this Secret Recovery Phrase, this is likely going to be 0. If you created many validator keys, this could be a higher value from where you want to start in the list of validators derived from your Secret Recovery Phrase.",
 	BTEC_INDICES: "A list of the chosen validator index number(s) as identified on the beacon chain. You can find your validator indice on beaconcha.in website on your validator page. It will be at the top of that page the form of a title like Validator XXXXX, where XXXXX is going to be your indice.",
 	BLS_CREDENTIALS: "A list of the old BLS withdrawal credentials of the given validator(s). You can find your validator BLS withdrawal credentials on beaconcha.in website on your validator page. It will be in the Deposits tab and it should start with 0x00.",
-  COMPOUNDING: "Compounding Credentials increases your maximum effective balance from 32 to 2048 ETH."
+	COMPOUNDING: "Compounding Credentials increases your maximum effective balance from 32 to 2048 ETH."
 };
 
 export const stepLabels = {
@@ -49,8 +66,8 @@ export const stepLabels = {
 	[StepKey.KeyGeneration]: 'Create Validator Key Files',
 	[StepKey.Finish]: 'Finish',
 	[StepKey.BTECConfiguration]: 'Configure Withdrawal Address',
-  [StepKey.BTECGeneration]: 'Create Credentials Change',
-  [StepKey.FinishBTEC]: 'Finish'
+	[StepKey.BTECGeneration]: 'Create Credentials Change',
+	[StepKey.FinishBTEC]: 'Finish'
 };
 
 export const CreateMnemonicFlow = [StepKey.MnemonicGeneration, StepKey.KeyConfiguration, StepKey.KeyGeneration, StepKey.Finish];
