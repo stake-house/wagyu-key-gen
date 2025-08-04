@@ -40,12 +40,13 @@ from ethstaker_deposit.utils.validation import (
     validate_bls_withdrawal_credentials_matching,
 )
 from ethstaker_deposit.utils.constants import (
-    MIN_ACTIVATION_AMOUNT,
+    ETH2GWEI,
 )
 from ethstaker_deposit.utils.deposit import export_deposit_data_json as export_deposit_data_json_util
 
 from ethstaker_deposit.settings import (
     get_chain_setting,
+    BaseChainSetting,
 )
 
 from ethstaker_deposit.utils.file_handling import (
@@ -78,7 +79,8 @@ def generate_bls_to_execution_change(
         validator_start_index: int,
         validator_indices: Sequence[int],
         bls_withdrawal_credentials_list: Sequence[bytes],
-        execution_address: HexAddress
+        withdrawal_address: HexAddress,
+        devnet_chain_setting: Optional[BaseChainSetting] = None,
         ) -> None:
     """Generate bls to execution change file.
 
@@ -90,7 +92,8 @@ def generate_bls_to_execution_change(
     validator_start_index -- index position for the keys to start generating withdrawal credentials
     validator_indices -- a list of the chosen validator index number(s) as identified on the beacon chain
     bls_withdrawal_credentials_list -- a list of the old BLS withdrawal credentials of the given validator(s)
-    execution_address -- withdrawal address
+    withdrawal_address -- withdrawal address
+    devnet_chain_setting -- optional custom chain setting
     """
     if not os.path.exists(folder):
         os.mkdir(folder)
@@ -103,7 +106,7 @@ def generate_bls_to_execution_change(
     execution_address = eth1_withdrawal_address
 
     # Get chain setting
-    chain_setting = get_chain_setting(chain)
+    chain_setting = devnet_chain_setting if devnet_chain_setting is not None else get_chain_setting(chain)
 
     if len(validator_indices) != len(bls_withdrawal_credentials_list):
         raise ValueError(
@@ -112,13 +115,13 @@ def generate_bls_to_execution_change(
         )
 
     num_validators = len(validator_indices)
-    amounts = [MIN_ACTIVATION_AMOUNT] * num_validators
+    amounts = [chain_setting.MIN_ACTIVATION_AMOUNT * ETH2GWEI] * num_validators
 
     mnemonic_password = ''
 
     num_keys = num_validators
     start_index = validator_start_index
-    hex_withdrawal_address = execution_address
+    hex_withdrawal_address = withdrawal_address
 
     if len(amounts) != num_keys:
         raise ValueError(
@@ -201,6 +204,7 @@ def validate_bls_credentials(
         mnemonic: str,
         validator_start_index: int,
         bls_withdrawal_credentials_list: Sequence[bytes],
+        devnet_chain_setting: Optional[BaseChainSetting] = None,
         ) -> None:
     """Validate BLS credentials against what was generated from a mnemonic.
 
@@ -210,12 +214,14 @@ def validate_bls_credentials(
     mnemonic -- mnemonic to be used as the seed for generating the keys
     validator_start_index -- index position for the keys to start generating withdrawal credentials
     bls_withdrawal_credentials_list -- a list of the old BLS withdrawal credentials of the given validator(s)
+    devnet_chain_setting -- optional custom chain setting
     """
 
-    chain_setting = get_chain_setting(chain)
+    # Get chain setting
+    chain_setting = devnet_chain_setting if devnet_chain_setting is not None else get_chain_setting(chain)
 
     num_validators = len(bls_withdrawal_credentials_list)
-    amounts = [MIN_ACTIVATION_AMOUNT] * num_validators
+    amounts = [chain_setting.MIN_ACTIVATION_AMOUNT * ETH2GWEI] * num_validators
 
     mnemonic_password = ''
 
@@ -308,7 +314,7 @@ def generate_keys(args):
             - count: number of signing keys you want to generate
             - folder: folder path for the resulting keystore(s) and deposit(s) files
             - network: network setting for the signing domain, possible values are 'mainnet',
-                       'prater', 'kintsugi' or 'kiln'
+                       'sepolia', 'holesky', 'hoodi', 'ephemery', 'gnosis' or 'chiado'
             - password: password that will protect the resulting keystore(s)
             - eth1_withdrawal_address: (Optional) eth1 address that will be used to create the
                                        withdrawal credentials
@@ -407,7 +413,8 @@ def generate_keys(args):
         deposit_json = json.load(f)
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        for valid_deposit in executor.map(validate_deposit, deposit_json, credentials.credentials):
+        chain_settings = [chain_setting] * len(deposit_json)
+        for valid_deposit in executor.map(validate_deposit, deposit_json, chain_settings, credentials.credentials):
             all_valid_deposits &= valid_deposit
 
     if not all_valid_deposits:
