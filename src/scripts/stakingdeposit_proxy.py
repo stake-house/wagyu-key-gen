@@ -98,12 +98,12 @@ def generate_bls_to_execution_change(
     if not os.path.exists(folder):
         os.mkdir(folder)
 
-    eth1_withdrawal_address = execution_address
-    if not is_hex_address(eth1_withdrawal_address):
+    eth1_withdrawal_address = withdrawal_address
+    if not is_hex_address(withdrawal_address):
         raise ValueError("The given withdrawal address is not in hexadecimal encoded form.")
 
-    eth1_withdrawal_address = to_normalized_address(eth1_withdrawal_address)
-    execution_address = eth1_withdrawal_address
+    eth1_withdrawal_address = to_normalized_address(withdrawal_address)
+    withdrawal_address = eth1_withdrawal_address
 
     # Get chain setting
     chain_setting = devnet_chain_setting if devnet_chain_setting is not None else get_chain_setting(chain)
