@@ -25,6 +25,7 @@ export enum Network {
   HOODI = "Hoodi",
   GNOSIS = "Gnosis",
   CHIADO = "Chiado",
+  HOLESKY = "Holesky",
 }
 
 export interface NetworkConfig {
