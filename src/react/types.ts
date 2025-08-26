@@ -25,7 +25,6 @@ export enum Network {
   HOODI = "Hoodi",
   GNOSIS = "Gnosis",
   CHIADO = "Chiado",
-  HOLESKY = "Holesky",
 }
 
 export interface NetworkConfig {
@@ -34,9 +33,6 @@ export interface NetworkConfig {
 
 export const NetworkConfig: Record<Network, NetworkConfig> = {
   [Network.MAINNET]: {
-    multiplier: 1,
-  },
-  [Network.HOLESKY]: {
     multiplier: 1,
   },
   [Network.HOODI]: {
