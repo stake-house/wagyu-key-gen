@@ -13,3 +13,4 @@ dist/
 # For pyinstaller
 build/
 src/scripts/__pycache__/
+src/vendors/*.pyc
