@@ -87,7 +87,7 @@ const VerifyMnemonic = ({
 
   return (
     <Grid container item xs={10} spacing={2}>
-      { network === Network.MAINNET ? (
+      { network === Network.MAINNET || network === Network.GNOSIS ? (
         mnemonicToVerifyArray.map((value, index) => (
           <Grid item xs={2} key={"verify-mnemonic-grid-key-" + index}>
             <TextField
