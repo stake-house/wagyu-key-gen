@@ -23,6 +23,7 @@ import {
 } from "../constants";
 import { GlobalContext } from "../GlobalContext";
 import { KeyCreationContext } from "../KeyCreationContext";
+import { NetworkConfig } from "../types";
 
 /**
  * Form to provide number of keys, index, password, and optional withdrawal address necessary to
@@ -64,7 +65,7 @@ const ConfigureValidatorKeys = () => {
   const [inputIndex, setInputIndex] = useState(index);
   const [inputIndexError, setInputIndexError] = useState(false);
 
-  const [inputAmount, setInputAmount] = useState(amount);
+  const [inputAmount, setInputAmount] = useState(amount / NetworkConfig[network].multiplier);
   const [inputAmountError, setInputAmountError] = useState(false);
 
   const [inputPassword, setInputPassword] = useState(password);

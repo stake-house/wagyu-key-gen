@@ -13,6 +13,7 @@ import {
 } from "../constants";
 import { GlobalContext } from "../GlobalContext";
 import { KeyCreationContext } from "../KeyCreationContext";
+import { NetworkConfig } from "../types";
 
 /**
  * Allows the user to select a destination folder for the validator keys.
@@ -61,7 +62,7 @@ const CreateValidatorKeys = () => {
     }
 
     // Convert user provided amount to integer representation of gwei
-    const gweiAmount = parseInt((amount * ETH_TO_GWEI).toString());
+    const gweiAmount = parseInt((amount * NetworkConfig[network].multiplier * ETH_TO_GWEI).toString());
 
     window.eth2Deposit.generateKeys(
       mnemonic,

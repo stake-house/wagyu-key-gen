@@ -1,6 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import { Network, NetworkConfig } from "./types";
-import { GlobalContext } from "./GlobalContext";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 
 interface KeyCreationContextType {
   folderLocation: string;
@@ -52,7 +50,6 @@ const KeyCreationContextWrapper = ({ children }: { children: React.ReactNode}) =
   const [password, setPassword] = useState<string>("");
   const [withdrawalAddress, setWithdrawalAddress] = useState<string>("");
   const [compounding, setCompounding] = useState<boolean>(false);
-  const { network } = useContext(GlobalContext);
 
   return (
     <KeyCreationContext.Provider value={{
@@ -64,7 +61,7 @@ const KeyCreationContextWrapper = ({ children }: { children: React.ReactNode}) =
       setMnemonic,
       numberOfKeys,
       setNumberOfKeys,
-      amount: amount / NetworkConfig[network].multiplier,
+      amount: amount,
       setAmount,
       password,
       setPassword,
