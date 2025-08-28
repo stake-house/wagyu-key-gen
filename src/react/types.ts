@@ -23,4 +23,25 @@ export enum ReuseMnemonicAction {
 export enum Network {
   MAINNET = "Mainnet",
   HOODI = "Hoodi",
+  GNOSIS = "Gnosis",
+  CHIADO = "Chiado",
 }
+
+export interface NetworkConfig {
+  multiplier: number;
+}
+
+export const NetworkConfig: Record<Network, NetworkConfig> = {
+  [Network.MAINNET]: {
+    multiplier: 1,
+  },
+  [Network.HOODI]: {
+    multiplier: 1,
+  },
+  [Network.GNOSIS]: {
+    multiplier: 32,
+  },
+  [Network.CHIADO]: {
+    multiplier: 32,
+  },
+};

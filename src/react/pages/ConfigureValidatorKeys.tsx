@@ -16,8 +16,14 @@ import {
   errors,
   paths,
   tooltips,
+  getDepositAmountLimits,
+  formatDepositAmountError,
+  formatAmountTooltip,
+  formatCompoundingTooltip,
 } from "../constants";
+import { GlobalContext } from "../GlobalContext";
 import { KeyCreationContext } from "../KeyCreationContext";
+import { NetworkConfig } from "../types";
 
 /**
  * Form to provide number of keys, index, password, and optional withdrawal address necessary to
@@ -42,8 +48,12 @@ const ConfigureValidatorKeys = () => {
     compounding,
     setCompounding,
   } = useContext(KeyCreationContext);
+  const { network } = useContext(GlobalContext);
   const history = useHistory();
   const usingExistingFlow = history.location.pathname === paths.CONFIGURE_EXISTING;
+
+  // Get dynamic min/max values based on current network
+  const { min: minAmount, max: maxAmount } = getDepositAmountLimits(network);
 
   const [passwordToVerify, setPasswordToVerify] = useState("");
   const [verifyPassword, setVerifyPassword] = useState(false);
@@ -55,7 +65,7 @@ const ConfigureValidatorKeys = () => {
   const [inputIndex, setInputIndex] = useState(index);
   const [inputIndexError, setInputIndexError] = useState(false);
 
-  const [inputAmount, setInputAmount] = useState(amount);
+  const [inputAmount, setInputAmount] = useState(amount / NetworkConfig[network].multiplier);
   const [inputAmountError, setInputAmountError] = useState(false);
 
   const [inputPassword, setInputPassword] = useState(password);
@@ -136,7 +146,7 @@ const ConfigureValidatorKeys = () => {
       setInputIndexError(false);
     }
 
-    if (inputAmount < 1 || inputAmount > 2048) {
+    if (inputAmount < minAmount || inputAmount > maxAmount) {
       setInputAmountError(true);
       isError = true;
     } else {
@@ -277,34 +287,34 @@ const ConfigureValidatorKeys = () => {
                 />
               </Tooltip>
 
-              <Tooltip title={tooltips.COMPOUNDING}>
-                <FormControlLabel
-                  label="Compounding Credentials (0x02) - Must set a valid Withdrawal Address"
-                  control={
-                    <Checkbox
-                      checked={inputCompounding}
-                      disabled={!inputWithdrawalAddress}
-                      onChange={updateCompounding}
-                    />
-                  }
-                />
-              </Tooltip>
-            </div>
-            <Tooltip title={tooltips.AMOUNT}>
-              <TextField
-                className="tw-flex-1"
-                disabled={!inputCompounding}
-                id="amount"
-                label="Deposit Amount"
-                type="number"
-                variant="outlined"
-                value={inputAmount}
-                onChange={updateAmount}
-                error={inputAmountError}
-                helperText={inputAmountError ? errors.DEPOSIT_AMOUNT : ""}
+            <Tooltip title={formatCompoundingTooltip(network)}>
+              <FormControlLabel
+                label="Compounding Credentials (0x02) - Must set a valid Withdrawal Address"
+                control={
+                  <Checkbox
+                    checked={inputCompounding}
+                    disabled={!inputWithdrawalAddress}
+                    onChange={updateCompounding}
+                  />
+                }
               />
             </Tooltip>
           </div>
+          <Tooltip title={formatAmountTooltip(network)}>
+            <TextField
+              className="tw-flex-1"
+              disabled={!inputCompounding}
+              id="amount"
+              label="Deposit Amount"
+              type="number"
+              variant="outlined"
+              value={inputAmount}
+              onChange={updateAmount}
+              error={inputAmountError}
+              helperText={inputAmountError ? formatDepositAmountError(network) : ""}
+            />
+          </Tooltip>
+        </div>
 
           <div className="tw-w-full tw-flex tw-flex-row tw-gap-4">
             <Tooltip title={tooltips.NUMBER_OF_KEYS}>

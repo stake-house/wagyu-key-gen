@@ -61,7 +61,7 @@ const KeyCreationContextWrapper = ({ children }: { children: React.ReactNode}) =
       setMnemonic,
       numberOfKeys,
       setNumberOfKeys,
-      amount,
+      amount: amount,
       setAmount,
       password,
       setPassword,
