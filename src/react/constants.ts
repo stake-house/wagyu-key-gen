@@ -20,7 +20,7 @@ export const formatDepositAmountError = (network: Network): string => {
 
 export const formatAmountTooltip = (network: Network): string => {
   const { min, max } = getDepositAmountLimits(network);
-  return `Enter the amount you would like to deposit for each validator. This value must be between ${min} and ${max} and can not have greater precision than 1 gwei. You must have withdrawal credentials defined and set "compounding".`;
+  return `Enter the amount you would like to initially deposit for each validator. This value must be between ${min} and ${max} and can not have greater precision than 1 gwei. You must have withdrawal credentials defined and validator type set to "compounding". You can "top up" a validator with additional funds after the initial deposit is processed.`;
 };
 
 export const formatCompoundingTooltip = (network: Network): string => {
